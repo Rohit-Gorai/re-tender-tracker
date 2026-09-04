@@ -467,6 +467,8 @@ FIELDNAMES = [
     "State", "Due Date", "Status", "Source URL",
     "Tender Ref No", "Tender Type", "Published Date", "Days Left",
     "Capacity Raw", "Is Renewable", "First Seen", "Last Seen", "Notes",
+    "Winner", "Bids Received", "Award Status", "Award URL", "Award Date",
+    "Award Source", "Award Headline",
 ]
 
 
@@ -500,7 +502,345 @@ def build_record(raw, cfg):
         "First Seen": TODAY.isoformat(),
         "Last Seen": TODAY.isoformat(),
         "Notes": "",
+        "Winner": "",
+        "Bids Received": "",
+        "Award Status": "",
+        "Award URL": "",
+        "Award Date": "",
+        "Award Source": "",
+        "Award Headline": "",
     }
+
+
+# ---------------------------------------------------------------------------
+# AWARD / WINNER TRACKING
+# ---------------------------------------------------------------------------
+# Award data is published far less consistently than tender notices. Strategy:
+#   1. scrape whatever the authority publishes (SECI has a clean award table)
+#   2. let the user override or fill gaps via manual_awards.csv in the repo root
+# Manual entries always win, because a human reading Mercom or Saur Energy is
+# more reliable than any parser.
+# ---------------------------------------------------------------------------
+
+AWARD_SOURCES = [
+    {
+        "key": "SECI",
+        "url": "https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder",
+        "header_must_contain": ["tender ref no", "number of bids"],
+        "map": {"ref": "tender ref no", "bids": "number of bids"},
+        "enabled": True,
+    },
+]
+
+WINNER_HEADER_HINTS = ("bidder", "company", "name of", "firm", "developer", "agency")
+WINNER_NOISE = re.compile(r"^(s\.?\s*no|sr|serial|rank|l\d|view|download|n/?a|-)$", re.I)
+
+
+def normalize_ref(ref: str) -> str:
+    """Join key that survives 'RfP No. X' vs 'X' and stray whitespace."""
+    if not ref:
+        return ""
+    r = re.sub(r"(?i)^\s*(rfp|rfs|nit|tender)\s*(no\.?|ref\.?)?\s*[:.]?\s*", "", str(ref))
+    return re.sub(r"[^A-Z0-9/\-]", "", r.upper())
+
+
+def extract_winners(url):
+    """Best-effort pull of bidder names from an award detail page."""
+    try:
+        soup = BeautifulSoup(fetch(url, retries=2, timeout=30), "lxml")
+    except Exception:
+        return ""
+    names = []
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < 2:
+            continue
+        headers = [_key(c.get_text(" ")) for c in rows[0].find_all(["th", "td"])]
+        col = next((i for i, h in enumerate(headers)
+                    if any(hint in h for hint in WINNER_HEADER_HINTS)), None)
+        if col is None:
+            continue
+        for tr in rows[1:]:
+            cells = tr.find_all(["td", "th"])
+            if col < len(cells):
+                val = _norm(cells[col].get_text(" "))
+                if val and len(val) > 3 and not WINNER_NOISE.match(val):
+                    names.append(val)
+    seen, out = set(), []
+    for n in names:
+        if n.lower() not in seen:
+            seen.add(n.lower())
+            out.append(n)
+    return "; ".join(out[:8])
+
+
+def fetch_awards():
+    """Return {normalized_ref: {...}} of everything the authorities have published."""
+    awards = {}
+    for cfg in AWARD_SOURCES:
+        if not cfg.get("enabled", True):
+            continue
+        try:
+            soup = BeautifulSoup(fetch(cfg["url"]), "lxml")
+            table, headers = pick_table(soup, [m.lower() for m in cfg["header_must_contain"]])
+            if table is None:
+                print(f"  awards {cfg['key']:<8} no matching table", file=sys.stderr)
+                continue
+
+            def col_index(wanted):
+                wanted = wanted.lower()
+                return next((i for i, h in enumerate(headers) if wanted in h), None)
+
+            idx = {f: col_index(lbl) for f, lbl in cfg["map"].items()}
+            count = 0
+            for tr in (table.find("tbody") or table).find_all("tr"):
+                cells = tr.find_all(["td", "th"])
+                if len(cells) < 2:
+                    continue
+                texts = [_norm(c.get_text(" ")) for c in cells]
+                if all(_key(t) in headers for t in texts if t):
+                    continue  # header row
+                ri = idx.get("ref")
+                if ri is None or ri >= len(texts):
+                    continue
+                ref = normalize_ref(texts[ri])
+                if not ref:
+                    continue
+                bi = idx.get("bids")
+                a = tr.find("a", href=True)
+                detail = urljoin(cfg["url"], a["href"]) if a else ""
+                awards[ref] = {
+                    "bids": texts[bi] if bi is not None and bi < len(texts) else "",
+                    "url": detail or cfg["url"],
+                    "winner": extract_winners(detail) if detail else "",
+                    "source": cfg["key"],
+                }
+                count += 1
+            print(f"  awards {cfg['key']:<8} {count:>4} results")
+        except Exception as exc:  # noqa: BLE001
+            print(f"  awards {cfg['key']:<8} FAILED: {exc}", file=sys.stderr)
+    return awards
+
+
+def read_manual_awards():
+    """manual_awards.csv columns: TenderRefNo, Winner, AwardDate, AwardURL"""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "manual_awards.csv")
+    out = {}
+    for row in read_csv(path):
+        ref = normalize_ref(row.get("TenderRefNo", ""))
+        if ref:
+            out[ref] = row
+    return out
+
+
+def apply_awards(records):
+    """Fill Winner / Bids / Award Status. Scraped first, manual overrides last."""
+    scraped = fetch_awards()
+    manual = read_manual_awards()
+    filled = 0
+
+    for rec in records.values():
+        ref = normalize_ref(rec.get("Tender Ref No", ""))
+        due = parse_date(rec.get("Due Date"))
+        closed = rec.get("Status") in ("Closed", "Delisted") or (due and due < TODAY)
+
+        hit = scraped.get(ref)
+        if hit:
+            rec["Bids Received"] = hit["bids"] or rec.get("Bids Received", "")
+            rec["Award URL"] = hit["url"]
+            if hit["winner"]:
+                rec["Winner"] = hit["winner"]
+            rec["Award Status"] = "Awarded" if hit["winner"] else "Awarded (see link)"
+            rec["Award Source"] = "portal"
+            filled += 1
+
+        m = manual.get(ref)
+        if m:
+            rec["Winner"] = _norm(m.get("Winner", "")) or rec.get("Winner", "")
+            rec["Award Date"] = _norm(m.get("AwardDate", "")) or rec.get("Award Date", "")
+            rec["Award URL"] = _norm(m.get("AwardURL", "")) or rec.get("Award URL", "")
+            rec["Award Status"] = "Awarded"
+            rec["Award Source"] = "manual"
+            filled += 1
+
+        if not rec.get("Award Status"):
+            rec["Award Status"] = "Under Evaluation" if closed else "Bidding Open"
+
+    print(f"  awards matched to {filled} tender(s)")
+    enrich_with_news(records)
+
+
+# ---------------------------------------------------------------------------
+# NEWS-BASED AWARD DISCOVERY  (Google News RSS, free, no API key)
+# ---------------------------------------------------------------------------
+# Only runs for tenders that have closed and have no winner yet. Results are
+# labelled unverified and never override a portal or manual entry.
+# ---------------------------------------------------------------------------
+
+NEWS_ENABLED = True
+MAX_NEWS_QUERIES = 20        # per run, keeps us polite and the job fast
+NEWS_WINDOW_DAYS = 400       # stop chasing tenders older than this
+NEWS_ENDPOINT = ("https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en")
+
+# Developers and IPPs that actually win Indian RE tenders. Extend freely.
+DEVELOPERS = [
+    "Adani Green", "Adani Power", "ReNew", "Tata Power", "NTPC Green", "NTPC Renewable",
+    "Greenko", "JSW Neo", "JSW Energy", "Juniper Green", "Hero Future", "Hero Solar",
+    "ACME Solar", "ACME Cleantech", "Avaada", "Torrent Power", "Torrent Energy",
+    "Serentica", "Sembcorp", "O2 Power", "Ampin Energy", "Amp Energy", "Vibrant Energy",
+    "Waaree", "Hexa Climate", "Blupine", "Fortum", "EDF Renewables", "Engie",
+    "Continuum Green", "Brookfield", "Mahindra Susten", "Radiance Renewables",
+    "SAEL", "Oswal", "Shivalaya", "Purvah Green", "Banyan Insolation", "Pace Digitek",
+    "SJVN Green", "NHPC", "SECI", "Azure Power", "Sprng Energy", "Ayana Renewable",
+    "CleanMax", "Statkraft", "Enel Green", "Vena Energy", "Solarworld", "Gensol",
+    "Sunsure", "Refex", "KP Energy", "Inox Wind", "Suzlon", "Envision", "Goldi Solar",
+    "Premier Energies", "Vikram Solar", "Tata Renewable", "Rays Power", "Ostro",
+    "Resolven", "Kengeri Prime", "Solarcraft", "Aditya Birla Renewables",
+    "NLC India", "THDC", "Jakson", "Sunsource", "Clean Max", "Bikaner Solar",
+    # bare surnames last so the longer forms above match first
+    "Torrent", "Juniper", "Greenko", "Avaada", "Serentica", "Hexa",
+]
+DEV_RE = re.compile(r"(" + "|".join(re.escape(d) for d in DEVELOPERS) + r")", re.I)
+
+AWARD_VERB = re.compile(
+    r"\baward|\bwins?\b|\bwon\b|\bbags?\b|\ballot|\bsecures?\b|\bL1\b|"
+    r"\bemerges?\b|\bwinning bid|\bbaggs?\b|\bselected\b", re.I)
+
+SCHEME_TAG = re.compile(
+    r"\(([A-Za-z]{2,}[A-Za-z0-9]*(?:-[A-Za-z0-9]+){1,3})\)|"
+    r"\b(SECI-[A-Z]+-[IVXL]+|Tranche-[IVXL]+|ISTS-[IVXL]+|FDRE-[IVXL]+)\b")
+
+
+def scheme_tag(title):
+    m = SCHEME_TAG.search(title or "")
+    if not m:
+        return ""
+    tag = (m.group(1) or m.group(2) or "").strip()
+    return tag if len(tag) >= 5 and re.search(r"[IVXL0-9]", tag) else ""
+
+
+def build_news_query(rec):
+    bits = [rec.get("Authority", "")]
+    tag = scheme_tag(rec.get("Project Name", ""))
+    if tag:
+        bits.append(tag)
+    cap = rec.get("Capacity MW")
+    if cap not in ("", None):
+        try:
+            bits.append(f"{int(float(cap))} MW")
+        except (TypeError, ValueError):
+            pass
+    tech = rec.get("Technology", "")
+    if tech and tech != "Unclassified" and not tag:
+        bits.append(tech.split("/")[0].split("(")[0].strip())
+    bits.append("(awarded OR wins OR tariff)")
+    return " ".join(b for b in bits if b)
+
+
+def parse_news_items(xml_text):
+    soup = BeautifulSoup(xml_text, "xml")
+    items = []
+    for it in soup.find_all("item")[:12]:
+        items.append({
+            "title": _norm(it.title.get_text() if it.title else ""),
+            "link": _norm(it.link.get_text() if it.link else ""),
+            "date": parse_date((it.pubDate.get_text()[5:16] if it.pubDate else "")),
+            "source": _norm(it.source.get_text()) if it.source else "",
+        })
+    return items
+
+
+def score_news_item(item, rec, tag):
+    """Higher is better. Returns 0 when the item clearly is not about this tender."""
+    title = item["title"]
+    if not AWARD_VERB.search(title):
+        return 0
+    due = parse_date(rec.get("Due Date"))
+    if due and item["date"] and item["date"] < due:
+        return 0                      # published before bids even closed
+    score = 1
+    if tag and tag.lower() in title.lower():
+        score += 3
+    cap = rec.get("Capacity MW")
+    if cap not in ("", None):
+        try:
+            if re.search(rf"\b{int(float(cap))}\s*(MW|MWh)", title, re.I):
+                score += 3
+        except (TypeError, ValueError):
+            pass
+    if rec.get("Authority", "").lower() in title.lower():
+        score += 1
+    if DEV_RE.search(title):
+        score += 1
+    return score
+
+
+def search_award_news(rec):
+    """Return dict with winner/headline/url, or None."""
+    tag = scheme_tag(rec.get("Project Name", ""))
+    query = build_news_query(rec)
+    url = NEWS_ENDPOINT.format(q=requests.utils.quote(query))
+    try:
+        items = parse_news_items(fetch(url, retries=2, timeout=25))
+    except Exception:
+        return None
+    best, best_score = None, 0
+    for it in items:
+        sc = score_news_item(it, rec, tag)
+        if sc > best_score:
+            best, best_score = it, sc
+    if not best or best_score < 4:        # needs the tag or the capacity to match
+        return None
+    names = []
+    for m in DEV_RE.finditer(best["title"]):
+        n = m.group(1)
+        if n.lower() not in [x.lower() for x in names] and n.lower() != rec.get(
+                "Authority", "").lower():
+            names.append(n)
+    return {
+        "winner": "; ".join(names[:6]),
+        "headline": best["title"],
+        "url": best["link"],
+        "date": best["date"].isoformat() if best["date"] else "",
+        "score": best_score,
+    }
+
+
+def enrich_with_news(records):
+    if not NEWS_ENABLED:
+        return
+    candidates = []
+    for rec in records.values():
+        if rec.get("Winner") or rec.get("Award Source") == "manual":
+            continue
+        if rec.get("Is Renewable") != "Yes":
+            continue
+        due = parse_date(rec.get("Due Date"))
+        if not due or due >= TODAY:
+            continue
+        if (TODAY - due).days > NEWS_WINDOW_DAYS:
+            continue
+        candidates.append(rec)
+
+    candidates.sort(key=lambda r: r.get("Due Date") or "", reverse=True)
+    found = 0
+    for rec in candidates[:MAX_NEWS_QUERIES]:
+        hit = search_award_news(rec)
+        time.sleep(1.5)
+        if not hit:
+            continue
+        rec["Award Headline"] = hit["headline"]
+        rec["Award URL"] = hit["url"] or rec.get("Award URL", "")
+        rec["Award Date"] = hit["date"] or rec.get("Award Date", "")
+        rec["Award Source"] = "news (unverified)"
+        if hit["winner"]:
+            rec["Winner"] = hit["winner"]
+            rec["Award Status"] = "Awarded (news, unverified)"
+        else:
+            rec["Award Status"] = "Award reported (check link)"
+        found += 1
+    print(f"  news    checked {min(len(candidates), MAX_NEWS_QUERIES)}, "
+          f"matched {found}")
 
 
 # ---------------------------------------------------------------------------
@@ -613,6 +953,8 @@ def run(only_source=None):
         old["Days Left"] = (due - TODAY).days if due else ""
         old["Notes"] = ""
         merged[key] = old
+
+    apply_awards(merged)
 
     rows = sorted(
         merged.values(),
