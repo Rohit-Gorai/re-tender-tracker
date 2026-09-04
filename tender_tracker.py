@@ -24,6 +24,8 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 import re
 import sys
@@ -497,7 +499,7 @@ FIELDNAMES = [
     "Winner Announcement Date", "Winner", "Tariff", "Award URL",
     # --- links and provenance ---
     "Source URL", "Bids Received", "Award Status", "Award Source", "Award Headline",
-    "Is Renewable", "Capacity Raw", "Details Fetched", "TenderKey", "Notes",
+    "Is Renewable", "Capacity Raw", "Details Fetched", "AI Checked", "TenderKey", "Notes",
 ]
 
 # old column name -> new column name, so existing data files keep their history
@@ -556,6 +558,7 @@ def build_record(raw, cfg):
         "Is Renewable": "Yes" if is_renewable(blob) else "No",
         "Capacity Raw": cap_raw,
         "Details Fetched": "",
+        "AI Checked": "",
         "TenderKey": make_key(cfg["authority"], raw.get("ref", ""), title),
         "Notes": "",
     }
@@ -806,6 +809,7 @@ def apply_awards(records):
     print(f"  awards matched to {filled} tender(s)")
     enrich_with_news(records)
     sweep_award_news(records)
+    enrich_with_ai(records)
 
 
 # ---------------------------------------------------------------------------
@@ -1132,11 +1136,174 @@ def sweep_award_news(records):
                     "Is Renewable": "Yes",
                     "Capacity Raw": cap_raw,
                     "Details Fetched": "n/a",
+                    "AI Checked": "n/a",
                     "TenderKey": key,
                     "Notes": "news-derived record",
                 }
                 found += 1
     print(f"  sweep   {found} award record(s) from {SWEEP_FROM} onwards")
+
+
+# ---------------------------------------------------------------------------
+# AI FALLBACK  (Anthropic API + server-side web search)
+# ---------------------------------------------------------------------------
+# Runs only when ANTHROPIC_API_KEY is set. Last resort: used on closed RE
+# tenders that the portal and the news sweep both failed to resolve.
+# Everything it returns must carry a source URL, or it is discarded.
+# ---------------------------------------------------------------------------
+
+AI_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5-20251001")
+MAX_AI_LOOKUPS = int(os.environ.get("MAX_AI_LOOKUPS", "0"))   # 0 = no cap
+AI_CONCURRENCY = int(os.environ.get("AI_CONCURRENCY", "5"))
+AI_ENDPOINT = "https://api.anthropic.com/v1/messages"
+
+AI_PROMPT = """You are checking whether an Indian renewable energy tender has been awarded.
+
+Authority: {authority}
+Tender reference: {ref}
+Tender title: {title}
+Published: {published}
+Bid submission end date: {due}
+
+Search the web and determine whether the award or auction result has been announced.
+
+Reply with ONLY a JSON object, no preamble, no markdown fences:
+{{"awarded": true|false,
+  "winners": ["exact company names"],
+  "tariff": "e.g. INR 2.86/kWh, or empty string",
+  "award_date": "YYYY-MM-DD or empty string",
+  "source_url": "URL of the page you relied on",
+  "confidence": "high|medium|low"}}
+
+Rules:
+- Only report winners for THIS specific tender. Matching capacity and scheme
+  name (e.g. SECI-ISTS-XVIII, Tranche-IX, FDRE-VII) is required.
+- If you cannot find a specific credible source, return awarded=false.
+- Never guess a company name. Never infer from a similar tender.
+- source_url must be a real page from your search results."""
+
+
+def ai_lookup_award(rec):
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key:
+        return None
+    payload = {
+        "model": AI_MODEL,
+        "max_tokens": 1200,
+        "messages": [{"role": "user", "content": AI_PROMPT.format(
+            authority=rec.get("Authority", ""),
+            ref=rec.get("Tender Ref No", "") or "(not published)",
+            title=rec.get("Project Name", ""),
+            published=rec.get("Tender Publication Date", "") or "unknown",
+            due=rec.get("Bid Submission End Date (Online)", "") or "unknown")}],
+        "tools": [{"type": "web_search_20250305", "name": "web_search", "max_uses": 4}],
+    }
+    headers = {"x-api-key": key, "anthropic-version": "2023-06-01",
+               "content-type": "application/json"}
+    blocks, delay = None, 4
+    for attempt in range(5):
+        try:
+            r = requests.post(AI_ENDPOINT, timeout=180, json=payload, headers=headers)
+            if r.status_code in (429, 500, 502, 503, 529):
+                wait = int(r.headers.get("retry-after", delay))
+                time.sleep(min(wait, 90))
+                delay = min(delay * 2, 90)
+                continue
+            r.raise_for_status()
+            blocks = r.json().get("content", [])
+            break
+        except Exception as exc:  # noqa: BLE001
+            if attempt == 4:
+                print(f"  ai      call failed: {str(exc)[:110]}", file=sys.stderr)
+                return None
+            time.sleep(delay)
+            delay = min(delay * 2, 90)
+    if blocks is None:
+        return None
+
+    text = "".join(b.get("text", "") for b in blocks if b.get("type") == "text")
+    text = text.replace("```json", "").replace("```", "").strip()
+    m = re.search(r"\{.*\}", text, re.S)
+    if not m:
+        return None
+    try:
+        data = json.loads(m.group(0))
+    except json.JSONDecodeError:
+        return None
+
+    if not data.get("awarded"):
+        return None
+    if str(data.get("confidence", "")).lower() == "low":
+        return None
+    src = _norm(str(data.get("source_url", "")))
+    winners = [_norm(str(w)) for w in (data.get("winners") or []) if _norm(str(w))]
+    if not src.startswith("http") or not winners:
+        return None
+    return {
+        "winners": "; ".join(winners[:10]),
+        "tariff": _norm(str(data.get("tariff", ""))),
+        "award_date": (parse_date(data.get("award_date")) or "") and
+                      parse_date(data.get("award_date")).isoformat(),
+        "url": src,
+        "confidence": str(data.get("confidence", "")).lower(),
+    }
+
+
+def enrich_with_ai(records):
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return
+    pending = []
+    for rec in records.values():
+        if rec.get("Winner") or rec.get("Award Source") == "manual":
+            continue
+        if rec.get("Is Renewable") != "Yes":
+            continue
+        if rec.get("Notes") == "news-derived record":
+            continue
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
+        awarded = str(rec.get("Award Status", "")).startswith("Awarded")
+        if not awarded and (not due or due >= TODAY):
+            continue
+        if rec.get("AI Checked") == "yes":
+            continue
+        pending.append(rec)
+
+    pending.sort(key=lambda r: r.get("Bid Submission End Date (Online)") or "",
+                 reverse=True)
+    if MAX_AI_LOOKUPS > 0:
+        pending = pending[:MAX_AI_LOOKUPS]
+    if not pending:
+        print("  ai      nothing to check")
+        return
+
+    print(f"  ai      {len(pending)} closed tender(s) to resolve, "
+          f"{AI_CONCURRENCY} at a time")
+    found = done = 0
+    with ThreadPoolExecutor(max_workers=max(1, AI_CONCURRENCY)) as pool:
+        futures = {pool.submit(ai_lookup_award, r): r for r in pending}
+        for fut in as_completed(futures):
+            rec = futures[fut]
+            rec["AI Checked"] = "yes"
+            done += 1
+            if done % 25 == 0:
+                print(f"  ai      {done}/{len(pending)} checked, {found} resolved",
+                      flush=True)
+            try:
+                hit = fut.result()
+            except Exception:
+                continue
+            if not hit:
+                continue
+            rec["Winner"] = hit["winners"]
+            rec["Award URL"] = hit["url"]
+            rec["Award Source"] = f"AI + web search ({hit['confidence']})"
+            rec["Award Status"] = "Awarded (AI, unverified)"
+            if hit["tariff"] and not rec.get("Tariff"):
+                rec["Tariff"] = hit["tariff"]
+            if hit["award_date"] and not rec.get("Winner Announcement Date"):
+                rec["Winner Announcement Date"] = hit["award_date"]
+            found += 1
+    print(f"  ai      checked {done}, resolved {found}")
 
 
 # ---------------------------------------------------------------------------
@@ -1238,7 +1405,7 @@ def run(only_source=None):
             for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
                       "Award Headline", "Winner Announcement Date", "Bids Received",
                       "Pre Bid Meeting Date", "Bid Open Date",
-                      "Bid Submission End Date (Offline)", "Details Fetched"):
+                      "Bid Submission End Date (Offline)", "Details Fetched", "AI Checked"):
                 if old.get(f) and not rec.get(f):
                     rec[f] = old[f]
             if old.get("Tender Publication Date") and not rec.get("Tender Publication Date"):
