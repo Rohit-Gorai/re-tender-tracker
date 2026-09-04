@@ -214,7 +214,8 @@ TENDER_TYPE_RULES = [
 ]
 
 CAP_TOKEN = re.compile(
-    r"(\d{1,4}(?:,\d{3})*(?:\.\d+)?)\s*(GWh|GWp|GW|MWh|MWp|MWac|MWdc|MW|kWp|kWh|kWac|kW)\b",
+    r"(?<![\d.])(\d{1,6}(?:,\d{3})*(?:\.\d+)?)\s*"
+    r"(GWh|GWp|GW|MWh|MWp|MWac|MWdc|MW|kWp|kWh|kWac|kW)\b",
     re.I,
 )
 
@@ -258,8 +259,20 @@ def extract_capacity_mw(text: str):
     return None, ""
 
 
+ORG_NOISE = re.compile(
+    r"solar energy corporation of india( limited)?|\bSECI\b|"
+    r"ntpc green energy|sjvn green energy|solar energy corporation|"
+    r"of SECI\b|at SECI\b|SECI's|SECI\u2019s", re.I)
+
+
+def strip_org_names(text: str) -> str:
+    """An insurance policy 'of Solar Energy Corporation of India' is not a solar
+    tender. Remove the authority's own name before classifying."""
+    return ORG_NOISE.sub(" ", text or "")
+
+
 def detect_technology(text: str) -> str:
-    t = text or ""
+    t = strip_org_names(text)
     hits = [name for name, pat in TECH_RULES if re.search(pat, t, re.I)]
     if not hits:
         return "Unclassified"
@@ -287,7 +300,7 @@ def detect_tender_type(text: str) -> str:
 
 
 def is_renewable(text: str) -> bool:
-    t = text or ""
+    t = strip_org_names(text)
     re_hit = bool(RE_SIGNAL.search(t))
     noise_hit = bool(NOISE_SIGNAL.search(t))
     strong_re = bool(re.search(
@@ -316,9 +329,12 @@ def parse_date(raw):
         return None
     s = re.sub(r"\s+", " ", str(raw)).strip()
     s = re.split(r"\s+\d{1,2}:\d{2}", s)[0].strip()  # drop trailing time
+    def _sane(d):
+        return d if d and 2000 <= d.year <= 2100 else None
+
     for fmt in DATE_PATTERNS:
         try:
-            return datetime.strptime(s, fmt).date()
+            return _sane(datetime.strptime(s, fmt).date())
         except ValueError:
             continue
     m = re.search(r"(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2,4})", s)
@@ -327,7 +343,7 @@ def parse_date(raw):
         y = int(y)
         y = y + 2000 if y < 100 else y
         try:
-            return date(y, int(mth), int(d))
+            return _sane(date(y, int(mth), int(d)))
         except ValueError:
             return None
     return None
@@ -502,6 +518,8 @@ FIELDNAMES = [
     "Is Renewable", "Capacity Raw", "Details Fetched", "AI Checked", "TenderKey", "Notes",
 ]
 
+RESET_NEWS_AWARDS = True   # see the news section below; flip to False after one clean run
+
 # old column name -> new column name, so existing data files keep their history
 LEGACY_MAP = {
     "Due Date": "Bid Submission End Date (Online)",
@@ -516,13 +534,17 @@ def migrate_row(row):
         out[LEGACY_MAP.get(k, k)] = v
     for f in FIELDNAMES:
         out.setdefault(f, "")
+    if RESET_NEWS_AWARDS and str(out.get("Award Source", "")).startswith("news"):
+        for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
+                  "Award Headline", "Winner Announcement Date"):
+            out[f] = ""
     return {k: out.get(k, "") for k in FIELDNAMES}
 
 
 
 def make_key(authority, ref, title):
     basis = f"{authority}|{ref}".strip("|") if ref else f"{authority}|{title[:120]}"
-    return hashlib.md5(basis.lower().encode("utf-8")).hexdigest()[:12]
+    return "T-" + hashlib.md5(basis.lower().encode("utf-8")).hexdigest()[:12]
 
 
 def build_record(raw, cfg):
@@ -804,7 +826,12 @@ def apply_awards(records):
             filled += 1
 
         if not rec.get("Award Status"):
-            rec["Award Status"] = "Under Evaluation" if closed else "Bidding Open"
+            if closed:
+                rec["Award Status"] = "Under Evaluation"
+            elif due:
+                rec["Award Status"] = "Bidding Open"
+            else:
+                rec["Award Status"] = "Unknown"
 
     print(f"  awards matched to {filled} tender(s)")
     enrich_with_news(records)
@@ -820,6 +847,16 @@ def apply_awards(records):
 # ---------------------------------------------------------------------------
 
 NEWS_ENABLED = True
+
+# Contracts that the trade press never reports a "winner" for. Searching these
+# only produces false matches against the IPP award for the same capacity.
+NON_IPP = re.compile(
+    r"balance of system|\bbos\b|\bo&m\b|operation & maintenance|operation and maintenance|"
+    r"module procurement|procurement of|supply of \d|transformer|leased line|"
+    r"phasor measurement|\bpmu\b|consultant|consultancy|manpower|insurance|"
+    r"housekeeping|vehicle|software|licen[cs]e|audit|empanel|printing|furniture|"
+    r"desktop|laptop|hrms|\berp\b|website|portal|gap assessment|renting|tenant|"
+    r"design, engineering, supply|construction, erection|epc\b|civil work", re.I)
 MAX_NEWS_QUERIES = 40        # per run, keeps us polite and the job fast
 NEWS_WINDOW_DAYS = 400       # stop chasing tenders older than this
 NEWS_ENDPOINT = ("https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en")
@@ -885,76 +922,82 @@ def parse_news_items(xml_text):
     soup = BeautifulSoup(xml_text, "xml")
     items = []
     for it in soup.find_all("item")[:12]:
+        link = _norm(it.link.get_text() if it.link else "")
+        # Google wraps the real article in a redirect; the publisher URL is in
+        # the description. Prefer it: it is readable and short enough to store.
+        publisher = ""
+        if it.description:
+            m = re.search(r'href="(https?://[^"]+)"', it.description.get_text())
+            if m and "news.google.com" not in m.group(1):
+                publisher = m.group(1)
         items.append({
             "title": _norm(it.title.get_text() if it.title else ""),
-            "link": _norm(it.link.get_text() if it.link else ""),
+            "link": publisher or link,
+            "google_link": link,
             "date": parse_date((it.pubDate.get_text()[5:16] if it.pubDate else "")),
             "source": _norm(it.source.get_text()) if it.source else "",
         })
     return items
 
 
+def capacity_in_headline(headline, cap):
+    """True if the headline quotes a capacity within 3% of the tender's.
+
+    Tolerance matters: '17.7 MW Rooftop Solar' is the award for a 17.768 MW
+    tender, and '1.2 GW' is the same thing as 1200 MW.
+    """
+    if cap in ("", None):
+        return False
+    try:
+        target = float(cap)
+    except (TypeError, ValueError):
+        return False
+    for value, unit in CAP_TOKEN.findall(headline or ""):
+        try:
+            num = float(value.replace(",", ""))
+        except ValueError:
+            continue
+        u = unit.lower()
+        mw = num * 1000 if u.startswith("gw") else num / 1000 if u.startswith("kw") else num
+        if target and abs(mw - target) <= max(0.03 * target, 0.5):
+            return True
+    return False
+
+
 def score_news_item(item, rec, tag):
-    """Higher is better. Returns 0 when the item clearly is not about this tender."""
+    """Higher is better; 0 rejects.
+
+    Two independent signals are required. A bare capacity match is never
+    enough on its own - that is what paired a Kerala BESS award with an
+    offshore wind tender because both mentioned 500.
+    """
     title = item["title"]
     if not AWARD_VERB.search(title):
         return 0
     due = parse_date(rec.get("Bid Submission End Date (Online)"))
     if due and item["date"] and item["date"] < due:
-        return 0                      # published before bids even closed
-    score = 1
-    if tag and tag.lower() in title.lower():
-        score += 3
-    cap = rec.get("Capacity MW")
-    if cap not in ("", None):
-        try:
-            if re.search(rf"\b{int(float(cap))}\s*(MW|MWh)", title, re.I):
-                score += 3
-        except (TypeError, ValueError):
-            pass
-    if rec.get("Authority", "").lower() in title.lower():
-        score += 1
-    if DEV_RE.search(title):
-        score += 1
-    return score
+        return 0                       # published before bids even closed
+    if rec.get("Authority", "").lower() not in title.lower():
+        return 0                       # must name the authority
 
+    low = title.lower()
+    tag_hit = bool(tag) and tag.lower().replace(" ", "") in low.replace(" ", "")
+    cap_hit = capacity_in_headline(title, rec.get("Capacity MW"))
 
-TARIFF_RE = re.compile(
-    r"(?:\u20b9|INR|Rs\.?)\s*([0-9]{1,2}\.[0-9]{1,2})\s*(?:\(|per\s|/)\s*(?:kWh|unit|kwh)",
-    re.I)
+    tech = (rec.get("Technology") or "").lower()
+    tech_words = [w for w in re.findall(r"[a-z]{4,}", tech)
+                  if w not in ("power", "trading", "clock", "round", "unclassified")]
+    tech_hit = bool(tech_words) and all(w in low for w in tech_words[:2])
 
+    # a wind tender does not get a solar award, whatever the numbers say
+    for word, opposites in (("wind", ("solar pv", "rooftop", "pumped storage")),
+                            ("solar", ("wind power", "pumped storage")),
+                            ("pumped storage", ("rooftop", "wind power"))):
+        if word in tech and any(o in low for o in opposites) and not tag_hit:
+            return 0
 
-def read_article(url):
-    """Follow a news link and return (plain_text, tariff_string)."""
-    if not url:
-        return "", ""
-    try:
-        soup = BeautifulSoup(fetch(url, retries=1, timeout=25), "lxml")
-    except Exception:
-        return "", ""
-    for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
-        tag.decompose()
-    text = _norm(soup.get_text(" "))[:20000]
-    rates = sorted({float(m) for m in TARIFF_RE.findall(text) if 0.5 < float(m) < 25})
-    if not rates:
-        tariff = ""
-    elif len(rates) == 1:
-        tariff = f"\u20b9{rates[0]:.2f}/kWh"
-    else:
-        tariff = f"\u20b9{rates[0]:.2f}\u2013{rates[-1]:.2f}/kWh"
-    return text, tariff
-
-
-def names_from(text, authority):
-    out = []
-    for m in DEV_RE.finditer(text or ""):
-        n = m.group(1)
-        low = n.lower()
-        if low == (authority or "").lower():
-            continue
-        if not any(low == x.lower() or low in x.lower() for x in out):
-            out.append(n)
-    return out
+    score = (4 if tag_hit else 0) + (2 if cap_hit else 0) + (2 if tech_hit else 0)
+    return score if score >= 4 else 0
 
 
 def search_award_news(rec):
@@ -998,6 +1041,8 @@ def enrich_with_news(records):
         if rec.get("Winner") or rec.get("Award Source") == "manual":
             continue
         if rec.get("Is Renewable") != "Yes":
+            continue
+        if NON_IPP.search(rec.get("Project Name", "")):
             continue
         due = parse_date(rec.get("Bid Submission End Date (Online)"))
         already_awarded = str(rec.get("Award Status", "")).startswith("Awarded")
@@ -1061,6 +1106,8 @@ def sweep_award_news(records):
     if not SWEEP_ENABLED:
         return
     seen_links = {r.get("Award URL") for r in records.values() if r.get("Award URL")}
+    seen_titles = {_key(r.get("Award Headline", "")) for r in records.values()
+                   if r.get("Award Headline")}
     cutoff = parse_date(SWEEP_FROM)
     found = fetched = 0
 
@@ -1079,6 +1126,8 @@ def sweep_award_news(records):
                 title, link = it["title"], it["link"]
                 if not title or not link or link in seen_links:
                     continue
+                if _key(title) in seen_titles:
+                    continue          # same story already filed under another authority
                 if not AWARD_VERB.search(title):
                     continue
                 if it["date"] and cutoff and it["date"] < cutoff:
@@ -1109,6 +1158,7 @@ def sweep_award_news(records):
                     continue
 
                 seen_links.add(link)
+                seen_titles.add(_key(title))
                 existing = records.get(key, {})
                 records[key] = {
                     "Authority": authority,
@@ -1260,6 +1310,8 @@ def enrich_with_ai(records):
             continue
         if rec.get("Notes") == "news-derived record":
             continue
+        if NON_IPP.search(rec.get("Project Name", "")):
+            continue
         due = parse_date(rec.get("Bid Submission End Date (Online)"))
         awarded = str(rec.get("Award Status", "")).startswith("Awarded")
         if not awarded and (not due or due >= TODAY):
@@ -1358,6 +1410,8 @@ def run(only_source=None):
     previous = {}
     for _r in read_csv(master_path):
         _m = migrate_row(_r)
+        if RESET_NEWS_AWARDS and _m.get("Notes") == "news-derived record":
+            continue
         if _m.get("TenderKey"):
             previous[_m["TenderKey"]] = _m
 
