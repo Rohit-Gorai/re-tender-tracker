@@ -1402,6 +1402,127 @@ def write_excel(path, master, renewable):
 
 
 # ---------------------------------------------------------------------------
+# FINANCING TARGETS VIEW
+# ---------------------------------------------------------------------------
+# One derived file answering "who do I call?". Built from the tender table -
+# no second database, no second source of truth.
+#
+# COD is DERIVED, never scraped: Indian RE tenders specify a commissioning
+# window from PPA effective date rather than a calendar date, so expected COD
+# is award date + the standard window for that technology. The "COD Basis"
+# column always says which window was used, so the number is never mistaken
+# for something an agency published.
+# ---------------------------------------------------------------------------
+
+COD_CUTOFF = date(2026, 9, 30)      # projects commissioning after this are live targets
+MIN_TARGET_MW = float(os.environ.get("MIN_TARGET_MW", "50"))
+
+COMMISSIONING_MONTHS = [            # first match wins
+    ("Pumped Storage",              60),
+    ("Green Hydrogen / Derivatives", 48),
+    ("Hydro",                       48),
+    ("Wind-Solar Hybrid",           24),
+    ("Round-the-Clock / CfD / Trading", 24),
+    ("Solar + Storage",             24),
+    ("Wind",                        24),
+    ("Solar",                       24),
+    ("Energy Storage (BESS)",       18),
+    ("Rooftop Solar",               12),
+    ("Transmission / Evacuation",   30),
+]
+DEFAULT_MONTHS = 24
+
+COMMISSIONED = re.compile(
+    r"commission|\bcod achieved\b|declared commercial operation|"
+    r"fully operational|begins generation|starts generation", re.I)
+
+TARGET_FIELDS = [
+    "Priority", "Tender Agency", "Tender Detail", "Technology", "Capacity MW",
+    "State", "Winner Group", "Winner SPV", "Tariff",
+    "Expected COD", "Months to COD", "COD Basis",
+    "Confidence", "Tender Ref No", "Award Date", "Source URL", "Award URL",
+]
+
+
+def add_months(d, months):
+    y, m = divmod((d.year * 12 + d.month - 1) + months, 12)
+    return date(y, m + 1, min(d.day, 28))
+
+
+def commissioning_window(technology):
+    for name, months in COMMISSIONING_MONTHS:
+        if name.lower() in (technology or "").lower():
+            return months, f"{months} months from award ({name})"
+    return DEFAULT_MONTHS, f"{DEFAULT_MONTHS} months from award (default)"
+
+
+def confidence_of(rec):
+    src = (rec.get("Award Source") or "").lower()
+    if src.startswith("manual"):
+        return "Manual - verified"
+    if src.startswith("portal"):
+        return "Portal - official"
+    if src.startswith("ai"):
+        return "AI + citation - verify"
+    if "news" in src:
+        return "Press report - verify"
+    return "Unverified"
+
+
+def build_financing_targets(rows):
+    """Awarded, pre-COD, material-capacity projects, biggest first."""
+    targets = []
+    for rec in rows:
+        if not rec.get("Winner") or rec.get("Is Renewable") != "Yes":
+            continue
+        if NON_IPP.search(rec.get("Project Name", "")):
+            continue          # EPC/O&M contracts are not financing targets
+        if COMMISSIONED.search(rec.get("Award Headline", "")):
+            continue          # already generating
+        try:
+            cap = float(rec.get("Capacity MW") or 0)
+        except (TypeError, ValueError):
+            cap = 0.0
+        if cap < MIN_TARGET_MW:
+            continue
+
+        award = (parse_date(rec.get("Winner Announcement Date"))
+                 or parse_date(rec.get("Bid Submission End Date (Online)")))
+        if not award:
+            continue
+        months, basis = commissioning_window(rec.get("Technology"))
+        cod = add_months(award, months)
+        if cod <= COD_CUTOFF:
+            continue          # window has closed; treat as commissioned
+
+        months_left = (cod.year - TODAY.year) * 12 + (cod.month - TODAY.month)
+        targets.append({
+            "Priority": 0,
+            "Tender Agency": rec.get("Authority", ""),
+            "Tender Detail": rec.get("Project Name", ""),
+            "Technology": rec.get("Technology", ""),
+            "Capacity MW": cap,
+            "State": rec.get("State", ""),
+            "Winner Group": rec.get("Winner", ""),
+            "Winner SPV": rec.get("Winner SPV", ""),
+            "Tariff": rec.get("Tariff", ""),
+            "Expected COD": cod.isoformat(),
+            "Months to COD": months_left,
+            "COD Basis": basis,
+            "Confidence": confidence_of(rec),
+            "Tender Ref No": rec.get("Tender Ref No", ""),
+            "Award Date": rec.get("Winner Announcement Date", ""),
+            "Source URL": rec.get("Source URL", ""),
+            "Award URL": rec.get("Award URL", ""),
+        })
+
+    targets.sort(key=lambda t: (-t["Capacity MW"], t["Months to COD"]))
+    for i, t in enumerate(targets, 1):
+        t["Priority"] = i
+    return targets
+
+
+# ---------------------------------------------------------------------------
 # MAIN RUN
 # ---------------------------------------------------------------------------
 
@@ -1457,7 +1578,7 @@ def run(only_source=None):
         else:
             # carry forward everything a previous run discovered
             for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
-                      "Award Headline", "Winner Announcement Date", "Bids Received",
+                      "Award Headline", "Winner Announcement Date", "Bids Received", "Winner SPV",
                       "Pre Bid Meeting Date", "Bid Open Date",
                       "Bid Submission End Date (Offline)", "Details Fetched", "AI Checked"):
                 if old.get(f) and not rec.get(f):
@@ -1496,6 +1617,8 @@ def run(only_source=None):
 
     write_csv(master_path, rows, FIELDNAMES)
     write_csv(os.path.join(DATA_DIR, "tenders_renewable.csv"), renewable, FIELDNAMES)
+    targets = build_financing_targets(rows)
+    write_csv(os.path.join(DATA_DIR, "financing_targets.csv"), targets, TARGET_FIELDS)
     write_excel(os.path.join(DATA_DIR, "tenders.xlsx"), rows, renewable)
     if changes:
         append_csv(os.path.join(DATA_DIR, "changes.csv"), changes,
@@ -1507,7 +1630,8 @@ def run(only_source=None):
     live = [r for r in renewable if r["Status"] in ("Open", "Closing Soon")]
     won = [r for r in rows if r.get("Winner")]
     print(f"\nMaster: {len(rows)} | RE total: {len(renewable)} | Live: {len(live)} | "
-          f"Winners known: {len(won)} | Changes today: {len(changes)}")
+          f"Winners known: {len(won)} | Financing targets: {len(targets)} | "
+          f"Changes today: {len(changes)}")
 
     failures = [r for r in run_log if r["status"] in ("FAILED", "EMPTY")]
     if failures:
