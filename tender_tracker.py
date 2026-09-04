@@ -486,13 +486,36 @@ PARSERS = {"table": parse_table_source, "blocks": parse_blocks_source}
 # ---------------------------------------------------------------------------
 
 FIELDNAMES = [
-    "TenderKey", "Authority", "Project Name", "Technology", "Capacity MW",
-    "State", "Due Date", "Status", "Source URL",
-    "Tender Ref No", "Tender Type", "Published Date", "Days Left",
-    "Capacity Raw", "Is Renewable", "First Seen", "Last Seen", "Notes",
-    "Winner", "Bids Received", "Award Status", "Award URL", "Award Date",
-    "Award Source", "Award Headline", "Tariff",
+    # --- core identity ---
+    "Authority", "Project Name", "Technology", "Capacity MW", "State", "Status",
+    "Tender Ref No", "Tender Type",
+    # --- the five portal dates ---
+    "Tender Publication Date", "Pre Bid Meeting Date",
+    "Bid Submission End Date (Online)", "Bid Submission End Date (Offline)",
+    "Bid Open Date",
+    # --- outcome ---
+    "Winner Announcement Date", "Winner", "Tariff", "Award URL",
+    # --- links and provenance ---
+    "Source URL", "Bids Received", "Award Status", "Award Source", "Award Headline",
+    "Is Renewable", "Capacity Raw", "Details Fetched", "TenderKey", "Notes",
 ]
+
+# old column name -> new column name, so existing data files keep their history
+LEGACY_MAP = {
+    "Due Date": "Bid Submission End Date (Online)",
+    "Published Date": "Tender Publication Date",
+    "Award Date": "Winner Announcement Date",
+}
+
+
+def migrate_row(row):
+    out = {}
+    for k, v in row.items():
+        out[LEGACY_MAP.get(k, k)] = v
+    for f in FIELDNAMES:
+        out.setdefault(f, "")
+    return {k: out.get(k, "") for k in FIELDNAMES}
+
 
 
 def make_key(authority, ref, title):
@@ -505,36 +528,125 @@ def build_record(raw, cfg):
     blob = f"{title} {raw.get('extra','')} {raw.get('ref','')}"
     cap, cap_raw = extract_capacity_mw(title)
     due = parse_date(raw.get("due"))
-    awarded = cfg.get("assume_awarded", False)
     pub = parse_date(raw.get("published"))
+    awarded = cfg.get("assume_awarded", False)
     return {
-        "TenderKey": make_key(cfg["authority"], raw.get("ref", ""), title),
         "Authority": cfg["authority"],
         "Project Name": title,
         "Technology": detect_technology(blob),
         "Capacity MW": cap if cap is not None else "",
         "State": detect_state(blob),
-        "Due Date": due.isoformat() if due else "",
         "Status": "Closed" if awarded else derive_status(due),
-        "Source URL": raw.get("link") or cfg["url"],
         "Tender Ref No": _norm(raw.get("ref", "")),
         "Tender Type": detect_tender_type(blob),
-        "Published Date": pub.isoformat() if pub else "",
-        "Days Left": (due - TODAY).days if due else "",
-        "Capacity Raw": cap_raw,
-        "Is Renewable": "Yes" if is_renewable(blob) else "No",
-        "First Seen": TODAY.isoformat(),
-        "Last Seen": TODAY.isoformat(),
-        "Notes": "",
+        "Tender Publication Date": pub.isoformat() if pub else "",
+        "Pre Bid Meeting Date": "",
+        "Bid Submission End Date (Online)": due.isoformat() if due else "",
+        "Bid Submission End Date (Offline)": "",
+        "Bid Open Date": "",
+        "Winner Announcement Date": "",
         "Winner": "",
+        "Tariff": "",
+        "Award URL": "",
+        "Source URL": raw.get("link") or cfg["url"],
         "Bids Received": _norm(raw.get("bids", "")),
         "Award Status": "Awarded (see link)" if awarded else "",
-        "Award URL": "",
-        "Award Date": "",
         "Award Source": "",
         "Award Headline": "",
-        "Tariff": "",
+        "Is Renewable": "Yes" if is_renewable(blob) else "No",
+        "Capacity Raw": cap_raw,
+        "Details Fetched": "",
+        "TenderKey": make_key(cfg["authority"], raw.get("ref", ""), title),
+        "Notes": "",
     }
+
+
+# ---------------------------------------------------------------------------
+# DETAIL PAGE ENRICHMENT  (the five portal dates)
+# ---------------------------------------------------------------------------
+
+MAX_DETAIL_FETCHES = 120          # per run; the backlog fills over a few days
+
+DETAIL_PATTERNS = {
+    "Tender Publication Date":          r"Tender Publication Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Pre Bid Meeting Date":             r"Pre[\s\-]?Bid Meeting Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Submission End Date (Online)": r"Bid Submission End Date\s*\(\s*Online\s*\)\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Submission End Date (Offline)":r"Bid Submission End Date\s*\(\s*Offline\s*\)\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Open Date":                    r"Bid Open(?:ing)? Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+}
+TENDER_TYPE_PAT = re.compile(r"Tender Type\s*[:\-]?\s*([A-Za-z][A-Za-z0-9 \-/&.()]{3,60}?)\s{2,}", re.I)
+
+
+def parse_detail_page(html):
+    soup = BeautifulSoup(html, "lxml")
+    for tag in soup(["script", "style", "nav", "footer"]):
+        tag.decompose()
+    text = re.sub(r"\s+", " ", soup.get_text(" "))
+    out = {}
+    for field, pat in DETAIL_PATTERNS.items():
+        m = re.search(pat, text, re.I)
+        if m:
+            d = parse_date(m.group(1))
+            if d:
+                out[field] = d.isoformat()
+    m = TENDER_TYPE_PAT.search(text)
+    if m:
+        out["Tender Type"] = _norm(m.group(1))
+
+    # label cell -> value in the next cell, which SECI's detail tables use
+    labels = {
+        "tender type": "Tender Type",
+        "tender publication date": "Tender Publication Date",
+        "pre bid meeting date": "Pre Bid Meeting Date",
+        "bid submission end date (online)": "Bid Submission End Date (Online)",
+        "bid submission end date (offline)": "Bid Submission End Date (Offline)",
+        "bid open date": "Bid Open Date",
+    }
+    for cell in soup.find_all(["td", "th"]):
+        key = _key(cell.get_text(" "))
+        field = labels.get(key)
+        if not field:
+            continue
+        nxt = cell.find_next_sibling(["td", "th"])
+        if not nxt:
+            continue
+        val = _norm(nxt.get_text(" "))
+        if not val:
+            continue
+        if field == "Tender Type":
+            out["Tender Type"] = val[:60]
+        else:
+            d = parse_date(val)
+            if d:
+                out[field] = d.isoformat()
+    return out
+
+
+def enrich_details(records):
+    """Visit tender detail pages to fill the portal date fields."""
+    pending = [r for r in records.values()
+               if r.get("Details Fetched") != "yes"
+               and "tender-details" in (r.get("Source URL") or "")]
+    pending.sort(key=lambda r: r.get("Bid Submission End Date (Online)") or "", reverse=True)
+
+    done = 0
+    for rec in pending[:MAX_DETAIL_FETCHES]:
+        try:
+            fields = parse_detail_page(fetch(rec["Source URL"], retries=1, timeout=25))
+        except Exception:
+            continue
+        time.sleep(0.8)
+        if not fields:
+            continue
+        for k, v in fields.items():
+            if v and (not rec.get(k) or k == "Tender Type"):
+                rec[k] = v
+        rec["Details Fetched"] = "yes"
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
+        if due and rec.get("Status") not in ("Delisted",):
+            rec["Status"] = derive_status(due)
+        done += 1
+    print(f"  details {done} page(s) parsed, {max(0, len(pending) - done)} still queued")
 
 
 # ---------------------------------------------------------------------------
@@ -666,7 +778,7 @@ def apply_awards(records):
 
     for rec in records.values():
         ref = normalize_ref(rec.get("Tender Ref No", ""))
-        due = parse_date(rec.get("Due Date"))
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
         closed = rec.get("Status") in ("Closed", "Delisted") or (due and due < TODAY)
 
         hit = scraped.get(ref)
@@ -682,7 +794,7 @@ def apply_awards(records):
         m = manual.get(ref)
         if m:
             rec["Winner"] = _norm(m.get("Winner", "")) or rec.get("Winner", "")
-            rec["Award Date"] = _norm(m.get("AwardDate", "")) or rec.get("Award Date", "")
+            rec["Winner Announcement Date"] = _norm(m.get("AwardDate", "")) or rec.get("Winner Announcement Date", "")
             rec["Award URL"] = _norm(m.get("AwardURL", "")) or rec.get("Award URL", "")
             rec["Award Status"] = "Awarded"
             rec["Award Source"] = "manual"
@@ -783,7 +895,7 @@ def score_news_item(item, rec, tag):
     title = item["title"]
     if not AWARD_VERB.search(title):
         return 0
-    due = parse_date(rec.get("Due Date"))
+    due = parse_date(rec.get("Bid Submission End Date (Online)"))
     if due and item["date"] and item["date"] < due:
         return 0                      # published before bids even closed
     score = 1
@@ -883,7 +995,7 @@ def enrich_with_news(records):
             continue
         if rec.get("Is Renewable") != "Yes":
             continue
-        due = parse_date(rec.get("Due Date"))
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
         already_awarded = str(rec.get("Award Status", "")).startswith("Awarded")
         if not already_awarded:
             if not due or due >= TODAY:
@@ -892,7 +1004,7 @@ def enrich_with_news(records):
                 continue
         candidates.append(rec)
 
-    candidates.sort(key=lambda r: r.get("Due Date") or "", reverse=True)
+    candidates.sort(key=lambda r: r.get("Bid Submission End Date (Online)") or "", reverse=True)
     found = 0
     for rec in candidates[:MAX_NEWS_QUERIES]:
         hit = search_award_news(rec)
@@ -901,7 +1013,7 @@ def enrich_with_news(records):
             continue
         rec["Award Headline"] = hit["headline"]
         rec["Award URL"] = hit["url"] or rec.get("Award URL", "")
-        rec["Award Date"] = hit["date"] or rec.get("Award Date", "")
+        rec["Winner Announcement Date"] = hit["date"] or rec.get("Winner Announcement Date", "")
         rec["Award Source"] = "news (unverified)"
         if hit.get("tariff"):
             rec["Tariff"] = hit["tariff"]
@@ -995,32 +1107,33 @@ def sweep_award_news(records):
                 seen_links.add(link)
                 existing = records.get(key, {})
                 records[key] = {
-                    "TenderKey": key,
                     "Authority": authority,
                     "Project Name": title,
                     "Technology": detect_technology(title),
                     "Capacity MW": cap if cap is not None else "",
                     "State": detect_state(title),
-                    "Due Date": "",
                     "Status": "Closed",
-                    "Source URL": link,
                     "Tender Ref No": "",
                     "Tender Type": detect_tender_type(title),
-                    "Published Date": "",
-                    "Days Left": "",
-                    "Capacity Raw": cap_raw,
-                    "Is Renewable": "Yes",
-                    "First Seen": existing.get("First Seen", TODAY.isoformat()),
-                    "Last Seen": TODAY.isoformat(),
-                    "Notes": "news-derived record",
+                    "Tender Publication Date": "",
+                    "Pre Bid Meeting Date": "",
+                    "Bid Submission End Date (Online)": "",
+                    "Bid Submission End Date (Offline)": "",
+                    "Bid Open Date": "",
+                    "Winner Announcement Date": it["date"].isoformat() if it["date"] else "",
                     "Winner": "; ".join(names[:10]),
+                    "Tariff": tariff,
+                    "Award URL": link,
+                    "Source URL": link,
                     "Bids Received": "",
                     "Award Status": "Awarded (news, unverified)",
-                    "Award URL": link,
-                    "Award Date": it["date"].isoformat() if it["date"] else "",
                     "Award Source": "news sweep",
                     "Award Headline": title,
-                    "Tariff": tariff,
+                    "Is Renewable": "Yes",
+                    "Capacity Raw": cap_raw,
+                    "Details Fetched": "n/a",
+                    "TenderKey": key,
+                    "Notes": "news-derived record",
                 }
                 found += 1
     print(f"  sweep   {found} award record(s) from {SWEEP_FROM} onwards")
@@ -1075,7 +1188,11 @@ def write_excel(path, master, renewable):
 
 def run(only_source=None):
     master_path = os.path.join(DATA_DIR, "tenders.csv")
-    previous = {r["TenderKey"]: r for r in read_csv(master_path)}
+    previous = {}
+    for _r in read_csv(master_path):
+        _m = migrate_row(_r)
+        if _m.get("TenderKey"):
+            previous[_m["TenderKey"]] = _m
 
     scraped, run_log = {}, []
 
@@ -1114,15 +1231,26 @@ def run(only_source=None):
             rec["Notes"] = "NEW"
             changes.append({"run_date": TODAY.isoformat(), "change": "NEW",
                             "Authority": rec["Authority"], "Project Name": rec["Project Name"],
-                            "field": "", "old": "", "new": rec["Due Date"],
+                            "field": "", "old": "", "new": rec["Bid Submission End Date (Online)"],
                             "Source URL": rec["Source URL"]})
         else:
-            rec["First Seen"] = old.get("First Seen") or rec["First Seen"]
-            if old.get("Due Date") and rec["Due Date"] and old["Due Date"] != rec["Due Date"]:
-                rec["Notes"] = "DUE DATE REVISED"
-                changes.append({"run_date": TODAY.isoformat(), "change": "DUE_DATE_REVISED",
+            # carry forward everything a previous run discovered
+            for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
+                      "Award Headline", "Winner Announcement Date", "Bids Received",
+                      "Pre Bid Meeting Date", "Bid Open Date",
+                      "Bid Submission End Date (Offline)", "Details Fetched"):
+                if old.get(f) and not rec.get(f):
+                    rec[f] = old[f]
+            if old.get("Tender Publication Date") and not rec.get("Tender Publication Date"):
+                rec["Tender Publication Date"] = old["Tender Publication Date"]
+            if (old.get("Bid Submission End Date (Online)")
+                    and rec["Bid Submission End Date (Online)"]
+                    and old["Bid Submission End Date (Online)"]
+                    != rec["Bid Submission End Date (Online)"]):
+                rec["Notes"] = "BID DATE REVISED"
+                changes.append({"run_date": TODAY.isoformat(), "change": "BID_DATE_REVISED",
                                 "Authority": rec["Authority"], "Project Name": rec["Project Name"],
-                                "field": "Due Date", "old": old["Due Date"], "new": rec["Due Date"],
+                                "field": "Bid Submission Date", "old": old["Bid Submission End Date (Online)"], "new": rec["Bid Submission End Date (Online)"],
                                 "Source URL": rec["Source URL"]})
         merged[key] = rec
 
@@ -1131,17 +1259,17 @@ def run(only_source=None):
         if key in merged:
             continue
         old = dict(old)
-        due = parse_date(old.get("Due Date"))
+        due = parse_date(old.get("Bid Submission End Date (Online)"))
         old["Status"] = "Closed" if (due and due < TODAY) else "Delisted"
-        old["Days Left"] = (due - TODAY).days if due else ""
-        old["Notes"] = ""
+        old["Notes"] = old.get("Notes", "")
         merged[key] = old
 
+    enrich_details(merged)
     apply_awards(merged)
 
     rows = sorted(
         merged.values(),
-        key=lambda r: (r.get("Due Date") or "9999-12-31", r.get("Authority", "")),
+        key=lambda r: (r.get("Bid Submission End Date (Online)") or "9999-12-31", r.get("Authority", "")),
     )
     renewable = [r for r in rows if r.get("Is Renewable") == "Yes"]
 
@@ -1194,7 +1322,7 @@ def send_digest(renewable, changes, run_log):
                 f"<tr><td>{r['Authority']}</td>"
                 f"<td><a href='{r['Source URL']}'>{r['Project Name'][:110]}</a></td>"
                 f"<td>{r['Technology']}</td><td align=right>{r['Capacity MW']}</td>"
-                f"<td>{r['State']}</td><td>{r['Due Date']}</td><td>{r['Status']}</td></tr>")
+                f"<td>{r['State']}</td><td>{r['Bid Submission End Date (Online)']}</td><td>{r['Status']}</td></tr>")
         out.append("</table>")
         return "".join(out)
 
