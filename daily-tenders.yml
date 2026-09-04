@@ -2,17 +2,24 @@ name: Daily Renewable Tender Tracker
 
 on:
   schedule:
-    # 05:00 UTC = 10:30 IST. GitHub's scheduler can drift 5-15 min under load.
-    - cron: '0 5 * * *'
-  workflow_dispatch:        # lets you run it manually from the Actions tab
+    # 04:25 UTC = 09:55 IST. Started early on purpose: GitHub's shared
+    # scheduler runs late under load, and a typical run takes 3-6 minutes,
+    # so the data is committed and ready before 10:30 IST.
+    - cron: '25 4 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  # never let a long backfill run overlap with the next day's run
+  group: tender-tracker
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
 
@@ -25,17 +32,20 @@ jobs:
 
       - name: Run tracker
         env:
-          EMAIL_TO:  ${{ secrets.EMAIL_TO }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MAX_AI_LOOKUPS:    ${{ vars.MAX_AI_LOOKUPS || 0 }}
+          AI_CONCURRENCY:    ${{ vars.AI_CONCURRENCY || 5 }}
+          EMAIL_TO:          ${{ secrets.EMAIL_TO }}
+          SMTP_USER:         ${{ secrets.SMTP_USER }}
+          SMTP_PASS:         ${{ secrets.SMTP_PASS }}
         run: python tender_tracker.py
 
       - name: Job summary
         if: always()
         run: |
-          echo "### Run $(date -u -d '+5 hours 30 minutes' '+%d %b %Y %H:%M IST')" >> $GITHUB_STEP_SUMMARY
+          echo "### Run $(TZ=Asia/Kolkata date '+%d %b %Y %H:%M IST')" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -n 8 data/run_log.csv >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "no run log" >> $GITHUB_STEP_SUMMARY
+          tail -n 10 data/run_log.csv >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "no run log" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Commit data
@@ -43,5 +53,16 @@ jobs:
           git config user.name  "tender-bot"
           git config user.email "actions@github.com"
           git add data/
-          git diff --staged --quiet || git commit -m "tenders: $(date -u +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "tenders: $(TZ=Asia/Kolkata date +%Y-%m-%d)"
           git push
+
+      - name: Keep the schedule alive
+        if: always()
+        run: |
+          # GitHub disables cron on repos with 60 days of no human activity.
+          # Touching a tracked heartbeat file each week counts as activity.
+          if [ "$(date +%u)" = "1" ]; then
+            TZ=Asia/Kolkata date '+last heartbeat %d %b %Y %H:%M IST' > .heartbeat
+            git add .heartbeat
+            git diff --staged --quiet || (git commit -m "heartbeat" && git push)
+          fi
