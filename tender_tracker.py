@@ -75,6 +75,28 @@ SOURCES = [
         "enabled": True,
     },
     {
+        "key": "SECI_ARCHIVE",
+        "authority": "SECI",
+        "url": "https://www.seci.co.in/tenders/archive",
+        "parser": "table",
+        "header_must_contain": ["tender title"],
+        "map": {"ref": "tender ref no", "title": "tender title",
+                "published": "publication date", "due": "bid submission date"},
+        "enabled": True,
+    },
+    {
+        # Historical seed: every SECI tender that has already been awarded.
+        # Gives the winner search something to work on from day one.
+        "key": "SECI_AWARDED",
+        "authority": "SECI",
+        "url": "https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder",
+        "parser": "table",
+        "header_must_contain": ["tender ref no", "number of bids"],
+        "map": {"ref": "tender ref no", "title": "tender title", "bids": "number of bids"},
+        "assume_awarded": True,
+        "enabled": True,
+    },
+    {
         "key": "NHPC",
         "authority": "NHPC",
         "url": "https://www.nhpcindia.com/welcome/tender",
@@ -417,6 +439,7 @@ def parse_table_source(html, cfg):
             "published": get("published") or "",
             "due": get("due") or "",
             "link": link or cfg["url"],
+            "bids": get("bids"),
             "extra": " ".join(texts),
         })
     return rows
@@ -468,7 +491,7 @@ FIELDNAMES = [
     "Tender Ref No", "Tender Type", "Published Date", "Days Left",
     "Capacity Raw", "Is Renewable", "First Seen", "Last Seen", "Notes",
     "Winner", "Bids Received", "Award Status", "Award URL", "Award Date",
-    "Award Source", "Award Headline",
+    "Award Source", "Award Headline", "Tariff",
 ]
 
 
@@ -482,6 +505,7 @@ def build_record(raw, cfg):
     blob = f"{title} {raw.get('extra','')} {raw.get('ref','')}"
     cap, cap_raw = extract_capacity_mw(title)
     due = parse_date(raw.get("due"))
+    awarded = cfg.get("assume_awarded", False)
     pub = parse_date(raw.get("published"))
     return {
         "TenderKey": make_key(cfg["authority"], raw.get("ref", ""), title),
@@ -491,7 +515,7 @@ def build_record(raw, cfg):
         "Capacity MW": cap if cap is not None else "",
         "State": detect_state(blob),
         "Due Date": due.isoformat() if due else "",
-        "Status": derive_status(due),
+        "Status": "Closed" if awarded else derive_status(due),
         "Source URL": raw.get("link") or cfg["url"],
         "Tender Ref No": _norm(raw.get("ref", "")),
         "Tender Type": detect_tender_type(blob),
@@ -503,12 +527,13 @@ def build_record(raw, cfg):
         "Last Seen": TODAY.isoformat(),
         "Notes": "",
         "Winner": "",
-        "Bids Received": "",
-        "Award Status": "",
+        "Bids Received": _norm(raw.get("bids", "")),
+        "Award Status": "Awarded (see link)" if awarded else "",
         "Award URL": "",
         "Award Date": "",
         "Award Source": "",
         "Award Headline": "",
+        "Tariff": "",
     }
 
 
@@ -668,6 +693,7 @@ def apply_awards(records):
 
     print(f"  awards matched to {filled} tender(s)")
     enrich_with_news(records)
+    sweep_award_news(records)
 
 
 # ---------------------------------------------------------------------------
@@ -678,7 +704,7 @@ def apply_awards(records):
 # ---------------------------------------------------------------------------
 
 NEWS_ENABLED = True
-MAX_NEWS_QUERIES = 20        # per run, keeps us polite and the job fast
+MAX_NEWS_QUERIES = 40        # per run, keeps us polite and the job fast
 NEWS_WINDOW_DAYS = 400       # stop chasing tenders older than this
 NEWS_ENDPOINT = ("https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en")
 
@@ -703,8 +729,10 @@ DEVELOPERS = [
 DEV_RE = re.compile(r"(" + "|".join(re.escape(d) for d in DEVELOPERS) + r")", re.I)
 
 AWARD_VERB = re.compile(
-    r"\baward|\bwins?\b|\bwon\b|\bbags?\b|\ballot|\bsecures?\b|\bL1\b|"
-    r"\bemerges?\b|\bwinning bid|\bbaggs?\b|\bselected\b", re.I)
+    r"\baward|\bwins?\b|\bwon\b|\bwinners?\b|\bwinning\b|\bbags?\b|\ballot|"
+    r"\bsecures?\b|\bL1\b|\bemerges?\b|\bselected\b|\bresults?\b|"
+    r"\bconcludes?\b|\bfinali[sz]e|\bunveils?\b|\bannounces?\b|\breveals?\b|"
+    r"\bauction\b|\btariff\b", re.I)
 
 SCHEME_TAG = re.compile(
     r"\(([A-Za-z]{2,}[A-Za-z0-9]*(?:-[A-Za-z0-9]+){1,3})\)|"
@@ -775,6 +803,44 @@ def score_news_item(item, rec, tag):
     return score
 
 
+TARIFF_RE = re.compile(
+    r"(?:\u20b9|INR|Rs\.?)\s*([0-9]{1,2}\.[0-9]{1,2})\s*(?:\(|per\s|/)\s*(?:kWh|unit|kwh)",
+    re.I)
+
+
+def read_article(url):
+    """Follow a news link and return (plain_text, tariff_string)."""
+    if not url:
+        return "", ""
+    try:
+        soup = BeautifulSoup(fetch(url, retries=1, timeout=25), "lxml")
+    except Exception:
+        return "", ""
+    for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
+        tag.decompose()
+    text = _norm(soup.get_text(" "))[:20000]
+    rates = sorted({float(m) for m in TARIFF_RE.findall(text) if 0.5 < float(m) < 25})
+    if not rates:
+        tariff = ""
+    elif len(rates) == 1:
+        tariff = f"\u20b9{rates[0]:.2f}/kWh"
+    else:
+        tariff = f"\u20b9{rates[0]:.2f}\u2013{rates[-1]:.2f}/kWh"
+    return text, tariff
+
+
+def names_from(text, authority):
+    out = []
+    for m in DEV_RE.finditer(text or ""):
+        n = m.group(1)
+        low = n.lower()
+        if low == (authority or "").lower():
+            continue
+        if not any(low == x.lower() or low in x.lower() for x in out):
+            out.append(n)
+    return out
+
+
 def search_award_news(rec):
     """Return dict with winner/headline/url, or None."""
     tag = scheme_tag(rec.get("Project Name", ""))
@@ -791,17 +857,19 @@ def search_award_news(rec):
             best, best_score = it, sc
     if not best or best_score < 4:        # needs the tag or the capacity to match
         return None
-    names = []
-    for m in DEV_RE.finditer(best["title"]):
-        n = m.group(1)
-        if n.lower() not in [x.lower() for x in names] and n.lower() != rec.get(
-                "Authority", "").lower():
-            names.append(n)
+    auth = rec.get("Authority", "")
+    names = names_from(best["title"], auth)
+    body, tariff = read_article(best["link"])
+    if body:
+        body_names = names_from(body[:9000], auth)
+        if len(body_names) > len(names):
+            names = body_names
     return {
-        "winner": "; ".join(names[:6]),
+        "winner": "; ".join(names[:10]),
         "headline": best["title"],
         "url": best["link"],
         "date": best["date"].isoformat() if best["date"] else "",
+        "tariff": tariff,
         "score": best_score,
     }
 
@@ -816,10 +884,12 @@ def enrich_with_news(records):
         if rec.get("Is Renewable") != "Yes":
             continue
         due = parse_date(rec.get("Due Date"))
-        if not due or due >= TODAY:
-            continue
-        if (TODAY - due).days > NEWS_WINDOW_DAYS:
-            continue
+        already_awarded = str(rec.get("Award Status", "")).startswith("Awarded")
+        if not already_awarded:
+            if not due or due >= TODAY:
+                continue
+            if (TODAY - due).days > NEWS_WINDOW_DAYS:
+                continue
         candidates.append(rec)
 
     candidates.sort(key=lambda r: r.get("Due Date") or "", reverse=True)
@@ -833,6 +903,8 @@ def enrich_with_news(records):
         rec["Award URL"] = hit["url"] or rec.get("Award URL", "")
         rec["Award Date"] = hit["date"] or rec.get("Award Date", "")
         rec["Award Source"] = "news (unverified)"
+        if hit.get("tariff"):
+            rec["Tariff"] = hit["tariff"]
         if hit["winner"]:
             rec["Winner"] = hit["winner"]
             rec["Award Status"] = "Awarded (news, unverified)"
@@ -841,6 +913,117 @@ def enrich_with_news(records):
         found += 1
     print(f"  news    checked {min(len(candidates), MAX_NEWS_QUERIES)}, "
           f"matched {found}")
+
+
+
+# ---------------------------------------------------------------------------
+# AWARD NEWS SWEEP  (2025 onwards, per authority)
+# ---------------------------------------------------------------------------
+# Historical tender lists for NTPC / NHPC / SJVN are behind CAPTCHAs, so for
+# those authorities the award announcement itself is the only public record.
+# This sweep discovers award stories directly and creates rows from them.
+# Rows are clearly labelled news-derived and never overwrite portal records.
+# ---------------------------------------------------------------------------
+
+SWEEP_ENABLED = True
+SWEEP_FROM = "2025-01-01"
+MAX_SWEEP_ARTICLES = 25          # article body fetches per run
+
+SWEEP_AUTHORITIES = [
+    "SECI", "NTPC", "NTPC Green Energy", "NHPC", "SJVN", "SJVN Green Energy",
+    "IREDA", "NLC India", "THDC India", "NVVN",
+]
+SWEEP_TERMS = [
+    "tender awarded winners MW",
+    "auction results tariff kWh",
+    "wins solar wind storage tender",
+]
+
+
+def sweep_award_news(records):
+    """Find award announcements from SWEEP_FROM onwards and add them as rows."""
+    if not SWEEP_ENABLED:
+        return
+    seen_links = {r.get("Award URL") for r in records.values() if r.get("Award URL")}
+    cutoff = parse_date(SWEEP_FROM)
+    found = fetched = 0
+
+    for authority in SWEEP_AUTHORITIES:
+        for term in SWEEP_TERMS:
+            q = f"{authority} {term} after:{SWEEP_FROM}"
+            try:
+                items = parse_news_items(
+                    fetch(NEWS_ENDPOINT.format(q=requests.utils.quote(q)),
+                          retries=1, timeout=25))
+            except Exception:
+                continue
+            time.sleep(1.2)
+
+            for it in items:
+                title, link = it["title"], it["link"]
+                if not title or not link or link in seen_links:
+                    continue
+                if not AWARD_VERB.search(title):
+                    continue
+                if it["date"] and cutoff and it["date"] < cutoff:
+                    continue
+                if authority.split()[0].lower() not in title.lower():
+                    continue
+                if not is_renewable(title):
+                    continue
+
+                key = make_key(authority, "", title)
+                if key in records and records[key].get("Winner"):
+                    continue
+
+                cap, cap_raw = extract_capacity_mw(title)
+                names = names_from(title, authority)
+                tariff = ""
+                if fetched < MAX_SWEEP_ARTICLES:
+                    body, tariff = read_article(link)
+                    fetched += 1
+                    time.sleep(1.2)
+                    if body:
+                        body_names = names_from(body[:9000], authority)
+                        if len(body_names) > len(names):
+                            names = body_names
+                        if cap is None:
+                            cap, cap_raw = extract_capacity_mw(body[:2500])
+                if not names:
+                    continue
+
+                seen_links.add(link)
+                existing = records.get(key, {})
+                records[key] = {
+                    "TenderKey": key,
+                    "Authority": authority,
+                    "Project Name": title,
+                    "Technology": detect_technology(title),
+                    "Capacity MW": cap if cap is not None else "",
+                    "State": detect_state(title),
+                    "Due Date": "",
+                    "Status": "Closed",
+                    "Source URL": link,
+                    "Tender Ref No": "",
+                    "Tender Type": detect_tender_type(title),
+                    "Published Date": "",
+                    "Days Left": "",
+                    "Capacity Raw": cap_raw,
+                    "Is Renewable": "Yes",
+                    "First Seen": existing.get("First Seen", TODAY.isoformat()),
+                    "Last Seen": TODAY.isoformat(),
+                    "Notes": "news-derived record",
+                    "Winner": "; ".join(names[:10]),
+                    "Bids Received": "",
+                    "Award Status": "Awarded (news, unverified)",
+                    "Award URL": link,
+                    "Award Date": it["date"].isoformat() if it["date"] else "",
+                    "Award Source": "news sweep",
+                    "Award Headline": title,
+                    "Tariff": tariff,
+                }
+                found += 1
+    print(f"  sweep   {found} award record(s) from {SWEEP_FROM} onwards")
 
 
 # ---------------------------------------------------------------------------
@@ -960,8 +1143,7 @@ def run(only_source=None):
         merged.values(),
         key=lambda r: (r.get("Due Date") or "9999-12-31", r.get("Authority", "")),
     )
-    renewable = [r for r in rows if r.get("Is Renewable") == "Yes"
-                 and r.get("Status") in ("Open", "Closing Soon", "Unknown")]
+    renewable = [r for r in rows if r.get("Is Renewable") == "Yes"]
 
     write_csv(master_path, rows, FIELDNAMES)
     write_csv(os.path.join(DATA_DIR, "tenders_renewable.csv"), renewable, FIELDNAMES)
@@ -974,7 +1156,9 @@ def run(only_source=None):
                ["run_date", "source", "status", "rows", "seconds", "error"])
 
     live = [r for r in renewable if r["Status"] in ("Open", "Closing Soon")]
-    print(f"\nMaster: {len(rows)} | Live RE: {len(live)} | Changes today: {len(changes)}")
+    won = [r for r in rows if r.get("Winner")]
+    print(f"\nMaster: {len(rows)} | RE total: {len(renewable)} | Live: {len(live)} | "
+          f"Winners known: {len(won)} | Changes today: {len(changes)}")
 
     failures = [r for r in run_log if r["status"] in ("FAILED", "EMPTY")]
     if failures:
