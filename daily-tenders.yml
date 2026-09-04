@@ -1,0 +1,47 @@
+name: Daily Renewable Tender Tracker
+
+on:
+  schedule:
+    # 05:00 UTC = 10:30 IST. GitHub's scheduler can drift 5-15 min under load.
+    - cron: '0 5 * * *'
+  workflow_dispatch:        # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - run: pip install -r requirements.txt
+
+      - name: Run tracker
+        env:
+          EMAIL_TO:  ${{ secrets.EMAIL_TO }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: python tender_tracker.py
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "### Run $(date -u -d '+5 hours 30 minutes' '+%d %b %Y %H:%M IST')" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -n 8 data/run_log.csv >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "no run log" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit data
+        run: |
+          git config user.name  "tender-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "tenders: $(date -u +%Y-%m-%d)"
+          git push
