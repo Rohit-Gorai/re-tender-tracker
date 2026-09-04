@@ -834,9 +834,12 @@ def apply_awards(records):
                 rec["Award Status"] = "Unknown"
 
     print(f"  awards matched to {filled} tender(s)")
-    enrich_with_news(records)
-    sweep_award_news(records)
-    enrich_with_ai(records)
+    for stage in (enrich_with_news, sweep_award_news, enrich_with_ai):
+        try:
+            stage(records)
+        except Exception:  # noqa: BLE001
+            print(f"  STAGE {stage.__name__} failed, continuing:", file=sys.stderr)
+            traceback.print_exc()
 
 
 # ---------------------------------------------------------------------------
@@ -1000,6 +1003,45 @@ def score_news_item(item, rec, tag):
     return score if score >= 4 else 0
 
 
+TARIFF_RE = re.compile(
+    r"(?:\u20b9|INR|Rs\.?)\s*([0-9]{1,2}\.[0-9]{1,2})\s*(?:\(|per\s|/)\s*(?:kWh|unit|kwh)",
+    re.I)
+
+
+def read_article(url):
+    """Follow a news link and return (plain_text, tariff_string)."""
+    if not url or "news.google.com" in url:
+        return "", ""   # the redirect page carries no article text
+    try:
+        soup = BeautifulSoup(fetch(url, retries=1, timeout=25), "lxml")
+    except Exception:
+        return "", ""
+    for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
+        tag.decompose()
+    text = _norm(soup.get_text(" "))[:20000]
+    rates = sorted({float(m) for m in TARIFF_RE.findall(text) if 0.5 < float(m) < 25})
+    if not rates:
+        tariff = ""
+    elif len(rates) == 1:
+        tariff = f"\u20b9{rates[0]:.2f}/kWh"
+    else:
+        tariff = f"\u20b9{rates[0]:.2f}\u2013{rates[-1]:.2f}/kWh"
+    return text, tariff
+
+
+def names_from(text, authority):
+    """Developer names mentioned in a headline or article body."""
+    out = []
+    for m in DEV_RE.finditer(text or ""):
+        n = m.group(1)
+        low = n.lower()
+        if low == (authority or "").lower():
+            continue
+        if not any(low == x.lower() or low in x.lower() for x in out):
+            out.append(n)
+    return out
+
+
 def search_award_news(rec):
     """Return dict with winner/headline/url, or None."""
     tag = scheme_tag(rec.get("Project Name", ""))
@@ -1056,7 +1098,11 @@ def enrich_with_news(records):
     candidates.sort(key=lambda r: r.get("Bid Submission End Date (Online)") or "", reverse=True)
     found = 0
     for rec in candidates[:MAX_NEWS_QUERIES]:
-        hit = search_award_news(rec)
+        try:
+            hit = search_award_news(rec)
+        except Exception as exc:  # noqa: BLE001
+            print(f"  news    skipped one: {str(exc)[:90]}", file=sys.stderr)
+            hit = None
         time.sleep(1.5)
         if not hit:
             continue
@@ -1606,8 +1652,12 @@ def run(only_source=None):
         old["Notes"] = old.get("Notes", "")
         merged[key] = old
 
-    enrich_details(merged)
-    apply_awards(merged)
+    for stage in (enrich_details, apply_awards):
+        try:
+            stage(merged)
+        except Exception:  # noqa: BLE001
+            print(f"  STAGE {stage.__name__} failed, continuing:", file=sys.stderr)
+            traceback.print_exc()
 
     rows = sorted(
         merged.values(),
