@@ -23,3 +23,7 @@ run_date,source,status,rows,seconds,error
 2026-09-04,SECI_ARCHIVE,OK,257,2.0,
 2026-09-04,SECI_AWARDED,FAILED,0,15.0,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Server Error for url: https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder
 2026-09-04,NHPC,OK,2998,15.9,
+2026-09-05,SECI,OK,19,1.4,
+2026-09-05,SECI_ARCHIVE,OK,257,2.0,
+2026-09-05,SECI_AWARDED,FAILED,0,14.8,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Server Error for url: https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder
+2026-09-05,NHPC,OK,3001,16.6,
