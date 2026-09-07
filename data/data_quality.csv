@@ -974,6 +974,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-4d5e7f9d49a8,NHPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-fffbbfe5bf93,NHPC,"winner from press or AI, confirm before use",Avaada
 LOW,WINNER_NEEDS_VERIFICATION,T-4d4a84c58251,NHPC,"winner from press or AI, confirm before use",SAEL
 LOW,WINNER_NEEDS_VERIFICATION,T-8c2d3d47531e,NHPC,"winner from press or AI, confirm before use",ReNew
+LOW,WINNER_NEEDS_VERIFICATION,T-a5b5304a9a2d,NHPC,"winner from press or AI, confirm before use",SAEL
 LOW,WINNER_NEEDS_VERIFICATION,T-956d86e85998,NLC India,"winner from press or AI, confirm before use",Renew; Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56d130be8de8,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36f0b8607c13,NLC India,"winner from press or AI, confirm before use",Renew
@@ -1014,6 +1015,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-2443862bb9ca,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-95125eeeb3d5,SECI,"winner from press or AI, confirm before use",Serentica; Renew; AMPIN Energy; ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-767ac40a755a,SECI,"winner from press or AI, confirm before use",Serentica
 LOW,WINNER_NEEDS_VERIFICATION,T-10c5313b39fd,SECI,"winner from press or AI, confirm before use",renew
+LOW,WINNER_NEEDS_VERIFICATION,T-4701ebe18dd6,SECI,"winner from press or AI, confirm before use",Tata Power
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
@@ -1024,5 +1026,8 @@ LOW,WINNER_NEEDS_VERIFICATION,T-2d18ce3f4793,SJVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-351318dfbbe8,SJVN,"winner from press or AI, confirm before use",BluPine
 LOW,WINNER_NEEDS_VERIFICATION,T-97939a7d7f72,SJVN,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-e89f9335756c,SJVN,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-12b2fcf58c41,SJVN,"winner from press or AI, confirm before use",ACME Solar
+LOW,WINNER_NEEDS_VERIFICATION,T-cb446d247af4,SJVN,"winner from press or AI, confirm before use",SAEL; Sembcorp
+LOW,WINNER_NEEDS_VERIFICATION,T-f9a1aa507d28,SJVN,"winner from press or AI, confirm before use",SAEL; Sembcorp
 LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from press or AI, confirm before use",ACME Solar; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-354bc7d40a8b,UPPCL,"winner from press or AI, confirm before use",Adani Green

@@ -4,27 +4,27 @@
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 1576 |
-| Renewable tenders | 1381 |
-| Award records | 121 |
+| Canonical tenders | 1581 |
+| Renewable tenders | 1386 |
+| Award records | 128 |
 | Unique winners | 36 |
-| Renewable capacity tracked (MW) | 556,846 |
-| Tenders with a winner | 85 |
+| Renewable capacity tracked (MW) | 561,220 |
+| Tenders with a winner | 90 |
 | Tenders awaiting a winner | 1296 |
 | Records with a tariff | 0 |
-| Financing targets | 70 |
-| Needing manual review | 642 |
+| Financing targets | 75 |
+| Needing manual review | 659 |
 
 ## By technology
 
 | Technology | Tenders |
 |---|---|
 | Unclassified | 378 |
-| Solar | 374 |
+| Solar | 377 |
 | Hydro | 158 |
 | Wind | 107 |
 | Rooftop Solar | 99 |
-| Solar + Storage | 58 |
+| Solar + Storage | 59 |
 | Round-the-Clock / CfD / Trading | 37 |
 | Energy Storage (BESS) | 37 |
 | Green Hydrogen / Derivatives | 33 |
@@ -36,10 +36,10 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NHPC | 613 |
-| SECI | 379 |
+| NHPC | 614 |
+| SECI | 380 |
 | NTPC | 346 |
-| SJVN | 10 |
+| SJVN | 13 |
 | NLC India | 8 |
 | MSEDCL | 7 |
 | MPPMCL | 6 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 968 |
+| (blank) | 973 |
 | Rajasthan | 77 |
 | Jammu and Kashmir | 38 |
 | Andhra Pradesh | 34 |
@@ -71,7 +71,7 @@
 | Quality grade | Tenders |
 |---|---|
 | C | 543 |
-| D | 490 |
+| D | 495 |
 | E | 347 |
 | A | 1 |
 
@@ -79,7 +79,7 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1380 |
+| Fresh | 1385 |
 | Recently Verified | 1 |
 
 ## Source status this run
@@ -91,7 +91,7 @@
 | SECI_AWARDED | FAILED | 0 | 12.8 |
 | NTPC_RE | OK | 2 | 3.1 |
 | NTPC_RE_ARCHIVE | OK | 358 | 4.1 |
-| NHPC | EMPTY | 0 | 18.2 |
+| NHPC | EMPTY | 0 | 16.4 |
 
 ## Coverage limits
 

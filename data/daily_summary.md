@@ -3,10 +3,10 @@
 - **0** new tenders
 - **0** revised bid dates
 - **6** closing within 7 days
-- **121** award records across 85 tenders
-- **70** financing targets
+- **128** award records across 90 tenders
+- **75** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 586 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 593 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
