@@ -37,6 +37,7 @@ jobs:
       - name: Run tracker
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESET_NEWS:        ${{ vars.RESET_NEWS }}
           MAX_AI_LOOKUPS:    ${{ vars.MAX_AI_LOOKUPS || 0 }}
           AI_CONCURRENCY:    ${{ vars.AI_CONCURRENCY || 5 }}
           EMAIL_TO:          ${{ secrets.EMAIL_TO }}
