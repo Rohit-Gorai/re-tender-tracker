@@ -201,19 +201,33 @@ primary = data("renewable_tender_winners.csv")
 check("primary tracker exists", bool(primary))
 if primary:
     cols = list(primary[0].keys())
-    check("Award Status is the first column", cols[0] == "Award Status")
+    check("Winning Bidder is the first column", cols[0] == "Winning Bidder")
     check("commercial fields lead the file",
-          cols[:8] == ["Award Status", "Tender Date", "Issuing Authority",
-                       "Tender / RfS Number", "Tender Title", "Winning Bidder",
-                       "Winner Count", "Awarded Capacity MW"])
+          cols[:7] == ["Winning Bidder", "Award Status", "Issuing Authority",
+                       "Tender / RfS Number", "Tender Title", "Technology",
+                       "Awarded Capacity MW"])
+    check("open tenders never enter the winner file",
+          all(r["Award Status"] != "Not Yet Awarded" for r in primary))
+    check("no pre-FY26 award reaches the winner file",
+          all(not r["Business Eligibility"].startswith("Out of Scope")
+              for r in primary))
+    check("every in-scope award date is FY26 or later",
+          all(r["Award Date"] == "Unknown" or r["Award Date"] >= "2025-04-01"
+              for r in primary))
+    check("scope decision always states its basis",
+          all(r["Date Basis"] for r in primary))
+    check("Actual COD is never a derived value",
+          all(r["Actual COD"] == "Unknown" for r in primary
+              if r["COD Basis"].startswith("Derived")))
     check("Award Status uses only controlled values",
           set(r["Award Status"] for r in primary) <=
-          {"Awarded", "Not Yet Awarded", "Verification Required"})
-    check("awarded rows sort to the top",
+          {"Awarded", "Verification Required"})
+    check("awarded rows sort above unverified ones",
           [r["Award Status"] for r in primary] ==
           sorted([r["Award Status"] for r in primary],
-                 key=lambda v: {"Awarded": 0, "Verification Required": 1,
-                                "Not Yet Awarded": 2}[v]))
+                 key=lambda v: {"Awarded": 0, "Verification Required": 1}[v]))
+    dates = [r["Award Date"] for r in primary if r["Award Status"] == "Awarded"]
+    check("awarded rows run newest first", dates == sorted(dates, reverse=True))
     check("Awarded rows always name a bidder",
           all(r["Winning Bidder"] not in ("Not Yet Awarded", "Verification Required")
               for r in primary if r["Award Status"] == "Awarded"))
@@ -233,14 +247,30 @@ if primary:
           len(tkeys) >= len(set(tkeys)))
     check("no tender is silently blank on the winner field",
           all(r["Winning Bidder"] for r in primary))
-    check("derived COD is never presented as actual COD",
-          all(not r["Actual COD"] for r in primary if r["COD Basis"].startswith("Derived")))
+
     check("every row carries a source type and confidence",
           all(r["Source Type"] and r["Confidence"] for r in primary))
     targets = data("financing_targets.csv")
+    check("financing targets are FY26 onward",
+          all(not t["Award Date"] or t["Award Date"] >= "2025-04-01" for t in targets))
     check("financing targets contain no unawarded tender",
           all(t["Winner Group"] not in ("Not Yet Awarded", "Verification Required")
               for t in targets))
+
+check("storage 1500 MW/12000 MWh parses to both fields",
+      T.extract_storage("1500 MW/12000 MWh Pumped Storage") == (1500.0, 12000.0))
+check("plain generation capacity yields no storage rating",
+      T.extract_storage("700 MW ISTS-Connected Solar PV") == ("", ""))
+check("pre-FY26 award is out of scope",
+      T.date_eligibility(T.parse_date("2024-01-15"), None)[0]
+      == "Out of Scope - Pre-FY26")
+check("FY26 award is in scope",
+      T.date_eligibility(T.parse_date("2025-04-01"), None)[0] == "FY26+")
+check("unknown award date needs verification, not silent inclusion",
+      T.date_eligibility(None, T.parse_date("2026-06-01"))[0] == "Verification Required")
+check("old tender with unknown award date is excluded",
+      T.date_eligibility(None, T.parse_date("2023-11-14"))[0]
+      == "Out of Scope - Pre-FY26")
 
 rec = {"Tariff": "", "Tariff Status": "", "Tariff Conflict": ""}
 T.set_tariff(rec, "\u20b95.25/kWh", "Press report")

@@ -124,6 +124,9 @@ SOURCES = [
     {
         "key": "NHPC",
         "authority": "NHPC",
+        # 3,002 rows of which ~1% are renewable. Vendor procurement is out of
+        # scope, so it is never admitted rather than stored and filtered later.
+        "renewable_only": True,
         "url": "https://www.nhpcindia.com/welcome/tender",
         "parser": "blocks",
         "block_split": r"Tender Title\s*:",
@@ -390,11 +393,32 @@ def derive_status(due):
 # FETCH + PARSE
 # ---------------------------------------------------------------------------
 
+SESSION = requests.Session()
+SESSION.headers.update(HEADERS)
+_WARMED = set()
+
+
+def warm_up(url):
+    """Some portals 500 on a deep link unless a session cookie exists.
+    Visiting the site root first is ordinary browser behaviour, not a bypass."""
+    root = "/".join(url.split("/")[:3])
+    if root in _WARMED:
+        return
+    _WARMED.add(root)
+    try:
+        SESSION.get(root, timeout=20)
+        time.sleep(1)
+    except Exception:  # noqa: BLE001
+        pass
+
+
 def fetch(url, retries=3, timeout=45):
+    warm_up(url)
     last = None
     for attempt in range(retries):
         try:
-            r = requests.get(url, headers=HEADERS, timeout=timeout, verify=True)
+            r = SESSION.get(url, timeout=timeout, verify=True,
+                            headers={"Referer": "/".join(url.split("/")[:3]) + "/"})
             r.raise_for_status()
             return r.text
         except Exception as exc:  # noqa: BLE001
@@ -1639,8 +1663,8 @@ def build_financing_targets(rows):
 
         award = (parse_date(rec.get("Winner Announcement Date"))
                  or parse_date(rec.get("Bid Submission End Date (Online)")))
-        if not award:
-            continue
+        if not award or award < FY26_START:
+            continue          # FY26 onward only, same rule as the primary file
         months, basis = commissioning_window(rec.get("Technology"))
         cod = add_months(award, months)
         if cod <= COD_CUTOFF:
@@ -1802,7 +1826,8 @@ def build_quality_report(rows, run_log):
     return q
 
 
-def write_daily_summary(path, rows, awards, changes, targets, quality, run_log):
+def write_daily_summary(path, rows, awards, changes, targets, quality, run_log,
+                        primary_rows=()):
     new = [c for c in changes if c["change"] == "NEW"]
     revised = [c for c in changes if c["change"] == "BID_DATE_REVISED"]
     soon = [r for r in rows if r.get("Status") == "Closing Soon"]
@@ -1817,6 +1842,11 @@ def write_daily_summary(path, rows, awards, changes, targets, quality, run_log):
     L.append(f"- **{len(awards)}** award records across "
              f"{len({a['TenderKey'] for a in awards})} tenders")
     L.append(f"- **{len(targets)}** financing targets")
+    L.append("")
+    L.append(f"**Business scope: FY26 onward. Cutoff 1 April 2025.** "
+             f"{len(primary_rows)} winner rows in scope; "
+             f"{PRIMARY_EXCLUDED[0] if PRIMARY_EXCLUDED else 0} pre-FY26 excluded "
+             f"(retained in tenders.csv).")
     L.append("")
     L.append("Primary output: **data/renewable_tender_winners.csv** "
              "(one row per tender-award relationship).")
@@ -1943,6 +1973,11 @@ def build_manual_review(rows, quality):
         if closed and not rec.get("Winner") and cap >= MIN_TARGET_MW:
             add(rec, "WINNER_UNKNOWN", "HIGH",
                 "material tender closed with no winner found; search the agency site")
+        if rec.get("Winner"):
+            elig, _ = date_eligibility(parse_date(rec.get("Winner Announcement Date")), due)
+            if elig == "Verification Required":
+                add(rec, "AWARD_DATE_UNKNOWN", "HIGH",
+                    "winner found but award date unverified; FY26 eligibility cannot be confirmed")
         if rec.get("Winner") and not rec.get("Tariff"):
             add(rec, "TARIFF_MISSING", "MEDIUM",
                 "winner known but no tariff; check the award article or agency release")
@@ -2027,18 +2062,20 @@ def write_coverage_report(path, rows, awards, targets, review, run_log):
 # ---------------------------------------------------------------------------
 
 WINNER_FIELDS = [
-    # commercial fields first - never bury winner, capacity, tariff or COD
-    "Award Status", "Tender Date", "Issuing Authority", "Tender / RfS Number",
-    "Tender Title", "Winning Bidder", "Winner Count", "Awarded Capacity MW",
-    "Tariff", "Tariff Unit", "Tariff Status",
-    "Technology", "Capacity MW", "State", "Tender Deadline",
-    "Award Date", "Expected COD", "Actual COD", "COD Basis",
-    "Procurer / Offtaker", "Project / SPV", "Tender Details",
-    # provenance
-    "Source URL", "Award URL", "Source Type", "Confidence",
-    "Quality Grade", "Freshness", "Last Verified",
-    # keys, last: needed for dedup and joins, not for reading
-    "Tender Status", "TenderKey", "AwardID",
+    # the winner is the record - everything else describes it
+    "Winning Bidder", "Award Status", "Issuing Authority", "Tender / RfS Number",
+    "Tender Title", "Technology", "Awarded Capacity MW", "Capacity MW",
+    "Storage MW", "Storage MWh",
+    "Tariff", "Tariff Unit", "Tariff Type", "Tariff Status",
+    "Award Date", "LOA Date", "PPA Date", "PPA Tenure",
+    "Expected COD", "Actual COD", "COD Basis", "COD Source",
+    "State", "Procurer / Offtaker", "Project / SPV", "Consortium", "Lead Member",
+    "Winner Count", "Project Status", "Tender Details",
+    # scope and provenance
+    "Business Eligibility", "Date Basis",
+    "Source URL", "Award URL", "Source Type", "Evidence", "Confidence",
+    "Quality Grade", "Freshness", "First Seen", "Last Checked", "Last Verified",
+    "Tender Date", "Tender Deadline", "TenderKey", "AwardID",
 ]
 
 AWARDED, NOT_YET, VERIFY = "Awarded", "Not Yet Awarded", "Verification Required"
@@ -2076,56 +2113,115 @@ def tender_details_of(rec):
     return " · ".join(b for b in bits if b)
 
 
-def build_primary_tracker(rows, awards):
-    """One row per tender-award relationship.
+PRIMARY_EXCLUDED = []
+FY26_START = date(2025, 4, 1)          # FY2025-26 begins 1 April 2025
 
-    Three winners produce three rows sharing one TenderKey, Tender Number,
-    Tender Title and Issuing Authority. That is three award relationships,
-    not three tenders - tenders.csv still holds exactly one row for it.
+
+def extract_storage(text):
+    """'1500 MW/12000 MWh' or '600 MW/3600 MWh ESS' -> (storage MW, storage MWh).
+
+    Only returns a storage MW when an MWh figure sits beside it, so a plain
+    generation capacity is never mistaken for a battery rating.
+    """
+    if not text:
+        return "", ""
+    m = re.search(r"(?<![\d.])(\d{1,6}(?:\.\d+)?)\s*MW\s*/\s*(\d{1,6}(?:\.\d+)?)\s*MWh",
+                  text, re.I)
+    if m:
+        return float(m.group(1)), float(m.group(2))
+    m = re.search(r"(?<![\d.])(\d{1,6}(?:\.\d+)?)\s*MWh", text, re.I)
+    if m:
+        return "", float(m.group(1))
+    return "", ""
+
+
+def date_eligibility(award_date, deadline):
+    """Award date governs scope. Bid deadline is only a fallback for excluding
+    clearly pre-FY26 records, and the basis is always reported."""
+    if award_date:
+        if award_date >= FY26_START:
+            return "FY26+", "Award date"
+        return "Out of Scope - Pre-FY26", "Award date"
+    if deadline and deadline < FY26_START:
+        return "Out of Scope - Pre-FY26", "Bid deadline (award date unknown)"
+    return "Verification Required", "Award date unknown"
+
+
+def build_primary_tracker(rows, awards):
+    """Renewable-energy tender WINNERS, FY26 onward.
+
+    An open tender is not a tender winner, so Not Yet Awarded never appears
+    here - those stay in tenders.csv for award discovery. Three winners on one
+    tender produce three rows sharing one TenderKey: three award relationships,
+    one canonical tender.
     """
     by_tender = {}
     for a in awards:
         by_tender.setdefault(a["TenderKey"], []).append(a)
 
-    out = []
+    out, excluded = [], 0
     for rec in rows:
         if rec.get("Is Renewable") != "Yes":
             continue
         due = parse_date(rec.get("Bid Submission End Date (Online)"))
         closed = bool(due and due < TODAY) or rec.get("Status") in ("Closed", "Delisted")
-        months, basis = commissioning_window(rec.get("Technology"))
-        award_date = parse_date(rec.get("Winner Announcement Date"))
-        cod = add_months(award_date, months).isoformat() if award_date else ""
         status = award_status_of(rec, closed)
+        if status == NOT_YET:
+            continue                      # an open tender is not a winner
+
+        award_date = parse_date(rec.get("Winner Announcement Date"))
+        eligibility, basis = date_eligibility(award_date, due)
+        if eligibility.startswith("Out of Scope"):
+            excluded += 1
+            continue                      # pre-FY26, kept in tenders.csv only
+
+        months, cod_basis = commissioning_window(rec.get("Technology"))
+        cod = add_months(award_date, months).isoformat() if award_date else ""
+        st_mw, st_mwh = extract_storage(rec.get("Project Name"))
         tender_awards = by_tender.get(rec.get("TenderKey"), [])
+        all_winners = "; ".join(a["Winning Bidder"] for a in tender_awards)
 
         base = {
             "Award Status": status,
-            "Tender Date": rec.get("Tender Publication Date", ""),
             "Issuing Authority": rec.get("Authority", ""),
             "Tender / RfS Number": rec.get("Tender Ref No", ""),
             "Tender Title": rec.get("Project Name", ""),
-            "Winner Count": len(tender_awards),
-            "Tariff": rec.get("Tariff", ""),
-            "Tariff Unit": "INR/kWh" if rec.get("Tariff") else "",
-            "Tariff Status": rec.get("Tariff Status", ""),
             "Technology": rec.get("Technology", ""),
             "Capacity MW": rec.get("Capacity MW", ""),
-            "State": rec.get("State", ""),
-            "Tender Deadline": rec.get("Bid Submission End Date (Online)", ""),
-            "Award Date": rec.get("Winner Announcement Date", ""),
+            "Storage MW": st_mw,
+            "Storage MWh": st_mwh,
+            "Tariff": rec.get("Tariff", ""),
+            "Tariff Unit": "INR/kWh" if rec.get("Tariff") else "",
+            "Tariff Type": "Discovered tariff" if rec.get("Tariff") else "",
+            "Tariff Status": rec.get("Tariff Status", ""),
+            "Award Date": rec.get("Winner Announcement Date", "") or "Unknown",
+            "LOA Date": "",               # published only inside the LOA itself
+            "PPA Date": "",               # manual entry
+            "PPA Tenure": "",             # manual entry
             "Expected COD": cod,
-            "Actual COD": "",             # only ever set from a manual entry
-            "COD Basis": f"Derived: {basis}" if cod else "Unknown",
+            "Actual COD": "Unknown",      # never derived
+            "COD Basis": f"Derived: {cod_basis}" if cod else "Unknown",
+            "COD Source": "Derived from award date" if cod else "",
+            "State": rec.get("State", ""),
             "Procurer / Offtaker": rec.get("Authority", ""),
+            "Consortium": all_winners if len(tender_awards) > 1 else "",
+            "Lead Member": "",            # not distinguished in public reporting
+            "Winner Count": len(tender_awards),
+            "Project Status": "Pre-COD" if cod and cod > TODAY.isoformat() else "Unknown",
             "Tender Details": tender_details_of(rec),
+            "Business Eligibility": eligibility,
+            "Date Basis": basis,
             "Source URL": rec.get("Source URL", ""),
             "Award URL": rec.get("Award URL", ""),
+            "Evidence": rec.get("Award Headline", ""),
             "Confidence": confidence_of(rec),
             "Quality Grade": rec.get("Quality Grade", ""),
             "Freshness": rec.get("Freshness", ""),
+            "First Seen": rec.get("First Seen", ""),
+            "Last Checked": rec.get("Last Checked", ""),
             "Last Verified": rec.get("Last Verified", ""),
-            "Tender Status": rec.get("Status", ""),
+            "Tender Date": rec.get("Tender Publication Date", ""),
+            "Tender Deadline": rec.get("Bid Submission End Date (Online)", ""),
             "TenderKey": rec.get("TenderKey", ""),
         }
 
@@ -2143,27 +2239,30 @@ def build_primary_tracker(rows, awards):
         else:
             row = dict(base)
             row.update({
-                "Winning Bidder": status,     # never blank, never fabricated
+                "Winning Bidder": VERIFY,
                 "Awarded Capacity MW": "",
                 "Project / SPV": "",
                 "Source Type": "Official tender page",
-                "Confidence": "Not applicable" if status == NOT_YET
-                              else "Winner not found",
+                "Confidence": "Winner not found",
                 "AwardID": "",
             })
             out.append(row)
 
-    # Awarded first, then biggest capacity, then soonest deadline.
-    rank = {AWARDED: 0, VERIFY: 1, NOT_YET: 2}
-
-    def sort_key(r):
+    # most recently awarded first, then largest awarded capacity
+    def cap_of(r):
         try:
-            cap = float(r["Awarded Capacity MW"] or r["Capacity MW"] or 0)
+            return float(r["Awarded Capacity MW"] or r["Capacity MW"] or 0)
         except (TypeError, ValueError):
-            cap = 0
-        return (rank.get(r["Award Status"], 3), -cap, r["Tender Deadline"] or "9999")
+            return 0.0
 
-    out.sort(key=sort_key)
+    out.sort(key=lambda r: (
+        0 if r["Award Status"] == AWARDED else 1,
+        "0000-00-00" if r["Award Date"] == "Unknown" else r["Award Date"],
+        cap_of(r),
+    ), reverse=True)
+    out.sort(key=lambda r: 0 if r["Award Status"] == AWARDED else 1)
+    PRIMARY_EXCLUDED.clear()
+    PRIMARY_EXCLUDED.append(excluded)
     return out
 
 
@@ -2192,15 +2291,22 @@ def run(only_source=None):
         try:
             html = fetch(cfg["url"])
             raws = PARSERS[cfg["parser"]](html, cfg)
+            kept = 0
             for raw in raws:
                 rec = build_record(raw, cfg)
+                if cfg.get("renewable_only") and rec["Is Renewable"] != "Yes":
+                    continue
                 scraped[rec["TenderKey"]] = rec
+                kept += 1
             run_log.append({
                 "run_date": TODAY.isoformat(), "source": cfg["key"],
                 "status": "OK" if raws else "EMPTY", "rows": len(raws),
                 "seconds": round(time.time() - started, 1), "error": "",
             })
-            print(f"  {cfg['key']:<12} {len(raws):>4} rows")
+            if cfg.get("renewable_only"):
+                print(f"  {cfg['key']:<12} {kept:>4} renewable of {len(raws)} rows")
+            else:
+                print(f"  {cfg['key']:<12} {len(raws):>4} rows")
         except Exception as exc:  # noqa: BLE001
             run_log.append({
                 "run_date": TODAY.isoformat(), "source": cfg["key"],
@@ -2258,10 +2364,15 @@ def run(only_source=None):
         print(f"  guard   {', '.join(sorted(unhealthy))} unhealthy - "
               f"their records preserved untouched")
 
+    noisy_authorities = {c["authority"] for c in SOURCES if c.get("renewable_only")}
+
     for key, old in previous.items():
         if key in merged:
             continue
         old = dict(old)
+        if (old.get("Authority") in noisy_authorities
+                and old.get("Is Renewable") != "Yes"):
+            continue          # out-of-scope procurement, never was a tender we track
         due = parse_date(old.get("Bid Submission End Date (Online)"))
         if old.get("Authority") in healthy:
             old["Status"] = "Closed" if (due and due < TODAY) else "Delisted"
@@ -2301,7 +2412,8 @@ def run(only_source=None):
     write_coverage_report(os.path.join(DATA_DIR, "coverage_report.md"),
                           rows, awards_tbl, targets, review, run_log)
     write_daily_summary(os.path.join(DATA_DIR, "daily_summary.md"),
-                        rows, awards_tbl, changes, targets, quality, run_log)
+                        rows, awards_tbl, changes, targets, quality, run_log,
+                        primary)
     write_excel(os.path.join(DATA_DIR, "tenders.xlsx"), rows, renewable)
     if changes:
         append_csv(os.path.join(DATA_DIR, "changes.csv"), changes,
