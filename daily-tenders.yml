@@ -2,10 +2,10 @@ name: Daily Renewable Tender Tracker
 
 on:
   schedule:
-    # 04:25 UTC = 09:55 IST. Started early on purpose: GitHub's shared
+    # 04:20 UTC = 09:50 IST. Started early on purpose: GitHub's shared
     # scheduler runs late under load, and a typical run takes 3-6 minutes,
     # so the data is committed and ready before 10:30 IST.
-    - cron: '25 4 * * *'
+    - cron: '20 4 * * *'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +29,10 @@ jobs:
           cache: 'pip'
 
       - run: pip install -r requirements.txt
+
+      - name: Acceptance tests
+        # A broken build must never overwrite good data.
+        run: python tests.py
 
       - name: Run tracker
         env:

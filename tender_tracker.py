@@ -515,10 +515,16 @@ FIELDNAMES = [
     "Winner Announcement Date", "Winner", "Tariff", "Award URL",
     # --- links and provenance ---
     "Source URL", "Bids Received", "Award Status", "Award Source", "Award Headline",
-    "Is Renewable", "Capacity Raw", "Details Fetched", "AI Checked", "TenderKey", "Notes",
+    "Is Renewable", "Capacity Raw", "Quality Grade", "Freshness",
+    "First Seen", "Last Checked", "Last Verified",
+    "Details Fetched", "AI Checked", "TenderKey", "Notes",
 ]
 
-RESET_NEWS_AWARDS = True   # see the news section below; flip to False after one clean run
+# One-time purge of loosely-matched news awards. Off by default: leaving it on
+# re-derives every news winner daily, which wastes lookups and loses the winner
+# outright on any day the news layer is unavailable.
+# Run once with RESET_NEWS=1 in the environment, then never again.
+RESET_NEWS_AWARDS = os.environ.get("RESET_NEWS", "").strip() in ("1", "true", "yes")
 
 # old column name -> new column name, so existing data files keep their history
 LEGACY_MAP = {
@@ -579,6 +585,11 @@ def build_record(raw, cfg):
         "Award Headline": "",
         "Is Renewable": "Yes" if is_renewable(blob) else "No",
         "Capacity Raw": cap_raw,
+        "Quality Grade": "",
+        "Freshness": "",
+        "First Seen": TODAY.isoformat(),
+        "Last Checked": TODAY.isoformat(),
+        "Last Verified": "",
         "Details Fetched": "",
         "AI Checked": "",
         "TenderKey": make_key(cfg["authority"], raw.get("ref", ""), title),
@@ -1231,6 +1242,11 @@ def sweep_award_news(records):
                     "Award Headline": title,
                     "Is Renewable": "Yes",
                     "Capacity Raw": cap_raw,
+                    "Quality Grade": "",
+                    "Freshness": "",
+                    "First Seen": TODAY.isoformat(),
+                    "Last Checked": TODAY.isoformat(),
+                    "Last Verified": "",
                     "Details Fetched": "n/a",
                     "AI Checked": "n/a",
                     "TenderKey": key,
@@ -1569,6 +1585,328 @@ def build_financing_targets(rows):
 
 
 # ---------------------------------------------------------------------------
+# AWARDS TABLE, DATA QUALITY, DAILY SUMMARY
+# ---------------------------------------------------------------------------
+
+AWARD_FIELDS = [
+    "Award ID", "TenderKey", "Tender Ref No", "Tender Title", "Issuing Authority",
+    "Technology", "Tender Capacity MW", "State",
+    "Winning Bidder", "Winner SPV", "Awarded Capacity MW",
+    "Tariff", "Tariff Unit", "Award Date", "Expected COD",
+    "Confidence", "Award Source", "Award URL", "Tender Source URL",
+]
+QUALITY_FIELDS = ["Severity", "Check", "TenderKey", "Authority", "Detail", "Value"]
+
+
+def build_awards(rows):
+    """One row per (tender, winner). The tender itself is never duplicated -
+    these rows point back at it through TenderKey."""
+    awards = []
+    for rec in rows:
+        winners = [w.strip() for w in (rec.get("Winner") or "").split(";") if w.strip()]
+        if not winners:
+            continue
+        months, _ = commissioning_window(rec.get("Technology"))
+        award_date = parse_date(rec.get("Winner Announcement Date"))
+        cod = add_months(award_date, months).isoformat() if award_date else ""
+        for i, w in enumerate(winners, 1):
+            awards.append({
+                "Award ID": f"{rec.get('TenderKey','')}-{i:02d}",
+                "TenderKey": rec.get("TenderKey", ""),
+                "Tender Ref No": rec.get("Tender Ref No", ""),
+                "Tender Title": rec.get("Project Name", ""),
+                "Issuing Authority": rec.get("Authority", ""),
+                "Technology": rec.get("Technology", ""),
+                "Tender Capacity MW": rec.get("Capacity MW", ""),
+                "State": rec.get("State", ""),
+                "Winning Bidder": w,
+                "Winner SPV": rec.get("Winner SPV", "") if len(winners) == 1 else "",
+                # agencies publish the winner list but rarely the per-winner split
+                "Awarded Capacity MW": "" if len(winners) > 1 else rec.get("Capacity MW", ""),
+                "Tariff": rec.get("Tariff", ""),
+                "Tariff Unit": "INR/kWh" if rec.get("Tariff") else "",
+                "Award Date": rec.get("Winner Announcement Date", ""),
+                "Expected COD": cod,
+                "Confidence": confidence_of(rec),
+                "Award Source": rec.get("Award Source", ""),
+                "Award URL": rec.get("Award URL", ""),
+                "Tender Source URL": rec.get("Source URL", ""),
+            })
+    return awards
+
+
+def build_quality_report(rows, run_log):
+    """Flag suspicious records instead of silently accepting them."""
+    q = []
+
+    def flag(sev, check, rec, detail, value=""):
+        q.append({"Severity": sev, "Check": check,
+                  "TenderKey": rec.get("TenderKey", "") if rec else "",
+                  "Authority": rec.get("Authority", "") if rec else "",
+                  "Detail": detail, "Value": str(value)[:120]})
+
+    for e in run_log:
+        if e["status"] != "OK":
+            flag("HIGH", "SOURCE_UNHEALTHY", None,
+                 f"{e['source']} returned {e['status']}", e.get("error", ""))
+
+    seen_refs = {}
+    for rec in rows:
+        ref = normalize_ref(rec.get("Tender Ref No", ""))
+        if ref:
+            if ref in seen_refs and seen_refs[ref] != rec.get("TenderKey"):
+                flag("HIGH", "POSSIBLE_DUPLICATE", rec,
+                     "same reference number on two records", ref)
+            seen_refs.setdefault(ref, rec.get("TenderKey"))
+
+        if rec.get("Is Renewable") != "Yes":
+            continue
+
+        try:
+            cap = float(rec.get("Capacity MW") or 0)
+        except (TypeError, ValueError):
+            cap = 0
+        if cap > 5000:
+            flag("MEDIUM", "CAPACITY_IMPLAUSIBLE", rec,
+                 "capacity above 5 GW, check the parsed unit", cap)
+
+        m = re.search(r"([0-9]+\.[0-9]+)", rec.get("Tariff") or "")
+        if m and not (1.5 <= float(m.group(1)) <= 12):
+            flag("MEDIUM", "TARIFF_OUT_OF_RANGE", rec,
+                 "tariff outside INR 1.50-12.00/kWh", rec.get("Tariff"))
+
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
+        awd = parse_date(rec.get("Winner Announcement Date"))
+        if due and awd and awd < due:
+            flag("HIGH", "AWARD_BEFORE_CLOSE", rec,
+                 "award date precedes bid submission date", f"{awd} < {due}")
+
+        if rec.get("Winner") and confidence_of(rec).endswith("verify"):
+            flag("LOW", "WINNER_NEEDS_VERIFICATION", rec,
+                 "winner from press or AI, confirm before use", rec.get("Winner"))
+
+        if not rec.get("Winner") and due and due < TODAY and cap >= MIN_TARGET_MW:
+            flag("LOW", "WINNER_NOT_FOUND", rec,
+                 "material tender closed with no winner found yet", cap)
+
+        if not due and "tender-details" in (rec.get("Source URL") or ""):
+            flag("LOW", "MISSING_BID_DATE", rec, "no online bid submission date", "")
+    return q
+
+
+def write_daily_summary(path, rows, awards, changes, targets, quality, run_log):
+    new = [c for c in changes if c["change"] == "NEW"]
+    revised = [c for c in changes if c["change"] == "BID_DATE_REVISED"]
+    soon = [r for r in rows if r.get("Status") == "Closing Soon"]
+    failed = [e for e in run_log if e["status"] != "OK"]
+    high = [q for q in quality if q["Severity"] == "HIGH"]
+    verify = [q for q in quality if q["Check"] == "WINNER_NEEDS_VERIFICATION"]
+
+    L = [f"# Renewable tender tracker - {TODAY:%d %b %Y}", ""]
+    L.append(f"- **{len(new)}** new tenders")
+    L.append(f"- **{len(revised)}** revised bid dates")
+    L.append(f"- **{len(soon)}** closing within 7 days")
+    L.append(f"- **{len(awards)}** award records across "
+             f"{len({a['TenderKey'] for a in awards})} tenders")
+    L.append(f"- **{len(targets)}** financing targets")
+    L.append(f"- **{len(high)}** high-severity data-quality flags")
+    L.append("")
+
+    def table(items, cols, rowfn):
+        out = ["| " + " | ".join(cols) + " |",
+               "|" + "|".join(["---"] * len(cols)) + "|"]
+        out += ["| " + " | ".join(rowfn(i)) + " |" for i in items]
+        return out + [""]
+
+    if new:
+        L.append("## New tenders")
+        L += table(new[:20], ["Authority", "Tender", "Closes"],
+                   lambda c: [c["Authority"], c["Project Name"][:80], c["new"] or "-"])
+    if targets:
+        L.append("## Financing targets (top 10 by capacity)")
+        L += table(targets[:10], ["#", "Winner", "MW", "Tech", "COD", "Confidence"],
+                   lambda t: [str(t["Priority"]), t["Winner Group"][:50],
+                              f"{t['Capacity MW']:.0f}", t["Technology"],
+                              t["Expected COD"], t["Confidence"]])
+    if verify:
+        L.append("## Needs manual verification")
+        L += table(verify[:15], ["Authority", "Winner", "TenderKey"],
+                   lambda q: [q["Authority"], q["Value"][:60], q["TenderKey"]])
+    if failed:
+        L.append("## Sources that failed")
+        L += table(failed, ["Source", "Status", "Error"],
+                   lambda e: [e["source"], e["status"], (e.get("error") or "-")[:80]])
+        L.append("> Records from a failed source are preserved untouched, "
+                 "not marked delisted.")
+    L.append("")
+    L.append("_Confidence: Portal and Manual are official. "
+             "Press report and AI need the Award URL checked before use._")
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(L))
+
+
+# ---------------------------------------------------------------------------
+# GRADING, FRESHNESS, MANUAL REVIEW QUEUE, COVERAGE REPORT
+# ---------------------------------------------------------------------------
+
+FRESH_DAYS, STALE_DAYS = 7, 45
+REVIEW_FIELDS = ["Reason", "Severity", "TenderKey", "Authority", "Tender Title",
+                 "Technology", "Capacity MW", "What to do", "Source URL", "Award URL"]
+
+
+def grade_record(rec):
+    """A-E on evidence actually present. Never hides the underlying fields."""
+    src = (rec.get("Award Source") or "").lower()
+    has_dates = bool(rec.get("Bid Submission End Date (Online)"))
+    has_cap = rec.get("Capacity MW") not in ("", None)
+    if src.startswith(("manual", "portal")) and has_dates and has_cap:
+        return "A"
+    if rec.get("Winner") and src.startswith("ai") and has_dates:
+        return "B"
+    if rec.get("Winner") and has_dates:
+        return "C"
+    if has_dates and has_cap:
+        return "C"
+    if has_dates or has_cap:
+        return "D"
+    return "E"
+
+
+def freshness_of(rec):
+    checked = parse_date(rec.get("Last Checked"))
+    verified = parse_date(rec.get("Last Verified"))
+    if verified and (TODAY - verified).days <= FRESH_DAYS:
+        return "Recently Verified"
+    if not checked:
+        return "Needs Verification"
+    age = (TODAY - checked).days
+    if age <= FRESH_DAYS:
+        return "Fresh"
+    if age <= STALE_DAYS:
+        return "Needs Verification"
+    return "Stale"
+
+
+def stamp_quality(rows):
+    for rec in rows:
+        rec["Last Checked"] = TODAY.isoformat()
+        if (rec.get("Award Source") or "").lower().startswith(("manual", "portal")):
+            rec["Last Verified"] = rec.get("Last Verified") or TODAY.isoformat()
+        rec["Quality Grade"] = grade_record(rec)
+        rec["Freshness"] = freshness_of(rec)
+
+
+def build_manual_review(rows, quality):
+    """The user's actual work queue."""
+    out, seen = [], set()
+
+    def add(rec, reason, sev, todo):
+        k = (rec.get("TenderKey"), reason)
+        if k in seen:
+            return
+        seen.add(k)
+        out.append({"Reason": reason, "Severity": sev,
+                    "TenderKey": rec.get("TenderKey", ""),
+                    "Authority": rec.get("Authority", ""),
+                    "Tender Title": rec.get("Project Name", "")[:120],
+                    "Technology": rec.get("Technology", ""),
+                    "Capacity MW": rec.get("Capacity MW", ""),
+                    "What to do": todo,
+                    "Source URL": rec.get("Source URL", ""),
+                    "Award URL": rec.get("Award URL", "")})
+
+    for rec in rows:
+        if rec.get("Is Renewable") != "Yes":
+            continue
+        try:
+            cap = float(rec.get("Capacity MW") or 0)
+        except (TypeError, ValueError):
+            cap = 0
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
+        closed = due and due < TODAY
+
+        if rec.get("Winner") and (rec.get("Award Source") or "").lower().startswith(
+                ("news", "ai")):
+            add(rec, "WINNER_UNVERIFIED", "HIGH",
+                "open the Award URL, confirm the winner, then record it in manual_awards.csv")
+        if closed and not rec.get("Winner") and cap >= MIN_TARGET_MW:
+            add(rec, "WINNER_UNKNOWN", "HIGH",
+                "material tender closed with no winner found; search the agency site")
+        if rec.get("Winner") and not rec.get("Tariff"):
+            add(rec, "TARIFF_MISSING", "MEDIUM",
+                "winner known but no tariff; check the award article or agency release")
+        if rec.get("Winner") and ";" in rec.get("Winner", "") and not rec.get("Winner SPV"):
+            add(rec, "SPV_UNKNOWN", "LOW",
+                "multi-winner award; per-winner capacity and SPV need a manual source")
+        if rec.get("Notes") == "news-derived record":
+            add(rec, "MATCH_UNCERTAIN", "MEDIUM",
+                "record built from a headline, not a tender page; confirm it is a real tender")
+        if cap > 5000:
+            add(rec, "CAPACITY_SUSPECT", "MEDIUM", "capacity above 5 GW; check the parsed unit")
+
+    order = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+    out.sort(key=lambda r: (order.get(r["Severity"], 3), -float(r["Capacity MW"] or 0)))
+    return out
+
+
+def write_coverage_report(path, rows, awards, targets, review, run_log):
+    ren = [r for r in rows if r.get("Is Renewable") == "Yes"]
+
+    def total_mw(items, field="Capacity MW"):
+        t = 0.0
+        for i in items:
+            try:
+                t += float(i.get(field) or 0)
+            except (TypeError, ValueError):
+                pass
+        return t
+
+    def tally(items, field, top=12):
+        c = {}
+        for i in items:
+            c[i.get(field) or "(blank)"] = c.get(i.get(field) or "(blank)", 0) + 1
+        return sorted(c.items(), key=lambda kv: -kv[1])[:top]
+
+    L = [f"# Coverage report - {TODAY:%d %b %Y}", "",
+         "## Totals", "",
+         "| Metric | Value |", "|---|---|",
+         f"| Canonical tenders | {len(rows)} |",
+         f"| Renewable tenders | {len(ren)} |",
+         f"| Award records | {len(awards)} |",
+         f"| Unique winners | {len({a['Winning Bidder'] for a in awards})} |",
+         f"| Renewable capacity tracked (MW) | {total_mw(ren):,.0f} |",
+         f"| Tenders with a winner | {len([r for r in ren if r.get('Winner')])} |",
+         f"| Tenders awaiting a winner | {len([r for r in ren if not r.get('Winner')])} |",
+         f"| Records with a tariff | {len([r for r in ren if r.get('Tariff')])} |",
+         f"| Financing targets | {len(targets)} |",
+         f"| Needing manual review | {len(review)} |", ""]
+
+    for label, field, items in (("Technology", "Technology", ren),
+                                ("Issuing authority", "Authority", ren),
+                                ("State", "State", ren),
+                                ("Quality grade", "Quality Grade", ren),
+                                ("Freshness", "Freshness", ren)):
+        L += [f"## By {label.lower()}", "", f"| {label} | Tenders |", "|---|---|"]
+        L += [f"| {k} | {v} |" for k, v in tally(items, field)] + [""]
+
+    L += ["## Source status this run", "",
+          "| Source | Status | Rows | Seconds |", "|---|---|---|---|"]
+    L += [f"| {e['source']} | {e['status']} | {e['rows']} | {e['seconds']} |"
+          for e in run_log]
+    L += ["", "## Coverage limits", "",
+          "Covered: SECI (tenders + detail dates).",
+          "Partially covered: NHPC (titles only, no bid dates); awards for all "
+          "agencies via press and AI, which only report large auctions.",
+          "Blocked: NTPC e-procurement, GeM, CPPP search - CAPTCHA protected.",
+          "Not covered: NTPC Green, SJVN, NLC, NVVN, IREDA, MNRE, PGCIL, NEEPCO, "
+          "DVC, state agencies and DISCOMs.", "",
+          "This tracker is not a complete record of Indian renewable tenders. "
+          "Treat anything outside SECI as best-effort."]
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(L))
+
+
+# ---------------------------------------------------------------------------
 # MAIN RUN
 # ---------------------------------------------------------------------------
 
@@ -1626,7 +1964,8 @@ def run(only_source=None):
             for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
                       "Award Headline", "Winner Announcement Date", "Bids Received", "Winner SPV",
                       "Pre Bid Meeting Date", "Bid Open Date",
-                      "Bid Submission End Date (Offline)", "Details Fetched", "AI Checked"):
+                      "Bid Submission End Date (Offline)", "Details Fetched", "AI Checked",
+                      "First Seen", "Last Verified"):
                 if old.get(f) and not rec.get(f):
                     rec[f] = old[f]
             if old.get("Tender Publication Date") and not rec.get("Tender Publication Date"):
@@ -1642,13 +1981,31 @@ def run(only_source=None):
                                 "Source URL": rec["Source URL"]})
         merged[key] = rec
 
-    # keep history for tenders that dropped off the live listing
+    # Keep history for tenders that dropped off the live listing.
+    #
+    # A source returning zero rows is NOT evidence that its tenders vanished -
+    # it is far more likely the site changed or was down. Only authorities
+    # whose sources all succeeded this run are allowed to delist anything.
+    healthy, unhealthy = set(), set()
+    for entry in run_log:
+        cfg = next((c for c in SOURCES if c["key"] == entry["source"]), None)
+        auth = cfg["authority"] if cfg else entry["source"]
+        (healthy if entry["status"] == "OK" else unhealthy).add(auth)
+    healthy -= unhealthy
+    if unhealthy:
+        print(f"  guard   {', '.join(sorted(unhealthy))} unhealthy - "
+              f"their records preserved untouched")
+
     for key, old in previous.items():
         if key in merged:
             continue
         old = dict(old)
         due = parse_date(old.get("Bid Submission End Date (Online)"))
-        old["Status"] = "Closed" if (due and due < TODAY) else "Delisted"
+        if old.get("Authority") in healthy:
+            old["Status"] = "Closed" if (due and due < TODAY) else "Delisted"
+        elif due and due < TODAY:
+            old["Status"] = "Closed"
+        # else: source is unhealthy, leave the record exactly as it was
         old["Notes"] = old.get("Notes", "")
         merged[key] = old
 
@@ -1667,8 +2024,19 @@ def run(only_source=None):
 
     write_csv(master_path, rows, FIELDNAMES)
     write_csv(os.path.join(DATA_DIR, "tenders_renewable.csv"), renewable, FIELDNAMES)
+    stamp_quality(rows)
     targets = build_financing_targets(rows)
+    awards_tbl = build_awards(rows)
+    review = build_manual_review(rows, None)
+    quality = build_quality_report(rows, run_log)
     write_csv(os.path.join(DATA_DIR, "financing_targets.csv"), targets, TARGET_FIELDS)
+    write_csv(os.path.join(DATA_DIR, "awards.csv"), awards_tbl, AWARD_FIELDS)
+    write_csv(os.path.join(DATA_DIR, "data_quality.csv"), quality, QUALITY_FIELDS)
+    write_csv(os.path.join(DATA_DIR, "manual_review.csv"), review, REVIEW_FIELDS)
+    write_coverage_report(os.path.join(DATA_DIR, "coverage_report.md"),
+                          rows, awards_tbl, targets, review, run_log)
+    write_daily_summary(os.path.join(DATA_DIR, "daily_summary.md"),
+                        rows, awards_tbl, changes, targets, quality, run_log)
     write_excel(os.path.join(DATA_DIR, "tenders.xlsx"), rows, renewable)
     if changes:
         append_csv(os.path.join(DATA_DIR, "changes.csv"), changes,
@@ -1680,8 +2048,9 @@ def run(only_source=None):
     live = [r for r in renewable if r["Status"] in ("Open", "Closing Soon")]
     won = [r for r in rows if r.get("Winner")]
     print(f"\nMaster: {len(rows)} | RE total: {len(renewable)} | Live: {len(live)} | "
-          f"Winners known: {len(won)} | Financing targets: {len(targets)} | "
-          f"Changes today: {len(changes)}")
+          f"Winners known: {len(won)} | Awards: {len(awards_tbl)} | "
+          f"Targets: {len(targets)} | Changes: {len(changes)} | "
+          f"QC flags: {len(quality)} | Review queue: {len(review)}")
 
     failures = [r for r in run_log if r["status"] in ("FAILED", "EMPTY")]
     if failures:
