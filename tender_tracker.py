@@ -1625,7 +1625,7 @@ def build_financing_targets(rows):
     targets = []
     for rec in rows:
         if not rec.get("Winner") or rec.get("Is Renewable") != "Yes":
-            continue
+            continue          # an unawarded tender is not a financing target
         if NON_IPP.search(rec.get("Project Name", "")):
             continue          # EPC/O&M contracts are not financing targets
         if COMMISSIONED.search(rec.get("Award Headline", "")):
@@ -2027,14 +2027,21 @@ def write_coverage_report(path, rows, awards, targets, review, run_log):
 # ---------------------------------------------------------------------------
 
 WINNER_FIELDS = [
-    "Tender Date", "Issuing Authority", "Tender / RfS Number", "Tender Title",
-    "Technology", "Capacity MW", "State", "Deadline", "Tender Status",
-    "Winner", "Awarded Capacity MW", "Tariff", "Tariff Unit", "Tariff Status",
+    # commercial fields first - never bury winner, capacity, tariff or COD
+    "Award Status", "Tender Date", "Issuing Authority", "Tender / RfS Number",
+    "Tender Title", "Winning Bidder", "Winner Count", "Awarded Capacity MW",
+    "Tariff", "Tariff Unit", "Tariff Status",
+    "Technology", "Capacity MW", "State", "Tender Deadline",
     "Award Date", "Expected COD", "Actual COD", "COD Basis",
-    "Project / SPV", "Procurer", "Source", "Confidence", "Last Verified",
-    "Quality Grade", "Freshness", "Source URL", "Award URL",
-    "TenderKey", "AwardID",
+    "Procurer / Offtaker", "Project / SPV", "Tender Details",
+    # provenance
+    "Source URL", "Award URL", "Source Type", "Confidence",
+    "Quality Grade", "Freshness", "Last Verified",
+    # keys, last: needed for dedup and joins, not for reading
+    "Tender Status", "TenderKey", "AwardID",
 ]
+
+AWARDED, NOT_YET, VERIFY = "Awarded", "Not Yet Awarded", "Verification Required"
 
 SOURCE_TYPE = {
     "manual": "Manual - verified",
@@ -2052,16 +2059,30 @@ def source_type_of(rec):
     return "Official tender page"
 
 
-def winner_state(rec, closed):
-    """Never leave the most important field ambiguous."""
+def award_status_of(rec, closed):
+    """Controlled vocabulary. An uncertain winner is never promoted to Awarded."""
     if rec.get("Winner"):
-        return None                       # a real winner exists
-    if not closed:
-        return "Not Yet Awarded"
-    return "Verification Required"
+        return AWARDED
+    return VERIFY if closed else NOT_YET
+
+
+def tender_details_of(rec):
+    """Agencies publish no separate description, so summarise what they do give."""
+    bits = [rec.get("Tender Type") or ""]
+    if rec.get("Bids Received"):
+        bits.append(f"{rec['Bids Received']} bids")
+    if rec.get("Notes"):
+        bits.append(rec["Notes"])
+    return " · ".join(b for b in bits if b)
 
 
 def build_primary_tracker(rows, awards):
+    """One row per tender-award relationship.
+
+    Three winners produce three rows sharing one TenderKey, Tender Number,
+    Tender Title and Issuing Authority. That is three award relationships,
+    not three tenders - tenders.csv still holds exactly one row for it.
+    """
     by_tender = {}
     for a in awards:
         by_tender.setdefault(a["TenderKey"], []).append(a)
@@ -2075,68 +2096,73 @@ def build_primary_tracker(rows, awards):
         months, basis = commissioning_window(rec.get("Technology"))
         award_date = parse_date(rec.get("Winner Announcement Date"))
         cod = add_months(award_date, months).isoformat() if award_date else ""
+        status = award_status_of(rec, closed)
+        tender_awards = by_tender.get(rec.get("TenderKey"), [])
 
         base = {
+            "Award Status": status,
             "Tender Date": rec.get("Tender Publication Date", ""),
             "Issuing Authority": rec.get("Authority", ""),
             "Tender / RfS Number": rec.get("Tender Ref No", ""),
             "Tender Title": rec.get("Project Name", ""),
-            "Technology": rec.get("Technology", ""),
-            "Capacity MW": rec.get("Capacity MW", ""),
-            "State": rec.get("State", ""),
-            "Deadline": rec.get("Bid Submission End Date (Online)", ""),
-            "Tender Status": rec.get("Status", ""),
+            "Winner Count": len(tender_awards),
             "Tariff": rec.get("Tariff", ""),
             "Tariff Unit": "INR/kWh" if rec.get("Tariff") else "",
             "Tariff Status": rec.get("Tariff Status", ""),
+            "Technology": rec.get("Technology", ""),
+            "Capacity MW": rec.get("Capacity MW", ""),
+            "State": rec.get("State", ""),
+            "Tender Deadline": rec.get("Bid Submission End Date (Online)", ""),
             "Award Date": rec.get("Winner Announcement Date", ""),
             "Expected COD": cod,
             "Actual COD": "",             # only ever set from a manual entry
             "COD Basis": f"Derived: {basis}" if cod else "Unknown",
-            "Procurer": rec.get("Authority", ""),
-            "Confidence": confidence_of(rec),
-            "Last Verified": rec.get("Last Verified", ""),
-            "Quality Grade": rec.get("Quality Grade", ""),
-            "Freshness": rec.get("Freshness", ""),
+            "Procurer / Offtaker": rec.get("Authority", ""),
+            "Tender Details": tender_details_of(rec),
             "Source URL": rec.get("Source URL", ""),
             "Award URL": rec.get("Award URL", ""),
+            "Confidence": confidence_of(rec),
+            "Quality Grade": rec.get("Quality Grade", ""),
+            "Freshness": rec.get("Freshness", ""),
+            "Last Verified": rec.get("Last Verified", ""),
+            "Tender Status": rec.get("Status", ""),
             "TenderKey": rec.get("TenderKey", ""),
         }
 
-        tender_awards = by_tender.get(rec.get("TenderKey"), [])
         if tender_awards:
             for a in tender_awards:
                 row = dict(base)
                 row.update({
-                    "Winner": a["Winning Bidder"],
+                    "Winning Bidder": a["Winning Bidder"],
                     "Awarded Capacity MW": a["Awarded Capacity MW"],
                     "Project / SPV": a["Winner SPV"],
-                    "Source": source_type_of(rec),
+                    "Source Type": source_type_of(rec),
                     "AwardID": a["Award ID"],
                 })
                 out.append(row)
         else:
-            state = winner_state(rec, closed)
             row = dict(base)
             row.update({
-                "Winner": state,
+                "Winning Bidder": status,     # never blank, never fabricated
                 "Awarded Capacity MW": "",
                 "Project / SPV": "",
-                "Source": "Official tender page",
-                "Confidence": "Not applicable" if state == "Not Yet Awarded"
+                "Source Type": "Official tender page",
+                "Confidence": "Not applicable" if status == NOT_YET
                               else "Winner not found",
                 "AwardID": "",
             })
             out.append(row)
 
-    # awarded first, then biggest, then soonest deadline
+    # Awarded first, then biggest capacity, then soonest deadline.
+    rank = {AWARDED: 0, VERIFY: 1, NOT_YET: 2}
+
     def sort_key(r):
         try:
-            cap = float(r["Capacity MW"] or 0)
+            cap = float(r["Awarded Capacity MW"] or r["Capacity MW"] or 0)
         except (TypeError, ValueError):
             cap = 0
-        awarded = 0 if r["Winner"] not in ("Not Yet Awarded", "Verification Required") else 1
-        return (awarded, -cap, r["Deadline"] or "9999")
+        return (rank.get(r["Award Status"], 3), -cap, r["Tender Deadline"] or "9999")
+
     out.sort(key=sort_key)
     return out
 
@@ -2291,7 +2317,8 @@ def run(only_source=None):
           f"Targets: {len(targets)} | Changes: {len(changes)} | "
           f"QC flags: {len(quality)} | Review queue: {len(review)}\n"
           f"renewable_tender_winners.csv: {len(primary)} rows "
-          f"({len([r for r in primary if r['Winner'] not in ('Not Yet Awarded','Verification Required')])} awarded)")
+          f"({len([r for r in primary if r['Award Status'] == AWARDED])} awarded, "
+          f"{len([r for r in primary if r['Award Status'] == VERIFY])} need verification)")
 
     failures = [r for r in run_log if r["status"] in ("FAILED", "EMPTY")]
     if failures:

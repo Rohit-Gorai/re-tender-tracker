@@ -200,21 +200,47 @@ fresh_run(stub())
 primary = data("renewable_tender_winners.csv")
 check("primary tracker exists", bool(primary))
 if primary:
-    check("column order starts with the commercial fields",
-          list(primary[0].keys())[:5] ==
-          ["Tender Date", "Issuing Authority", "Tender / RfS Number",
-           "Tender Title", "Technology"])
+    cols = list(primary[0].keys())
+    check("Award Status is the first column", cols[0] == "Award Status")
+    check("commercial fields lead the file",
+          cols[:8] == ["Award Status", "Tender Date", "Issuing Authority",
+                       "Tender / RfS Number", "Tender Title", "Winning Bidder",
+                       "Winner Count", "Awarded Capacity MW"])
+    check("Award Status uses only controlled values",
+          set(r["Award Status"] for r in primary) <=
+          {"Awarded", "Not Yet Awarded", "Verification Required"})
+    check("awarded rows sort to the top",
+          [r["Award Status"] for r in primary] ==
+          sorted([r["Award Status"] for r in primary],
+                 key=lambda v: {"Awarded": 0, "Verification Required": 1,
+                                "Not Yet Awarded": 2}[v]))
+    check("Awarded rows always name a bidder",
+          all(r["Winning Bidder"] not in ("Not Yet Awarded", "Verification Required")
+              for r in primary if r["Award Status"] == "Awarded"))
+    check("multi-winner rows share tender identity",
+          all(len({(x["Tender / RfS Number"], x["Tender Title"],
+                    x["Issuing Authority"]) for x in primary
+                   if x["TenderKey"] == k}) == 1
+              for k in {r["TenderKey"] for r in primary}))
+    check("Winner Count matches the award rows present",
+          all(int(r["Winner Count"] or 0) ==
+              len([x for x in primary if x["TenderKey"] == r["TenderKey"] and x["AwardID"]])
+              for r in primary))
     tkeys = [r["TenderKey"] for r in primary]
     aids = [r["AwardID"] for r in primary if r["AwardID"]]
     check("AwardIDs unique across the primary view", len(aids) == len(set(aids)))
     check("multiple winners share one TenderKey",
           len(tkeys) >= len(set(tkeys)))
     check("no tender is silently blank on the winner field",
-          all(r["Winner"] for r in primary))
+          all(r["Winning Bidder"] for r in primary))
     check("derived COD is never presented as actual COD",
           all(not r["Actual COD"] for r in primary if r["COD Basis"].startswith("Derived")))
-    check("every row carries a source and confidence",
-          all(r["Source"] and r["Confidence"] for r in primary))
+    check("every row carries a source type and confidence",
+          all(r["Source Type"] and r["Confidence"] for r in primary))
+    targets = data("financing_targets.csv")
+    check("financing targets contain no unawarded tender",
+          all(t["Winner Group"] not in ("Not Yet Awarded", "Verification Required")
+              for t in targets))
 
 rec = {"Tariff": "", "Tariff Status": "", "Tariff Conflict": ""}
 T.set_tariff(rec, "\u20b95.25/kWh", "Press report")
