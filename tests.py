@@ -191,6 +191,38 @@ for name in os.listdir(T.DATA_DIR):
 check("no API key material in any output file", not leaked, str(leaked))
 
 # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# 9. Primary business output
+# --------------------------------------------------------------------------
+print("\n== 9. renewable_tender_winners.csv ==")
+shutil.rmtree(T.DATA_DIR, ignore_errors=True)
+fresh_run(stub())
+primary = data("renewable_tender_winners.csv")
+check("primary tracker exists", bool(primary))
+if primary:
+    check("column order starts with the commercial fields",
+          list(primary[0].keys())[:5] ==
+          ["Tender Date", "Issuing Authority", "Tender / RfS Number",
+           "Tender Title", "Technology"])
+    tkeys = [r["TenderKey"] for r in primary]
+    aids = [r["AwardID"] for r in primary if r["AwardID"]]
+    check("AwardIDs unique across the primary view", len(aids) == len(set(aids)))
+    check("multiple winners share one TenderKey",
+          len(tkeys) >= len(set(tkeys)))
+    check("no tender is silently blank on the winner field",
+          all(r["Winner"] for r in primary))
+    check("derived COD is never presented as actual COD",
+          all(not r["Actual COD"] for r in primary if r["COD Basis"].startswith("Derived")))
+    check("every row carries a source and confidence",
+          all(r["Source"] and r["Confidence"] for r in primary))
+
+rec = {"Tariff": "", "Tariff Status": "", "Tariff Conflict": ""}
+T.set_tariff(rec, "\u20b95.25/kWh", "Press report")
+T.set_tariff(rec, "\u20b95.40/kWh", "AI with citation")
+check("conflicting tariffs flag rather than overwrite",
+      rec["Tariff"] == "\u20b95.25/kWh" and rec["Tariff Status"] == "Conflict"
+      and "5.40" in rec["Tariff Conflict"])
+
 print(f"\n{len(PASS)} passed, {len(FAIL)} failed")
 if FAIL:
     print("FAILED: " + ", ".join(FAIL))

@@ -99,6 +99,29 @@ SOURCES = [
         "enabled": True,
     },
     {
+        # NTPC's own tender site. NOT eprocurentpc.nic.in, which is CAPTCHA
+        # protected - this one is openly browsable. Region=10 is the Renewable
+        # Energy region and carries NTPC, NTPC REL and NTPC Green tenders.
+        "key": "NTPC_RE",
+        "authority": "NTPC",
+        "url": "https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10",
+        "parser": "table",
+        "header_must_contain": ["tender title", "closing date"],
+        "map": {"ref": "tender/nit ref", "title": "tender title",
+                "due": "closing date"},
+        "enabled": True,
+    },
+    {
+        "key": "NTPC_RE_ARCHIVE",
+        "authority": "NTPC",
+        "url": "https://ntpctender.ntpc.co.in/Index/Archives?Type=Loc&Location=94",
+        "parser": "table",
+        "header_must_contain": ["tender title"],
+        "map": {"ref": "tender/nit ref", "title": "tender title",
+                "due": "closing date"},
+        "enabled": True,
+    },
+    {
         "key": "NHPC",
         "authority": "NHPC",
         "url": "https://www.nhpcindia.com/welcome/tender",
@@ -168,7 +191,7 @@ TECH_RULES = [
     ("Green Hydrogen / Derivatives", r"green hydrogen|green ammonia|green methanol|rfnbo|electrolys"),
     ("Transmission / Evacuation",     r"transmission line|evacuation of power|power evacuation|"
                                       r"\bsubstation\b|pooling station|\bists\b transmission"),
-    ("Pumped Storage",               r"pumped storage|\bpsp\b"),
+    ("Pumped Storage",               r"pumped storage|pump(ed)? hydro|\bphes\b|\bpsp\b"),
     ("Hydro",                        r"\bhydro\b|hydroelectric|hydro power|micro hydro|small hydro"),
     ("Solar + Storage",              r"(solar|spv|photovoltaic).{0,60}(bess|battery|storage)|"
                                      r"(bess|battery|storage).{0,60}(solar|spv|photovoltaic)"),
@@ -182,6 +205,7 @@ TECH_RULES = [
     ("Geothermal",                   r"geothermal"),
     ("Biomass / WtE",                r"biomass|waste to energy|bio-cng|biogas"),
     ("Round-the-Clock / CfD / Trading", r"round the clock|\brtc\b|\bcfd\b|peak supply|"
+                                        r"\bfdre\b|firm and dispatchable|firm & dispatchable|"
                                         r"power procurement|power trading|off-?taker"),
 ]
 
@@ -195,7 +219,7 @@ RE_SIGNAL = re.compile(
 
 NOISE_SIGNAL = re.compile(
     r"canteen|catering|housekeeping|horticulture|sanitation|security service|manpower|"
-    r"stationery|furniture|uniform|liveries|vehicle hire|hiring of (car|taxi|bus)|"
+    r"stationery|furniture|uniform|liveries|vehicle|hiring of (one|two|three|\d)|hiring of (car|taxi|bus)|"
     r"medical|dispensary|hospital|ambulance|guest house|colony|quarters|barrack|"
     r"painting|white ?wash|plumbing|carpentry|road repair|bituminous|park\b|plantation|"
     r"sap erp|hrms|\berp\b|printer|laptop|desktop|networking switch|\bups\b|"
@@ -555,7 +579,11 @@ def make_key(authority, ref, title):
 
 def build_record(raw, cfg):
     title = _norm(raw["title"])
-    blob = f"{title} {raw.get('extra','')} {raw.get('ref','')}"
+    # Classify on the tender's own text only. A listing's category column
+    # ("Source Of NIT: Renewable Energy") must not make a vehicle hire look
+    # like a renewable tender. Other columns are still used to find the state.
+    blob = f"{title} {raw.get('ref','')}"
+    state_blob = f"{title} {raw.get('extra','')}"
     cap, cap_raw = extract_capacity_mw(title)
     due = parse_date(raw.get("due"))
     pub = parse_date(raw.get("published"))
@@ -565,7 +593,7 @@ def build_record(raw, cfg):
         "Project Name": title,
         "Technology": detect_technology(blob),
         "Capacity MW": cap if cap is not None else "",
-        "State": detect_state(blob),
+        "State": detect_state(state_blob),
         "Status": "Closed" if awarded else derive_status(due),
         "Tender Ref No": _norm(raw.get("ref", "")),
         "Tender Type": detect_tender_type(blob),
@@ -604,13 +632,19 @@ def build_record(raw, cfg):
 MAX_DETAIL_FETCHES = 120          # per run; the backlog fills over a few days
 
 DETAIL_PATTERNS = {
-    "Tender Publication Date":          r"Tender Publication Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
-    "Pre Bid Meeting Date":             r"Pre[\s\-]?Bid Meeting Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
-    "Bid Submission End Date (Online)": r"Bid Submission End Date\s*\(\s*Online\s*\)\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
-    "Bid Submission End Date (Offline)":r"Bid Submission End Date\s*\(\s*Offline\s*\)\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
-    "Bid Open Date":                    r"Bid Open(?:ing)? Date\s*[:\-]?\s*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Tender Publication Date":          r"Tender Publication Date[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Pre Bid Meeting Date":             r"Pre[\s\-]?Bid Meeting Date[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Submission End Date (Online)": r"Bid Submission End Date\s*\(\s*Online\s*\)[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Submission End Date (Offline)":r"Bid Submission End Date\s*\(\s*Offline\s*\)[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "Bid Open Date":                    r"Bid Open(?:ing)? Date[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    # NTPC NIT detail pages
+    "_ntpc_issue":                      r"Date Of Issue of NIT[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
+    "_ntpc_submit":                     r"Bid Submission End Date[\s:\-]*([0-9]{1,2}[/\-][0-9]{1,2}[/\-][0-9]{4})",
 }
-TENDER_TYPE_PAT = re.compile(r"Tender Type\s*[:\-]?\s*([A-Za-z][A-Za-z0-9 \-/&.()]{3,60}?)\s{2,}", re.I)
+# NTPC label -> canonical field
+DETAIL_ALIASES = {"_ntpc_issue": "Tender Publication Date",
+                  "_ntpc_submit": "Bid Submission End Date (Online)"}
+TENDER_TYPE_PAT = re.compile(r"Tender Type[\s:\-]*([A-Za-z][A-Za-z0-9 \-/&.()]{3,60}?)\s{2,}", re.I)
 
 
 def parse_detail_page(html):
@@ -625,6 +659,11 @@ def parse_detail_page(html):
             d = parse_date(m.group(1))
             if d:
                 out[field] = d.isoformat()
+    for alias, canonical in DETAIL_ALIASES.items():
+        if alias in out:
+            out.setdefault(canonical, out.pop(alias))
+        out.pop(alias, None)
+
     m = TENDER_TYPE_PAT.search(text)
     if m:
         out["Tender Type"] = _norm(m.group(1))
@@ -662,7 +701,8 @@ def enrich_details(records):
     """Visit tender detail pages to fill the portal date fields."""
     pending = [r for r in records.values()
                if r.get("Details Fetched") != "yes"
-               and "tender-details" in (r.get("Source URL") or "")]
+               and ("tender-details" in (r.get("Source URL") or "")
+                    or "/NITDetails/" in (r.get("Source URL") or ""))]
     pending.sort(key=lambda r: r.get("Bid Submission End Date (Online)") or "", reverse=True)
 
     done = 0
@@ -698,9 +738,35 @@ def enrich_details(records):
 AWARD_SOURCES = [
     {
         "key": "SECI",
+        "authority": "SECI",
         "url": "https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder",
         "header_must_contain": ["tender ref no", "number of bids"],
         "map": {"ref": "tender ref no", "bids": "number of bids"},
+        "enabled": True,
+    },
+    {
+        # NTPC publishes award details on the same open site.
+        # Parser In Development: structure unverified, fails safe if it differs.
+        "key": "NTPC",
+        "authority": "NTPC",
+        "url": "https://ntpctender.ntpc.co.in/Index/Search?Type=Award&Region=10",
+        "header_must_contain": ["tender title"],
+        "map": {"ref": "tender/nit ref", "title": "tender title",
+                "winner": "awarded to", "award_date": "award date"},
+        "enabled": True,
+    },
+    {
+        # Official award table: winner, award date and an LOA link per row.
+        # Tier 1 evidence. In practice almost every row is vendor procurement -
+        # the renewable filter strips them - but a renewable award appears here
+        # before it reaches the press, which is exactly what we want.
+        "key": "SJVN",
+        "authority": "SJVN",
+        "url": "https://sjvn.nic.in/en/tender-awarded",
+        "header_must_contain": ["name of work", "name of agency", "date of award"],
+        "map": {"ref": "tender no", "title": "name of work",
+                "winner": "name of agency", "award_date": "date of award",
+                "loa": "loa"},
         "enabled": True,
     },
 ]
@@ -766,6 +832,7 @@ def fetch_awards():
 
             idx = {f: col_index(lbl) for f, lbl in cfg["map"].items()}
             count = 0
+            renewable_only = cfg.get("renewable_only", True)
             for tr in (table.find("tbody") or table).find_all("tr"):
                 cells = tr.find_all(["td", "th"])
                 if len(cells) < 2:
@@ -779,13 +846,26 @@ def fetch_awards():
                 ref = normalize_ref(texts[ri])
                 if not ref:
                     continue
+                ti = idx.get("title")
+                row_title = texts[ti] if ti is not None and ti < len(texts) else ""
+                if renewable_only and row_title and not is_renewable(row_title):
+                    continue
                 bi = idx.get("bids")
                 a = tr.find("a", href=True)
                 detail = urljoin(cfg["url"], a["href"]) if a else ""
+                def col(field):
+                    j = idx.get(field)
+                    return texts[j] if j is not None and j < len(texts) else ""
+
+                official = _norm(col("winner"))
                 awards[ref] = {
                     "bids": texts[bi] if bi is not None and bi < len(texts) else "",
                     "url": detail or cfg["url"],
-                    "winner": extract_winners(detail) if detail else "",
+                    # a winner column in the official table beats a detail-page scrape
+                    "winner": official or (extract_winners(detail) if detail else ""),
+                    "award_date": col("award_date"),
+                    "title": col("title"),
+                    "official": bool(official),
                     "source": cfg["key"],
                 }
                 count += 1
@@ -825,6 +905,11 @@ def apply_awards(records):
                 rec["Winner"] = hit["winner"]
             rec["Award Status"] = "Awarded" if hit["winner"] else "Awarded (see link)"
             rec["Award Source"] = "portal"
+            if hit.get("award_date"):
+                d = parse_date(hit["award_date"])
+                if d:
+                    rec["Winner Announcement Date"] = d.isoformat()
+                    rec["Last Verified"] = TODAY.isoformat()
             filled += 1
 
         m = manual.get(ref)
@@ -1121,8 +1206,7 @@ def enrich_with_news(records):
         rec["Award URL"] = hit["url"] or rec.get("Award URL", "")
         rec["Winner Announcement Date"] = hit["date"] or rec.get("Winner Announcement Date", "")
         rec["Award Source"] = "news (unverified)"
-        if hit.get("tariff"):
-            rec["Tariff"] = hit["tariff"]
+        set_tariff(rec, hit.get("tariff"), "Press report")
         if hit["winner"]:
             rec["Winner"] = hit["winner"]
             rec["Award Status"] = "Awarded (news, unverified)"
@@ -1148,8 +1232,13 @@ SWEEP_FROM = "2025-01-01"
 MAX_SWEEP_ARTICLES = 25          # article body fetches per run
 
 SWEEP_AUTHORITIES = [
+    # central procurers
     "SECI", "NTPC", "NTPC Green Energy", "NHPC", "SJVN", "SJVN Green Energy",
     "IREDA", "NLC India", "THDC India", "NVVN",
+    # state procurers. Their own portals are robots-disallowed or login-walled,
+    # so tenders and awards are discovered through the press and AI layers.
+    # GUVNL alone runs more renewable auctions than any entity except SECI.
+    "GUVNL", "RUVNL", "MSEDCL", "TANGEDCO", "KREDL", "MPPMCL", "APDCL", "UPPCL",
 ]
 SWEEP_TERMS = [
     "tender awarded winners MW",
@@ -1598,6 +1687,24 @@ AWARD_FIELDS = [
 QUALITY_FIELDS = ["Severity", "Check", "TenderKey", "Authority", "Detail", "Value"]
 
 
+def set_tariff(rec, value, source_label):
+    """Never overwrite one credible tariff with another - flag the conflict."""
+    value = _norm(value or "")
+    if not value:
+        return
+    existing = _norm(rec.get("Tariff") or "")
+    if not existing:
+        rec["Tariff"] = value
+        rec["Tariff Status"] = source_label
+        return
+    if existing != value:
+        rec["Tariff Status"] = "Conflict"
+        prior = rec.get("Tariff Conflict") or ""
+        entry = f"{value} ({source_label})"
+        if entry not in prior:
+            rec["Tariff Conflict"] = f"{prior}; {entry}".strip("; ")
+
+
 def build_awards(rows):
     """One row per (tender, winner). The tender itself is never duplicated -
     these rows point back at it through TenderKey."""
@@ -1689,7 +1796,8 @@ def build_quality_report(rows, run_log):
             flag("LOW", "WINNER_NOT_FOUND", rec,
                  "material tender closed with no winner found yet", cap)
 
-        if not due and "tender-details" in (rec.get("Source URL") or ""):
+        if not due and ("tender-details" in (rec.get("Source URL") or "")
+                        or "/NITDetails/" in (rec.get("Source URL") or "")):
             flag("LOW", "MISSING_BID_DATE", rec, "no online bid submission date", "")
     return q
 
@@ -1709,6 +1817,9 @@ def write_daily_summary(path, rows, awards, changes, targets, quality, run_log):
     L.append(f"- **{len(awards)}** award records across "
              f"{len({a['TenderKey'] for a in awards})} tenders")
     L.append(f"- **{len(targets)}** financing targets")
+    L.append("")
+    L.append("Primary output: **data/renewable_tender_winners.csv** "
+             "(one row per tender-award relationship).")
     L.append(f"- **{len(high)}** high-severity data-quality flags")
     L.append("")
 
@@ -1907,6 +2018,130 @@ def write_coverage_report(path, rows, awards, targets, review, run_log):
 
 
 # ---------------------------------------------------------------------------
+# PRIMARY BUSINESS OUTPUT: renewable_tender_winners.csv
+# ---------------------------------------------------------------------------
+# One row per tender-award relationship. A tender with three winners produces
+# three rows sharing one TenderKey - the tender is never duplicated as though
+# it were three different tenders. An unawarded tender produces one row with
+# the winner state spelled out rather than left blank.
+# ---------------------------------------------------------------------------
+
+WINNER_FIELDS = [
+    "Tender Date", "Issuing Authority", "Tender / RfS Number", "Tender Title",
+    "Technology", "Capacity MW", "State", "Deadline", "Tender Status",
+    "Winner", "Awarded Capacity MW", "Tariff", "Tariff Unit", "Tariff Status",
+    "Award Date", "Expected COD", "Actual COD", "COD Basis",
+    "Project / SPV", "Procurer", "Source", "Confidence", "Last Verified",
+    "Quality Grade", "Freshness", "Source URL", "Award URL",
+    "TenderKey", "AwardID",
+]
+
+SOURCE_TYPE = {
+    "manual": "Manual - verified",
+    "portal": "Official award document",
+    "ai": "AI research with citation",
+    "news": "Industry publication",
+}
+
+
+def source_type_of(rec):
+    src = (rec.get("Award Source") or "").lower()
+    for prefix, label in SOURCE_TYPE.items():
+        if src.startswith(prefix):
+            return label
+    return "Official tender page"
+
+
+def winner_state(rec, closed):
+    """Never leave the most important field ambiguous."""
+    if rec.get("Winner"):
+        return None                       # a real winner exists
+    if not closed:
+        return "Not Yet Awarded"
+    return "Verification Required"
+
+
+def build_primary_tracker(rows, awards):
+    by_tender = {}
+    for a in awards:
+        by_tender.setdefault(a["TenderKey"], []).append(a)
+
+    out = []
+    for rec in rows:
+        if rec.get("Is Renewable") != "Yes":
+            continue
+        due = parse_date(rec.get("Bid Submission End Date (Online)"))
+        closed = bool(due and due < TODAY) or rec.get("Status") in ("Closed", "Delisted")
+        months, basis = commissioning_window(rec.get("Technology"))
+        award_date = parse_date(rec.get("Winner Announcement Date"))
+        cod = add_months(award_date, months).isoformat() if award_date else ""
+
+        base = {
+            "Tender Date": rec.get("Tender Publication Date", ""),
+            "Issuing Authority": rec.get("Authority", ""),
+            "Tender / RfS Number": rec.get("Tender Ref No", ""),
+            "Tender Title": rec.get("Project Name", ""),
+            "Technology": rec.get("Technology", ""),
+            "Capacity MW": rec.get("Capacity MW", ""),
+            "State": rec.get("State", ""),
+            "Deadline": rec.get("Bid Submission End Date (Online)", ""),
+            "Tender Status": rec.get("Status", ""),
+            "Tariff": rec.get("Tariff", ""),
+            "Tariff Unit": "INR/kWh" if rec.get("Tariff") else "",
+            "Tariff Status": rec.get("Tariff Status", ""),
+            "Award Date": rec.get("Winner Announcement Date", ""),
+            "Expected COD": cod,
+            "Actual COD": "",             # only ever set from a manual entry
+            "COD Basis": f"Derived: {basis}" if cod else "Unknown",
+            "Procurer": rec.get("Authority", ""),
+            "Confidence": confidence_of(rec),
+            "Last Verified": rec.get("Last Verified", ""),
+            "Quality Grade": rec.get("Quality Grade", ""),
+            "Freshness": rec.get("Freshness", ""),
+            "Source URL": rec.get("Source URL", ""),
+            "Award URL": rec.get("Award URL", ""),
+            "TenderKey": rec.get("TenderKey", ""),
+        }
+
+        tender_awards = by_tender.get(rec.get("TenderKey"), [])
+        if tender_awards:
+            for a in tender_awards:
+                row = dict(base)
+                row.update({
+                    "Winner": a["Winning Bidder"],
+                    "Awarded Capacity MW": a["Awarded Capacity MW"],
+                    "Project / SPV": a["Winner SPV"],
+                    "Source": source_type_of(rec),
+                    "AwardID": a["Award ID"],
+                })
+                out.append(row)
+        else:
+            state = winner_state(rec, closed)
+            row = dict(base)
+            row.update({
+                "Winner": state,
+                "Awarded Capacity MW": "",
+                "Project / SPV": "",
+                "Source": "Official tender page",
+                "Confidence": "Not applicable" if state == "Not Yet Awarded"
+                              else "Winner not found",
+                "AwardID": "",
+            })
+            out.append(row)
+
+    # awarded first, then biggest, then soonest deadline
+    def sort_key(r):
+        try:
+            cap = float(r["Capacity MW"] or 0)
+        except (TypeError, ValueError):
+            cap = 0
+        awarded = 0 if r["Winner"] not in ("Not Yet Awarded", "Verification Required") else 1
+        return (awarded, -cap, r["Deadline"] or "9999")
+    out.sort(key=sort_key)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # MAIN RUN
 # ---------------------------------------------------------------------------
 
@@ -1963,6 +2198,7 @@ def run(only_source=None):
             # carry forward everything a previous run discovered
             for f in ("Winner", "Tariff", "Award URL", "Award Status", "Award Source",
                       "Award Headline", "Winner Announcement Date", "Bids Received", "Winner SPV",
+                      "Tariff Status", "Tariff Conflict",
                       "Pre Bid Meeting Date", "Bid Open Date",
                       "Bid Submission End Date (Offline)", "Details Fetched", "AI Checked",
                       "First Seen", "Last Verified"):
@@ -2031,6 +2267,9 @@ def run(only_source=None):
     quality = build_quality_report(rows, run_log)
     write_csv(os.path.join(DATA_DIR, "financing_targets.csv"), targets, TARGET_FIELDS)
     write_csv(os.path.join(DATA_DIR, "awards.csv"), awards_tbl, AWARD_FIELDS)
+    primary = build_primary_tracker(rows, awards_tbl)
+    write_csv(os.path.join(DATA_DIR, "renewable_tender_winners.csv"),
+              primary, WINNER_FIELDS)
     write_csv(os.path.join(DATA_DIR, "data_quality.csv"), quality, QUALITY_FIELDS)
     write_csv(os.path.join(DATA_DIR, "manual_review.csv"), review, REVIEW_FIELDS)
     write_coverage_report(os.path.join(DATA_DIR, "coverage_report.md"),
@@ -2050,7 +2289,9 @@ def run(only_source=None):
     print(f"\nMaster: {len(rows)} | RE total: {len(renewable)} | Live: {len(live)} | "
           f"Winners known: {len(won)} | Awards: {len(awards_tbl)} | "
           f"Targets: {len(targets)} | Changes: {len(changes)} | "
-          f"QC flags: {len(quality)} | Review queue: {len(review)}")
+          f"QC flags: {len(quality)} | Review queue: {len(review)}\n"
+          f"renewable_tender_winners.csv: {len(primary)} rows "
+          f"({len([r for r in primary if r['Winner'] not in ('Not Yet Awarded','Verification Required')])} awarded)")
 
     failures = [r for r in run_log if r["status"] in ("FAILED", "EMPTY")]
     if failures:
