@@ -1,32 +1,32 @@
-# Coverage report - 07 Sep 2026
+# Coverage report - 08 Sep 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 1581 |
-| Renewable tenders | 1386 |
-| Award records | 128 |
+| Canonical tenders | 1586 |
+| Renewable tenders | 1391 |
+| Award records | 133 |
 | Unique winners | 36 |
-| Renewable capacity tracked (MW) | 561,220 |
-| Tenders with a winner | 90 |
+| Renewable capacity tracked (MW) | 563,113 |
+| Tenders with a winner | 95 |
 | Tenders awaiting a winner | 1296 |
 | Records with a tariff | 0 |
-| Financing targets | 75 |
-| Needing manual review | 659 |
+| Financing targets | 79 |
+| Needing manual review | 675 |
 
 ## By technology
 
 | Technology | Tenders |
 |---|---|
-| Unclassified | 378 |
-| Solar | 377 |
+| Unclassified | 379 |
+| Solar | 378 |
 | Hydro | 158 |
-| Wind | 107 |
+| Wind | 108 |
 | Rooftop Solar | 99 |
-| Solar + Storage | 59 |
+| Solar + Storage | 60 |
+| Energy Storage (BESS) | 38 |
 | Round-the-Clock / CfD / Trading | 37 |
-| Energy Storage (BESS) | 37 |
 | Green Hydrogen / Derivatives | 33 |
 | Transmission / Evacuation | 31 |
 | Wind-Solar Hybrid | 28 |
@@ -36,31 +36,31 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NHPC | 614 |
+| NHPC | 615 |
 | SECI | 380 |
 | NTPC | 346 |
 | SJVN | 13 |
+| MSEDCL | 8 |
 | NLC India | 8 |
-| MSEDCL | 7 |
+| GUVNL | 6 |
 | MPPMCL | 6 |
-| GUVNL | 5 |
-| NVVN | 3 |
+| NVVN | 4 |
+| NTPC Green Energy | 2 |
 | KREDL | 1 |
-| NTPC Green Energy | 1 |
 | SJVN Green Energy | 1 |
 
 ## By state
 
 | State | Tenders |
 |---|---|
-| (blank) | 973 |
+| (blank) | 977 |
 | Rajasthan | 77 |
 | Jammu and Kashmir | 38 |
 | Andhra Pradesh | 34 |
 | Karnataka | 32 |
 | Gujarat | 31 |
 | Uttar Pradesh | 25 |
-| Maharashtra | 20 |
+| Maharashtra | 21 |
 | Ladakh | 16 |
 | Odisha | 15 |
 | Kerala | 14 |
@@ -70,28 +70,28 @@
 
 | Quality grade | Tenders |
 |---|---|
-| C | 543 |
-| D | 495 |
-| E | 347 |
-| A | 1 |
+| C | 541 |
+| D | 499 |
+| E | 348 |
+| A | 3 |
 
 ## By freshness
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1385 |
-| Recently Verified | 1 |
+| Fresh | 1388 |
+| Recently Verified | 3 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 19 | 3.0 |
+| SECI | OK | 19 | 2.9 |
 | SECI_ARCHIVE | OK | 257 | 0.9 |
 | SECI_AWARDED | FAILED | 0 | 12.8 |
-| NTPC_RE | OK | 2 | 3.1 |
-| NTPC_RE_ARCHIVE | OK | 358 | 4.1 |
-| NHPC | EMPTY | 0 | 16.4 |
+| NTPC_RE | OK | 3 | 3.3 |
+| NTPC_RE_ARCHIVE | OK | 357 | 4.8 |
+| NHPC | EMPTY | 0 | 16.9 |
 
 ## Coverage limits
 
