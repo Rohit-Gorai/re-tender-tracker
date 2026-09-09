@@ -1,12 +1,12 @@
-# Renewable tender tracker - 08 Sep 2026
+# Renewable tender tracker - 09 Sep 2026
 
 - **0** new tenders
-- **3** revised bid dates
-- **8** closing within 7 days
-- **133** award records across 95 tenders
-- **79** financing targets
+- **0** revised bid dates
+- **9** closing within 7 days
+- **141** award records across 101 tenders
+- **82** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 598 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 606 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -41,8 +41,8 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | GUVNL | Juniper | T-82c8f8303a06 |
 | GUVNL | Engie | T-0b5ee904fc8d |
 | GUVNL | Jakson | T-add6b5846289 |
+| IREDA | Inox Wind | T-a8f1f3eec1cc |
 | KREDL | Pace Digitek | T-8c923602ce25 |
-| MPPMCL | Ayana Renewable | T-8940327e293b |
 
 ## Sources that failed
 | Source | Status | Error |

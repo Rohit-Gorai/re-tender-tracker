@@ -652,6 +652,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, con
 LOW,WINNER_NEEDS_VERIFICATION,T-82c8f8303a06,GUVNL,"winner from press or AI, confirm before use",Juniper
 LOW,WINNER_NEEDS_VERIFICATION,T-0b5ee904fc8d,GUVNL,"winner from press or AI, confirm before use",Engie
 LOW,WINNER_NEEDS_VERIFICATION,T-add6b5846289,GUVNL,"winner from press or AI, confirm before use",Jakson
+LOW,WINNER_NEEDS_VERIFICATION,T-a8f1f3eec1cc,IREDA,"winner from press or AI, confirm before use",Inox Wind
 LOW,WINNER_NEEDS_VERIFICATION,T-8c923602ce25,KREDL,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-8940327e293b,MPPMCL,"winner from press or AI, confirm before use",Ayana Renewable
 LOW,WINNER_NEEDS_VERIFICATION,T-65e5485f6676,MPPMCL,"winner from press or AI, confirm before use",Adani Power
@@ -979,6 +980,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-4d4a84c58251,NHPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-8c2d3d47531e,NHPC,"winner from press or AI, confirm before use",ReNew
 LOW,WINNER_NEEDS_VERIFICATION,T-a5b5304a9a2d,NHPC,"winner from press or AI, confirm before use",SAEL
 LOW,WINNER_NEEDS_VERIFICATION,T-d9a927260c37,NHPC,"winner from press or AI, confirm before use",SAEL
+LOW,WINNER_NEEDS_VERIFICATION,T-3460bd727a0a,NHPC,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-956d86e85998,NLC India,"winner from press or AI, confirm before use",Renew; Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56d130be8de8,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36f0b8607c13,NLC India,"winner from press or AI, confirm before use",Renew
@@ -993,6 +995,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-98082a4e0e6b,NTPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-d9717b535ee9,NTPC,"winner from press or AI, confirm before use",SECI; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-30622cb3519a,NTPC,"winner from press or AI, confirm before use",NTPC Renewable
 LOW,WINNER_NEEDS_VERIFICATION,T-0ebaf350f811,NTPC,"winner from press or AI, confirm before use",NTPC Green; SECI
+LOW,WINNER_NEEDS_VERIFICATION,T-371e2132c618,NTPC,"winner from press or AI, confirm before use",NTPC Green; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-cca15fd12bcf,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-839f243652dc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b5f86f00d1d1,NVVN,"winner from press or AI, confirm before use",Sunsure
@@ -1022,6 +1025,8 @@ LOW,WINNER_NEEDS_VERIFICATION,T-95125eeeb3d5,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-767ac40a755a,SECI,"winner from press or AI, confirm before use",Serentica
 LOW,WINNER_NEEDS_VERIFICATION,T-10c5313b39fd,SECI,"winner from press or AI, confirm before use",renew
 LOW,WINNER_NEEDS_VERIFICATION,T-4701ebe18dd6,SECI,"winner from press or AI, confirm before use",Tata Power
+LOW,WINNER_NEEDS_VERIFICATION,T-52e91036f000,SECI,"winner from press or AI, confirm before use",NTPC Renewable
+LOW,WINNER_NEEDS_VERIFICATION,T-035d38538db6,SECI,"winner from press or AI, confirm before use",Waaree; ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
@@ -1037,3 +1042,4 @@ LOW,WINNER_NEEDS_VERIFICATION,T-cb446d247af4,SJVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-f9a1aa507d28,SJVN,"winner from press or AI, confirm before use",SAEL; Sembcorp
 LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from press or AI, confirm before use",ACME Solar; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-354bc7d40a8b,UPPCL,"winner from press or AI, confirm before use",Adani Green
+LOW,WINNER_NEEDS_VERIFICATION,T-b235e4c4bf9f,UPPCL,"winner from press or AI, confirm before use",NTPC Green
