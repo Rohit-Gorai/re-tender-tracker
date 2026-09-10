@@ -1,15 +1,20 @@
-# Renewable tender tracker - 09 Sep 2026
+# Renewable tender tracker - 10 Sep 2026
 
-- **0** new tenders
-- **0** revised bid dates
-- **9** closing within 7 days
-- **141** award records across 101 tenders
-- **82** financing targets
+- **1** new tenders
+- **2** revised bid dates
+- **11** closing within 7 days
+- **146** award records across 104 tenders
+- **83** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 606 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 610 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | RfP for Selection of Land Parcels: Lease of 02 Agricultural Land Sites (Minimum  | 2026-10-07 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
