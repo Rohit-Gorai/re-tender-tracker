@@ -1,20 +1,15 @@
-# Renewable tender tracker - 10 Sep 2026
+# Renewable tender tracker - 11 Sep 2026
 
-- **1** new tenders
-- **2** revised bid dates
-- **11** closing within 7 days
-- **146** award records across 104 tenders
-- **83** financing targets
+- **0** new tenders
+- **1** revised bid dates
+- **10** closing within 7 days
+- **159** award records across 110 tenders
+- **88** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 610 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 622 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | RfP for Selection of Land Parcels: Lease of 02 Agricultural Land Sites (Minimum  | 2026-10-07 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -26,8 +21,8 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | 5 | SAEL | 2000 | Solar + Storage | 2027-11-08 | Press report - verify |
 | 6 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
 | 7 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
-| 8 | Adani Power | 1600 | Unclassified | 2028-03-15 | Press report - verify |
-| 9 | Adani Power | 1600 | Unclassified | 2028-03-16 | Press report - verify |
+| 8 | Adani Power | 1600 | Unclassified | 2027-09-12 | Press report - verify |
+| 9 | Adani Power | 1600 | Unclassified | 2028-03-15 | Press report - verify |
 | 10 | Adani Power | 1600 | Unclassified | 2028-03-16 | Press report - verify |
 
 ## Needs manual verification
@@ -40,14 +35,14 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | SECI | Waaree; KP Energy; Vena Energy | T-519bbe8b1f67 |
 | SECI | Waaree; KP Energy; Vena Energy | 519bbe8b1f67 |
 | NTPC | Pace Digitek | T-ba290cae1701 |
+| SECI | Greenko; Torrent; Tata Power | T-2b32a0fbd349 |
+| SECI | Greenko; Torrent; Tata Power | 2b32a0fbd349 |
 | GUVNL | NLC India | T-70cc4438cd19 |
 | GUVNL | NLC India | T-bd812b7761b5 |
 | GUVNL | Juniper; Jakson | T-948bf847c4a1 |
 | GUVNL | Juniper | T-82c8f8303a06 |
 | GUVNL | Engie | T-0b5ee904fc8d |
 | GUVNL | Jakson | T-add6b5846289 |
-| IREDA | Inox Wind | T-a8f1f3eec1cc |
-| KREDL | Pace Digitek | T-8c923602ce25 |
 
 ## Sources that failed
 | Source | Status | Error |
