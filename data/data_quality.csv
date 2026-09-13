@@ -633,6 +633,7 @@ HIGH,POSSIBLE_DUPLICATE,5e9b7edc2288,SECI,same reference number on two records,S
 LOW,WINNER_NOT_FOUND,5e9b7edc2288,SECI,material tender closed with no winner found yet,500.0
 LOW,WINNER_NOT_FOUND,T-3e3df44c0435,NTPC,material tender closed with no winner found yet,813.0
 LOW,WINNER_NOT_FOUND,9f1745658bdb,SECI,material tender closed with no winner found yet,88.0
+LOW,WINNER_NOT_FOUND,T-bef42b8fc9df,NTPC,material tender closed with no winner found yet,813.0
 HIGH,POSSIBLE_DUPLICATE,1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
@@ -1038,6 +1039,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-52e91036f000,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-035d38538db6,SECI,"winner from press or AI, confirm before use",Waaree; ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-2752ad9f00bc,SECI,"winner from press or AI, confirm before use",Tata Power; Greenko; Torrent
 LOW,WINNER_NEEDS_VERIFICATION,T-9f38b115b916,SECI,"winner from press or AI, confirm before use",Juniper Green
+LOW,WINNER_NEEDS_VERIFICATION,T-fa8b5442cf08,SECI,"winner from press or AI, confirm before use",Purvah Green
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
@@ -1051,6 +1053,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-e89f9335756c,SJVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-12b2fcf58c41,SJVN,"winner from press or AI, confirm before use",ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-cb446d247af4,SJVN,"winner from press or AI, confirm before use",SAEL; Sembcorp
 LOW,WINNER_NEEDS_VERIFICATION,T-f9a1aa507d28,SJVN,"winner from press or AI, confirm before use",SAEL; Sembcorp
+LOW,WINNER_NEEDS_VERIFICATION,T-973590f2c8cd,SJVN,"winner from press or AI, confirm before use",ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from press or AI, confirm before use",ACME Solar; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-354bc7d40a8b,UPPCL,"winner from press or AI, confirm before use",Adani Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b235e4c4bf9f,UPPCL,"winner from press or AI, confirm before use",NTPC Green
