@@ -623,7 +623,6 @@ LOW,WINNER_NOT_FOUND,T-7bd77556d47f,SECI,material tender closed with no winner f
 HIGH,POSSIBLE_DUPLICATE,7bd77556d47f,SECI,same reference number on two records,SECI/CP/IPP/13/0006/26-27
 LOW,WINNER_NOT_FOUND,7bd77556d47f,SECI,material tender closed with no winner found yet,1500.0
 HIGH,POSSIBLE_DUPLICATE,2340251f1369,SECI,same reference number on two records,SECI/CP/IPP/11/0007/26-27
-HIGH,POSSIBLE_DUPLICATE,784605598a1f,SECI,same reference number on two records,GEM/2026/B/7897394
 LOW,WINNER_NOT_FOUND,T-8f1494aaf9b2,SECI,material tender closed with no winner found yet,100.0
 HIGH,POSSIBLE_DUPLICATE,8f1494aaf9b2,SECI,same reference number on two records,GEM/2026/B/7883396
 LOW,WINNER_NOT_FOUND,8f1494aaf9b2,SECI,material tender closed with no winner found yet,100.0
@@ -634,6 +633,7 @@ LOW,WINNER_NOT_FOUND,5e9b7edc2288,SECI,material tender closed with no winner fou
 LOW,WINNER_NOT_FOUND,T-3e3df44c0435,NTPC,material tender closed with no winner found yet,813.0
 LOW,WINNER_NOT_FOUND,9f1745658bdb,SECI,material tender closed with no winner found yet,88.0
 LOW,WINNER_NOT_FOUND,T-bef42b8fc9df,NTPC,material tender closed with no winner found yet,813.0
+HIGH,POSSIBLE_DUPLICATE,T-784605598a1f,SECI,same reference number on two records,GEM/2026/B/7897394
 HIGH,POSSIBLE_DUPLICATE,1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
@@ -658,6 +658,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-a8f1f3eec1cc,IREDA,"winner from press or AI, con
 LOW,WINNER_NEEDS_VERIFICATION,T-8c923602ce25,KREDL,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-1eb181f0a4d9,KREDL,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-bd4927335d19,KREDL,"winner from press or AI, confirm before use",Pace Digitek
+LOW,WINNER_NEEDS_VERIFICATION,T-f3f895952475,KREDL,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-8940327e293b,MPPMCL,"winner from press or AI, confirm before use",Ayana Renewable
 LOW,WINNER_NEEDS_VERIFICATION,T-65e5485f6676,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-75d161984b5f,MPPMCL,"winner from press or AI, confirm before use",Adani Power
