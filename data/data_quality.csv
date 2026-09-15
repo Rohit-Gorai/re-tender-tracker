@@ -541,7 +541,6 @@ LOW,WINNER_NOT_FOUND,710e9150b621,SECI,material tender closed with no winner fou
 LOW,WINNER_NEEDS_VERIFICATION,T-519bbe8b1f67,SECI,"winner from press or AI, confirm before use",Waaree; KP Energy; Vena Energy
 HIGH,POSSIBLE_DUPLICATE,519bbe8b1f67,SECI,same reference number on two records,SECI/CP/IPP/12/0013/25-26
 LOW,WINNER_NEEDS_VERIFICATION,519bbe8b1f67,SECI,"winner from press or AI, confirm before use",Waaree; KP Energy; Vena Energy
-LOW,WINNER_NOT_FOUND,T-40997de3451e,NTPC,material tender closed with no winner found yet,672.0
 HIGH,POSSIBLE_DUPLICATE,8288f555991a,SECI,same reference number on two records,SECI/CP/IPP/11/0010/25-26
 LOW,WINNER_NOT_FOUND,T-c6f7d896cb3e,SECI,material tender closed with no winner found yet,1200.0
 HIGH,POSSIBLE_DUPLICATE,c6f7d896cb3e,SECI,same reference number on two records,SECI/CP/IPP/13/0012/25-26
@@ -633,20 +632,21 @@ LOW,WINNER_NOT_FOUND,5e9b7edc2288,SECI,material tender closed with no winner fou
 LOW,WINNER_NOT_FOUND,T-3e3df44c0435,NTPC,material tender closed with no winner found yet,813.0
 LOW,WINNER_NOT_FOUND,9f1745658bdb,SECI,material tender closed with no winner found yet,88.0
 LOW,WINNER_NOT_FOUND,T-bef42b8fc9df,NTPC,material tender closed with no winner found yet,813.0
+LOW,WINNER_NOT_FOUND,T-69c7a513e920,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-784605598a1f,SECI,same reference number on two records,GEM/2026/B/7897394
-HIGH,POSSIBLE_DUPLICATE,1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
 HIGH,POSSIBLE_DUPLICATE,fde2f1c357d8,SECI,same reference number on two records,SECI/CP/EOI/17/0002/26-27
-HIGH,POSSIBLE_DUPLICATE,f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,T-9f1745658bdb,SECI,same reference number on two records,SECI/CP/OP/11/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,06aa19e5e4d1,SECI,same reference number on two records,SECI/CP/EOI/17/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,876f5d4e8922,SECI,same reference number on two records,SECI/CP/OP/11/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
+HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,9be57a217bf3,SECI,same reference number on two records,SECI/CP/IPP/15/0008/26-27
 HIGH,POSSIBLE_DUPLICATE,1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
 HIGH,POSSIBLE_DUPLICATE,7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
+HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
@@ -997,6 +997,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-d97c5c358ed7,NLC India,"winner from press or AI,
 LOW,WINNER_NEEDS_VERIFICATION,T-37b17d1a1f46,NLC India,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-20d36ea9205a,NLC India,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-5f338783eb34,NLC India,"winner from press or AI, confirm before use",Engie; Rays Power; SECI
+LOW,WINNER_NEEDS_VERIFICATION,T-dd1d102d1e0d,NLC India,"winner from press or AI, confirm before use",SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-08873d53680b,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-513c147e4745,NTPC,"winner from press or AI, confirm before use",SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-98082a4e0e6b,NTPC,"winner from press or AI, confirm before use",NTPC Green
@@ -1007,6 +1008,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-371e2132c618,NTPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-a866fd0c04cd,NTPC,"winner from press or AI, confirm before use",Waaree; SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-cca15fd12bcf,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-839f243652dc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-041b68d942e2,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b5f86f00d1d1,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-de9dfcb73ed6,NVVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-ed8a197bf7c0,NVVN,"winner from press or AI, confirm before use",Sunsure
@@ -1041,6 +1043,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-035d38538db6,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-2752ad9f00bc,SECI,"winner from press or AI, confirm before use",Tata Power; Greenko; Torrent
 LOW,WINNER_NEEDS_VERIFICATION,T-9f38b115b916,SECI,"winner from press or AI, confirm before use",Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-fa8b5442cf08,SECI,"winner from press or AI, confirm before use",Purvah Green
+LOW,WINNER_NEEDS_VERIFICATION,T-bc4c4ec49f3a,SECI,"winner from press or AI, confirm before use",Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
