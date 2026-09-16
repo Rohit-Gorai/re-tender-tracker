@@ -1,12 +1,12 @@
-# Renewable tender tracker - 15 Sep 2026
+# Renewable tender tracker - 16 Sep 2026
 
 - **1** new tenders
-- **3** revised bid dates
-- **8** closing within 7 days
-- **168** award records across 119 tenders
-- **97** financing targets
+- **2** revised bid dates
+- **5** closing within 7 days
+- **179** award records across 126 tenders
+- **100** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 632 winner rows in scope; 517 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 643 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -14,7 +14,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| SECI | Request for Proposal for engagement of an Agency for establishing a Programme Ma | 2026-10-06 |
+| NTPC | DEVELOPMENT OF WIND ENERGY PROJECT WITH 215MW CAPACITY AT STU SUBSTATION IN MADH | 2026-09-25 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |

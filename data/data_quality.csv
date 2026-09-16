@@ -634,14 +634,14 @@ LOW,WINNER_NOT_FOUND,9f1745658bdb,SECI,material tender closed with no winner fou
 LOW,WINNER_NOT_FOUND,T-bef42b8fc9df,NTPC,material tender closed with no winner found yet,813.0
 LOW,WINNER_NOT_FOUND,T-69c7a513e920,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-784605598a1f,SECI,same reference number on two records,GEM/2026/B/7897394
-HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
 HIGH,POSSIBLE_DUPLICATE,fde2f1c357d8,SECI,same reference number on two records,SECI/CP/EOI/17/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-9f1745658bdb,SECI,same reference number on two records,SECI/CP/OP/11/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,06aa19e5e4d1,SECI,same reference number on two records,SECI/CP/EOI/17/0003/26-27
-HIGH,POSSIBLE_DUPLICATE,876f5d4e8922,SECI,same reference number on two records,SECI/CP/OP/11/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
+HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
 HIGH,POSSIBLE_DUPLICATE,c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
+HIGH,POSSIBLE_DUPLICATE,T-876f5d4e8922,SECI,same reference number on two records,SECI/CP/OP/11/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,9be57a217bf3,SECI,same reference number on two records,SECI/CP/IPP/15/0008/26-27
 HIGH,POSSIBLE_DUPLICATE,1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
@@ -654,6 +654,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, con
 LOW,WINNER_NEEDS_VERIFICATION,T-82c8f8303a06,GUVNL,"winner from press or AI, confirm before use",Juniper
 LOW,WINNER_NEEDS_VERIFICATION,T-0b5ee904fc8d,GUVNL,"winner from press or AI, confirm before use",Engie
 LOW,WINNER_NEEDS_VERIFICATION,T-add6b5846289,GUVNL,"winner from press or AI, confirm before use",Jakson
+LOW,WINNER_NEEDS_VERIFICATION,T-9ec6731b010c,GUVNL,"winner from press or AI, confirm before use",KP Energy
 LOW,WINNER_NEEDS_VERIFICATION,T-a8f1f3eec1cc,IREDA,"winner from press or AI, confirm before use",Inox Wind
 LOW,WINNER_NEEDS_VERIFICATION,T-8c923602ce25,KREDL,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-1eb181f0a4d9,KREDL,"winner from press or AI, confirm before use",Pace Digitek
@@ -987,6 +988,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-8c2d3d47531e,NHPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-a5b5304a9a2d,NHPC,"winner from press or AI, confirm before use",SAEL
 LOW,WINNER_NEEDS_VERIFICATION,T-d9a927260c37,NHPC,"winner from press or AI, confirm before use",SAEL
 LOW,WINNER_NEEDS_VERIFICATION,T-3460bd727a0a,NHPC,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-bc7ccd878ed4,NHPC,"winner from press or AI, confirm before use",NTPC Green; Tata Power; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-956d86e85998,NLC India,"winner from press or AI, confirm before use",Renew; Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56d130be8de8,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36f0b8607c13,NLC India,"winner from press or AI, confirm before use",Renew
@@ -998,6 +1000,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-37b17d1a1f46,NLC India,"winner from press or AI,
 LOW,WINNER_NEEDS_VERIFICATION,T-20d36ea9205a,NLC India,"winner from press or AI, confirm before use",Pace Digitek
 LOW,WINNER_NEEDS_VERIFICATION,T-5f338783eb34,NLC India,"winner from press or AI, confirm before use",Engie; Rays Power; SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-dd1d102d1e0d,NLC India,"winner from press or AI, confirm before use",SECI
+LOW,WINNER_NEEDS_VERIFICATION,T-651dc9875602,NLC India,"winner from press or AI, confirm before use",ENGIE; Rays Power; SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-08873d53680b,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-513c147e4745,NTPC,"winner from press or AI, confirm before use",SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-98082a4e0e6b,NTPC,"winner from press or AI, confirm before use",NTPC Green
@@ -1006,9 +1009,12 @@ LOW,WINNER_NEEDS_VERIFICATION,T-30622cb3519a,NTPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-0ebaf350f811,NTPC,"winner from press or AI, confirm before use",NTPC Green; SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-371e2132c618,NTPC,"winner from press or AI, confirm before use",NTPC Green; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-a866fd0c04cd,NTPC,"winner from press or AI, confirm before use",Waaree; SECI
+LOW,WINNER_NEEDS_VERIFICATION,T-a8a649e31907,NTPC,"winner from press or AI, confirm before use",SolarWorld
+LOW,WINNER_NEEDS_VERIFICATION,T-963be4f494ae,NTPC,"winner from press or AI, confirm before use",SolarWorld
 LOW,WINNER_NEEDS_VERIFICATION,T-cca15fd12bcf,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-839f243652dc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-041b68d942e2,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-d1caf49c1118,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b5f86f00d1d1,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-de9dfcb73ed6,NVVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-ed8a197bf7c0,NVVN,"winner from press or AI, confirm before use",Sunsure
@@ -1061,3 +1067,4 @@ LOW,WINNER_NEEDS_VERIFICATION,T-973590f2c8cd,SJVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from press or AI, confirm before use",ACME Solar; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-354bc7d40a8b,UPPCL,"winner from press or AI, confirm before use",Adani Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b235e4c4bf9f,UPPCL,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-9e6d81f16a2c,UPPCL,"winner from press or AI, confirm before use",Adani Green
