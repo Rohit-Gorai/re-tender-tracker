@@ -1,12 +1,12 @@
-# Renewable tender tracker - 16 Sep 2026
+# Renewable tender tracker - 17 Sep 2026
 
 - **1** new tenders
 - **2** revised bid dates
 - **5** closing within 7 days
-- **179** award records across 126 tenders
-- **100** financing targets
+- **186** award records across 131 tenders
+- **103** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 643 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 649 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -14,7 +14,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| NTPC | DEVELOPMENT OF WIND ENERGY PROJECT WITH 215MW CAPACITY AT STU SUBSTATION IN MADH | 2026-09-25 |
+| NTPC | Hiring of 1 (One) No. 24 Hours Duty (Driver & Vehicle) for NREL, Khavda RE Park, | 2026-09-28 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -22,13 +22,13 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | 1 | Renew | 8600 | Solar + Storage | 2028-06-26 | Press report - verify |
 | 2 | Adani Power; Renew | 2500 | Round-the-Clock / CfD / Trading | 2028-04-07 | Press report - verify |
 | 3 | Adani Power | 2500 | Round-the-Clock / CfD / Trading | 2028-04-06 | Press report - verify |
-| 4 | Engie | 2000 | Energy Storage (BESS) | 2027-05-18 | Press report - verify |
-| 5 | SAEL | 2000 | Solar + Storage | 2027-11-08 | Press report - verify |
-| 6 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
+| 4 | ReNew | 2000 | Solar | 2027-04-24 | Press report - verify |
+| 5 | Engie | 2000 | Energy Storage (BESS) | 2027-05-18 | Press report - verify |
+| 6 | SAEL | 2000 | Solar + Storage | 2027-11-08 | Press report - verify |
 | 7 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
-| 8 | Adani Power | 1600 | Unclassified | 2027-09-12 | Press report - verify |
-| 9 | Adani Power | 1600 | Unclassified | 2028-03-15 | Press report - verify |
-| 10 | Adani Power | 1600 | Unclassified | 2028-03-16 | Press report - verify |
+| 8 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
+| 9 | Adani Power | 1600 | Unclassified | 2027-09-12 | Press report - verify |
+| 10 | Adani Power | 1600 | Unclassified | 2028-03-15 | Press report - verify |
 
 ## Needs manual verification
 | Authority | Winner | TenderKey |
