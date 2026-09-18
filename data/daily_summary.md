@@ -1,20 +1,15 @@
-# Renewable tender tracker - 17 Sep 2026
+# Renewable tender tracker - 18 Sep 2026
 
-- **1** new tenders
-- **2** revised bid dates
+- **0** new tenders
+- **0** revised bid dates
 - **5** closing within 7 days
-- **186** award records across 131 tenders
-- **103** financing targets
+- **187** award records across 132 tenders
+- **104** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 649 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 652 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| NTPC | Hiring of 1 (One) No. 24 Hours Duty (Driver & Vehicle) for NREL, Khavda RE Park, | 2026-09-28 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -28,7 +23,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | 7 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
 | 8 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
 | 9 | Adani Power | 1600 | Unclassified | 2027-09-12 | Press report - verify |
-| 10 | Adani Power | 1600 | Unclassified | 2028-03-15 | Press report - verify |
+| 10 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
 
 ## Needs manual verification
 | Authority | Winner | TenderKey |

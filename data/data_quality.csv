@@ -634,6 +634,7 @@ LOW,WINNER_NOT_FOUND,T-69c7a513e920,NTPC,material tender closed with no winner f
 HIGH,POSSIBLE_DUPLICATE,128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
 HIGH,POSSIBLE_DUPLICATE,fde2f1c357d8,SECI,same reference number on two records,SECI/CP/EOI/17/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-9f1745658bdb,SECI,same reference number on two records,SECI/CP/OP/11/0001/26-27
+LOW,WINNER_NOT_FOUND,T-9f1745658bdb,SECI,material tender closed with no winner found yet,88.0
 HIGH,POSSIBLE_DUPLICATE,06aa19e5e4d1,SECI,same reference number on two records,SECI/CP/EOI/17/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
@@ -667,6 +668,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-dbef980519c3,MPPMCL,"winner from press or AI, co
 LOW,WINNER_NEEDS_VERIFICATION,T-fc60669753ff,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-0b6a6c9a8b8a,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-2cae2dd2f358,MPPMCL,"winner from press or AI, confirm before use",Adani Power
+LOW,WINNER_NEEDS_VERIFICATION,T-d89fb52a28be,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-172f6093be8e,MSEDCL,"winner from press or AI, confirm before use",Adani Power; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-6697f371e816,MSEDCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-b5827573c02f,MSEDCL,"winner from press or AI, confirm before use",Adani Power
