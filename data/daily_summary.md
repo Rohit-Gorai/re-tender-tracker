@@ -1,20 +1,15 @@
-# Renewable tender tracker - 19 Sep 2026
+# Renewable tender tracker - 20 Sep 2026
 
-- **1** new tenders
+- **0** new tenders
 - **0** revised bid dates
 - **5** closing within 7 days
-- **187** award records across 132 tenders
-- **104** financing targets
+- **189** award records across 133 tenders
+- **105** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 652 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 654 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | RfS for setting up of 4083.75 kW Grid-Connected Rooftop Solar PV Projects under  | 2026-11-02 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
