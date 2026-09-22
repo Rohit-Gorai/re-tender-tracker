@@ -1,15 +1,21 @@
-# Renewable tender tracker - 21 Sep 2026
+# Renewable tender tracker - 22 Sep 2026
 
-- **0** new tenders
-- **2** revised bid dates
-- **6** closing within 7 days
-- **193** award records across 135 tenders
-- **107** financing targets
+- **2** new tenders
+- **1** revised bid dates
+- **7** closing within 7 days
+- **200** award records across 140 tenders
+- **110** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 658 winner rows in scope; 518 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 664 winner rows in scope; 520 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | 650 MVAR SVG PACKAGE FOR REACTIVE POWER COMPENSATION OF WIND PROJECTS IN KARNATA | 2026-10-02 |
+| NTPC | SUPPLY AND INSTALLATION OF WIND TURBINE GENERATORS (WTG) FOR ISTS CONNECTED WIND | 2026-10-01 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
