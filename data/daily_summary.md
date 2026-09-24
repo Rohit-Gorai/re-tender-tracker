@@ -1,15 +1,21 @@
-# Renewable tender tracker - 23 Sep 2026
+# Renewable tender tracker - 24 Sep 2026
 
-- **0** new tenders
-- **3** revised bid dates
-- **12** closing within 7 days
-- **201** award records across 141 tenders
-- **111** financing targets
+- **2** new tenders
+- **0** revised bid dates
+- **13** closing within 7 days
+- **202** award records across 142 tenders
+- **112** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 665 winner rows in scope; 520 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 666 winner rows in scope; 520 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | RfS for Green Ammonia (Mode-2A-Tranche-II) | 2026-10-27 |
+| NTPC | Hiring of 24 Hours Duty (Driver& VEHICLE) FOR NREL, Khavda RE Park, Site for a p | 2026-10-03 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
