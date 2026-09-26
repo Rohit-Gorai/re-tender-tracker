@@ -157,3 +157,9 @@ run_date,source,status,rows,seconds,error
 2026-09-25,NTPC_RE,OK,5,3.2,
 2026-09-25,NTPC_RE_ARCHIVE,OK,360,4.6,
 2026-09-25,NHPC,EMPTY,0,18.2,
+2026-09-26,SECI,OK,21,3.8,
+2026-09-26,SECI_ARCHIVE,OK,259,1.1,
+2026-09-26,SECI_AWARDED,FAILED,0,12.8,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Server Error for url: https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder
+2026-09-26,NTPC_RE,OK,4,2.9,
+2026-09-26,NTPC_RE_ARCHIVE,OK,361,6.2,
+2026-09-26,NHPC,EMPTY,0,19.8,

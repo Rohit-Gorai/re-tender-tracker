@@ -638,6 +638,7 @@ HIGH,POSSIBLE_DUPLICATE,06aa19e5e4d1,SECI,same reference number on two records,S
 LOW,WINNER_NOT_FOUND,T-40997de3451e,NTPC,material tender closed with no winner found yet,672.0
 LOW,WINNER_NOT_FOUND,876f5d4e8922,SECI,material tender closed with no winner found yet,70.0
 HIGH,POSSIBLE_DUPLICATE,T-784605598a1f,SECI,same reference number on two records,GEM/2026/B/7897394
+LOW,WINNER_NOT_FOUND,T-a2dbd2cc1661,NTPC,material tender closed with no winner found yet,215.0
 HIGH,POSSIBLE_DUPLICATE,T-128bed57616b,SECI,same reference number on two records,SECI/2026/B/7961764
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,T-d469b7653326,SECI,same reference number on two records,SECI/CP/MI/00/0001/26-27
@@ -1022,6 +1023,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-a8a649e31907,NTPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-963be4f494ae,NTPC,"winner from press or AI, confirm before use",SolarWorld
 LOW,WINNER_NEEDS_VERIFICATION,T-3270859d8000,NTPC,"winner from press or AI, confirm before use",NTPC Green; SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-e7d7780d6add,NTPC,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-195c05cab1f0,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-cca15fd12bcf,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-839f243652dc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-041b68d942e2,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
