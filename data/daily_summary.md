@@ -1,8 +1,8 @@
-# Renewable tender tracker - 27 Sep 2026
+# Renewable tender tracker - 28 Sep 2026
 
-- **0** new tenders
+- **1** new tenders
 - **0** revised bid dates
-- **13** closing within 7 days
+- **14** closing within 7 days
 - **208** award records across 148 tenders
 - **117** financing targets
 
@@ -10,6 +10,11 @@
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | Call for Proposals (CfP) for Selection of Executing Agency(ies) for preparation  | 2026-10-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
