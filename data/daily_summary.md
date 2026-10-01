@@ -1,12 +1,12 @@
-# Renewable tender tracker - 30 Sep 2026
+# Renewable tender tracker - 01 Oct 2026
 
-- **1** new tenders
+- **2** new tenders
 - **1** revised bid dates
-- **10** closing within 7 days
-- **212** award records across 150 tenders
-- **118** financing targets
+- **6** closing within 7 days
+- **215** award records across 153 tenders
+- **121** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 677 winner rows in scope; 521 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 683 winner rows in scope; 521 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -14,7 +14,8 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| SECI | Tender for Design, Engineering, Supply, Construction, Erection, Testing, Commiss | 2026-11-12 |
+| SECI | Request for Selection (RfS Document) of Solar Power Developers for Setting up of | 2026-11-10 |
+| NTPC | EPC PACKAGE FOR 2X500 MW GROUND MOUNTED SOLAR PV PROJECT AT KAMBADUR, ANANTAPUR, | 2026-10-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
