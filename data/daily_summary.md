@@ -1,20 +1,15 @@
-# Renewable tender tracker - 02 Oct 2026
+# Renewable tender tracker - 03 Oct 2026
 
-- **1** new tenders
-- **1** revised bid dates
-- **6** closing within 7 days
-- **215** award records across 153 tenders
-- **121** financing targets
+- **0** new tenders
+- **0** revised bid dates
+- **5** closing within 7 days
+- **217** award records across 155 tenders
+- **122** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 684 winner rows in scope; 521 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 686 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | RfS for Supply of Energy from 800 MW/ 3200 MWh Standalone Battery Energy Storage | 2026-10-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
