@@ -1001,6 +1001,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-bc7ccd878ed4,NHPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-33fa69bdc7a4,NHPC,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-b4af595b924e,NHPC,"winner from press or AI, confirm before use",Avaada
 LOW,WINNER_NEEDS_VERIFICATION,T-8bcac383106d,NHPC,"winner from press or AI, confirm before use",ACME Solar
+LOW,WINNER_NEEDS_VERIFICATION,T-d7e05e9c6d08,NHPC,"winner from press or AI, confirm before use",ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-956d86e85998,NLC India,"winner from press or AI, confirm before use",Renew; Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56d130be8de8,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36f0b8607c13,NLC India,"winner from press or AI, confirm before use",Renew
@@ -1016,6 +1017,8 @@ LOW,WINNER_NEEDS_VERIFICATION,T-651dc9875602,NLC India,"winner from press or AI,
 LOW,WINNER_NEEDS_VERIFICATION,T-f7eade44feb9,NLC India,"winner from press or AI, confirm before use",Brookfield
 LOW,WINNER_NEEDS_VERIFICATION,T-8744c6f8ae37,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-176f2a04ae80,NLC India,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-6e597eb43a1c,NLC India,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-38a4ea5a9184,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-08873d53680b,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-513c147e4745,NTPC,"winner from press or AI, confirm before use",SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-98082a4e0e6b,NTPC,"winner from press or AI, confirm before use",NTPC Green
@@ -1081,6 +1084,8 @@ LOW,WINNER_NEEDS_VERIFICATION,T-efbd46d662bc,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-4b3d7bcff6f2,SECI,"winner from press or AI, confirm before use",Tata Power; Greenko; Torrent
 LOW,WINNER_NEEDS_VERIFICATION,T-89c339eb4af4,SECI,"winner from press or AI, confirm before use",Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-21f1c1dbce87,SECI,"winner from press or AI, confirm before use",Juniper Green
+LOW,WINNER_NEEDS_VERIFICATION,T-5f9a098e7219,SECI,"winner from press or AI, confirm before use",Hero Future
+LOW,WINNER_NEEDS_VERIFICATION,T-fff4705fb576,SECI,"winner from press or AI, confirm before use",renew
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar

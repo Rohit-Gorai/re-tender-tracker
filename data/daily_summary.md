@@ -1,15 +1,20 @@
-# Renewable tender tracker - 04 Oct 2026
+# Renewable tender tracker - 05 Oct 2026
 
-- **0** new tenders
+- **1** new tenders
 - **0** revised bid dates
-- **4** closing within 7 days
-- **217** award records across 155 tenders
-- **122** financing targets
+- **3** closing within 7 days
+- **222** award records across 160 tenders
+- **126** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 686 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 692 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | EPC WORKS OF 400KV EHV TRANSMISSION LINE FROM NTPC REL’S PROJECT POOLING SUB-STA | 2026-10-15 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
