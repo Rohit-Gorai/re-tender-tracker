@@ -1,7 +1,7 @@
-# Renewable tender tracker - 05 Oct 2026
+# Renewable tender tracker - 06 Oct 2026
 
-- **1** new tenders
-- **0** revised bid dates
+- **2** new tenders
+- **1** revised bid dates
 - **3** closing within 7 days
 - **222** award records across 160 tenders
 - **126** financing targets
@@ -14,7 +14,8 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| NTPC | EPC WORKS OF 400KV EHV TRANSMISSION LINE FROM NTPC REL’S PROJECT POOLING SUB-STA | 2026-10-15 |
+| NTPC | Hiring of 01 No. 4-Wheel Drive Vehicle for Block-VI (300MW) PV Project for 02 Ye | 2026-10-16 |
+| NTPC | PROCUREMENT OF ISTS-CONNECTED PUMPED HYDRO ENERGY STORAGE OF 2,000 MW / 12,000 M | 2026-10-19 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
