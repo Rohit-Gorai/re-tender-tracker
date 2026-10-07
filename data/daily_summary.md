@@ -1,12 +1,12 @@
-# Renewable tender tracker - 06 Oct 2026
+# Renewable tender tracker - 07 Oct 2026
 
-- **2** new tenders
+- **3** new tenders
 - **1** revised bid dates
-- **3** closing within 7 days
-- **222** award records across 160 tenders
-- **126** financing targets
+- **5** closing within 7 days
+- **223** award records across 161 tenders
+- **127** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 692 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 693 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -14,8 +14,9 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| NTPC | Hiring of 01 No. 4-Wheel Drive Vehicle for Block-VI (300MW) PV Project for 02 Ye | 2026-10-16 |
-| NTPC | PROCUREMENT OF ISTS-CONNECTED PUMPED HYDRO ENERGY STORAGE OF 2,000 MW / 12,000 M | 2026-10-19 |
+| SECI | Request for Selection (RfS) of Solar Power Developer for setting up of 3680 kW G | 2026-11-17 |
+| SECI | RfS for 1200 MW ISTS-Connected Wind Power Projects in India (SECI-Tranche-XXI) | 2026-10-29 |
+| NTPC | Hiring of One No. Vehicle for NTPC REL Anta 300 MW Solar PV Project. | 2026-10-17 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |

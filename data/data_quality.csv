@@ -606,12 +606,12 @@ LOW,WINNER_NOT_FOUND,T-2298de2387a8,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-a3dcdb8d4277,NTPC,material tender closed with no winner found yet,240.0
 HIGH,POSSIBLE_DUPLICATE,d93078a92d7c,SECI,same reference number on two records,GEM/2026/B/7636230
 HIGH,POSSIBLE_DUPLICATE,d61d2ba849dc,SECI,same reference number on two records,GEM/2026/B/7634813
-LOW,WINNER_NOT_FOUND,T-fe5ae1312df3,NTPC,material tender closed with no winner found yet,540.0
 HIGH,POSSIBLE_DUPLICATE,9732f72d896a,SECI,same reference number on two records,SECI/CP/IPP/11/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,3620a5d9115f,SECI,same reference number on two records,SECI/CP/OP/11/04/2026-27
 LOW,WINNER_NOT_FOUND,T-00641139216d,NTPC,material tender closed with no winner found yet,900.0
 LOW,WINNER_NOT_FOUND,T-76a19cbdb074,NTPC,material tender closed with no winner found yet,300.0
 LOW,WINNER_NOT_FOUND,T-dea013ca569a,NTPC,material tender closed with no winner found yet,894.3
+LOW,WINNER_NOT_FOUND,T-fe5ae1312df3,NTPC,material tender closed with no winner found yet,540.0
 LOW,WINNER_NOT_FOUND,T-a5b691e0a9cb,SECI,material tender closed with no winner found yet,1000.0
 HIGH,POSSIBLE_DUPLICATE,a5b691e0a9cb,SECI,same reference number on two records,SECI/CP/IPP/13/0020/25-26
 LOW,WINNER_NOT_FOUND,a5b691e0a9cb,SECI,material tender closed with no winner found yet,1000.0
@@ -677,6 +677,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-fc60669753ff,MPPMCL,"winner from press or AI, co
 LOW,WINNER_NEEDS_VERIFICATION,T-0b6a6c9a8b8a,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-2cae2dd2f358,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-d89fb52a28be,MPPMCL,"winner from press or AI, confirm before use",Adani Power
+LOW,WINNER_NEEDS_VERIFICATION,T-66278d9af5cd,MPPMCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-172f6093be8e,MSEDCL,"winner from press or AI, confirm before use",Adani Power; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-6697f371e816,MSEDCL,"winner from press or AI, confirm before use",Adani Power
 LOW,WINNER_NEEDS_VERIFICATION,T-b5827573c02f,MSEDCL,"winner from press or AI, confirm before use",Adani Power

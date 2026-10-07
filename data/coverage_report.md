@@ -1,29 +1,29 @@
-# Coverage report - 06 Oct 2026
+# Coverage report - 07 Oct 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 1666 |
-| Renewable tenders | 1467 |
-| Award records | 222 |
+| Canonical tenders | 1670 |
+| Renewable tenders | 1471 |
+| Award records | 223 |
 | Unique winners | 40 |
-| Renewable capacity tracked (MW) | 602,083 |
-| Tenders with a winner | 160 |
-| Tenders awaiting a winner | 1307 |
+| Renewable capacity tracked (MW) | 605,187 |
+| Tenders with a winner | 161 |
+| Tenders awaiting a winner | 1310 |
 | Records with a tariff | 0 |
-| Financing targets | 126 |
-| Needing manual review | 892 |
+| Financing targets | 127 |
+| Needing manual review | 895 |
 
 ## By technology
 
 | Technology | Tenders |
 |---|---|
-| Unclassified | 391 |
-| Solar | 390 |
+| Unclassified | 392 |
+| Solar | 391 |
 | Hydro | 158 |
-| Wind | 116 |
-| Rooftop Solar | 101 |
+| Wind | 117 |
+| Rooftop Solar | 102 |
 | Solar + Storage | 76 |
 | Energy Storage (BESS) | 47 |
 | Round-the-Clock / CfD / Trading | 42 |
@@ -37,12 +37,12 @@
 | Issuing authority | Tenders |
 |---|---|
 | NHPC | 621 |
-| SECI | 406 |
-| NTPC | 361 |
+| SECI | 408 |
+| NTPC | 362 |
 | NLC India | 17 |
 | SJVN | 15 |
+| MPPMCL | 9 |
 | GUVNL | 8 |
-| MPPMCL | 8 |
 | MSEDCL | 8 |
 | NVVN | 6 |
 | UPPCL | 6 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1041 |
+| (blank) | 1045 |
 | Rajasthan | 79 |
 | Jammu and Kashmir | 38 |
 | Andhra Pradesh | 36 |
@@ -70,28 +70,28 @@
 
 | Quality grade | Tenders |
 |---|---|
-| D | 556 |
-| C | 543 |
+| D | 557 |
+| C | 545 |
 | E | 359 |
-| A | 9 |
+| A | 10 |
 
 ## By freshness
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1456 |
-| Recently Verified | 11 |
+| Fresh | 1459 |
+| Recently Verified | 12 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 21 | 3.1 |
-| SECI_ARCHIVE | OK | 263 | 0.6 |
+| SECI | OK | 23 | 4.1 |
+| SECI_ARCHIVE | OK | 263 | 1.3 |
 | SECI_AWARDED | FAILED | 0 | 12.8 |
-| NTPC_RE | OK | 4 | 3.7 |
-| NTPC_RE_ARCHIVE | OK | 365 | 3.7 |
-| NHPC | EMPTY | 0 | 21.9 |
+| NTPC_RE | OK | 5 | 3.3 |
+| NTPC_RE_ARCHIVE | OK | 365 | 4.1 |
+| NHPC | EMPTY | 0 | 17.9 |
 
 ## Coverage limits
 
