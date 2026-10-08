@@ -646,7 +646,6 @@ LOW,WINNER_NOT_FOUND,T-876f5d4e8922,SECI,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-9be57a217bf3,SECI,material tender closed with no winner found yet,50.0
 HIGH,POSSIBLE_DUPLICATE,9be57a217bf3,SECI,same reference number on two records,SECI/CP/IPP/15/0008/26-27
 LOW,WINNER_NOT_FOUND,9be57a217bf3,SECI,material tender closed with no winner found yet,50.0
-HIGH,POSSIBLE_DUPLICATE,1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
 LOW,WINNER_NOT_FOUND,T-23530c5db0fb,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 LOW,WINNER_NOT_FOUND,bd1bd676960c,SECI,material tender closed with no winner found yet,700.0
@@ -654,6 +653,7 @@ HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
+HIGH,POSSIBLE_DUPLICATE,T-1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
 HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
