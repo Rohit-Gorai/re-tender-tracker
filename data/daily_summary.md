@@ -1,20 +1,15 @@
-# Renewable tender tracker - 08 Oct 2026
+# Renewable tender tracker - 09 Oct 2026
 
-- **1** new tenders
-- **2** revised bid dates
+- **0** new tenders
+- **3** revised bid dates
 - **8** closing within 7 days
 - **223** award records across 161 tenders
 - **127** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 692 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 691 winner rows in scope; 522 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | RfS for Assured Peak Supply of 4800 MWh (1200 MW x 4 Hrs.) from ISTS-Connected R | 2026-10-29 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |

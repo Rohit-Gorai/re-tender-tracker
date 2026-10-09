@@ -1,4 +1,4 @@
-# Coverage report - 08 Oct 2026
+# Coverage report - 09 Oct 2026
 
 ## Totals
 
@@ -13,7 +13,7 @@
 | Tenders awaiting a winner | 1311 |
 | Records with a tariff | 0 |
 | Financing targets | 127 |
-| Needing manual review | 895 |
+| Needing manual review | 894 |
 
 ## By technology
 
@@ -86,12 +86,12 @@
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 24 | 3.1 |
+| SECI | OK | 24 | 3.2 |
 | SECI_ARCHIVE | OK | 263 | 0.7 |
 | SECI_AWARDED | FAILED | 0 | 12.8 |
-| NTPC_RE | OK | 5 | 3.4 |
-| NTPC_RE_ARCHIVE | OK | 365 | 4.4 |
-| NHPC | EMPTY | 0 | 19.6 |
+| NTPC_RE | OK | 6 | 3.3 |
+| NTPC_RE_ARCHIVE | OK | 364 | 4.4 |
+| NHPC | EMPTY | 0 | 18.4 |
 
 ## Coverage limits
 
