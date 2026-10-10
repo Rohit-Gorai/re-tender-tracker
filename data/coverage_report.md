@@ -1,19 +1,19 @@
-# Coverage report - 09 Oct 2026
+# Coverage report - 10 Oct 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 1671 |
-| Renewable tenders | 1472 |
-| Award records | 223 |
+| Canonical tenders | 1673 |
+| Renewable tenders | 1474 |
+| Award records | 225 |
 | Unique winners | 40 |
-| Renewable capacity tracked (MW) | 606,387 |
-| Tenders with a winner | 161 |
+| Renewable capacity tracked (MW) | 606,887 |
+| Tenders with a winner | 163 |
 | Tenders awaiting a winner | 1311 |
 | Records with a tariff | 0 |
-| Financing targets | 127 |
-| Needing manual review | 894 |
+| Financing targets | 128 |
+| Needing manual review | 900 |
 
 ## By technology
 
@@ -24,8 +24,8 @@
 | Hydro | 158 |
 | Wind | 117 |
 | Rooftop Solar | 102 |
-| Solar + Storage | 76 |
-| Energy Storage (BESS) | 47 |
+| Solar + Storage | 77 |
+| Energy Storage (BESS) | 48 |
 | Round-the-Clock / CfD / Trading | 43 |
 | Green Hydrogen / Derivatives | 35 |
 | Transmission / Evacuation | 33 |
@@ -36,9 +36,9 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NHPC | 621 |
+| NHPC | 622 |
 | SECI | 409 |
-| NTPC | 362 |
+| NTPC | 363 |
 | NLC India | 17 |
 | SJVN | 15 |
 | MPPMCL | 9 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1046 |
+| (blank) | 1047 |
 | Rajasthan | 79 |
 | Jammu and Kashmir | 38 |
 | Andhra Pradesh | 36 |
@@ -70,7 +70,7 @@
 
 | Quality grade | Tenders |
 |---|---|
-| D | 557 |
+| D | 559 |
 | C | 546 |
 | E | 359 |
 | A | 10 |
@@ -79,19 +79,19 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1460 |
+| Fresh | 1462 |
 | Recently Verified | 12 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 24 | 3.2 |
-| SECI_ARCHIVE | OK | 263 | 0.7 |
-| SECI_AWARDED | FAILED | 0 | 12.8 |
-| NTPC_RE | OK | 6 | 3.3 |
-| NTPC_RE_ARCHIVE | OK | 364 | 4.4 |
-| NHPC | EMPTY | 0 | 18.4 |
+| SECI | OK | 23 | 3.5 |
+| SECI_ARCHIVE | OK | 264 | 1.1 |
+| SECI_AWARDED | FAILED | 0 | 12.7 |
+| NTPC_RE | OK | 6 | 3.0 |
+| NTPC_RE_ARCHIVE | OK | 364 | 4.2 |
+| NHPC | EMPTY | 0 | 19.4 |
 
 ## Coverage limits
 
