@@ -1,19 +1,19 @@
-# Coverage report - 10 Oct 2026
+# Coverage report - 11 Oct 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 1673 |
-| Renewable tenders | 1474 |
-| Award records | 225 |
+| Canonical tenders | 1674 |
+| Renewable tenders | 1475 |
+| Award records | 226 |
 | Unique winners | 40 |
-| Renewable capacity tracked (MW) | 606,887 |
-| Tenders with a winner | 163 |
+| Renewable capacity tracked (MW) | 607,117 |
+| Tenders with a winner | 164 |
 | Tenders awaiting a winner | 1311 |
 | Records with a tariff | 0 |
-| Financing targets | 128 |
-| Needing manual review | 900 |
+| Financing targets | 129 |
+| Needing manual review | 903 |
 
 ## By technology
 
@@ -26,7 +26,7 @@
 | Rooftop Solar | 102 |
 | Solar + Storage | 77 |
 | Energy Storage (BESS) | 48 |
-| Round-the-Clock / CfD / Trading | 43 |
+| Round-the-Clock / CfD / Trading | 44 |
 | Green Hydrogen / Derivatives | 35 |
 | Transmission / Evacuation | 33 |
 | Wind-Solar Hybrid | 29 |
@@ -37,7 +37,7 @@
 | Issuing authority | Tenders |
 |---|---|
 | NHPC | 622 |
-| SECI | 409 |
+| SECI | 410 |
 | NTPC | 363 |
 | NLC India | 17 |
 | SJVN | 15 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1047 |
+| (blank) | 1048 |
 | Rajasthan | 79 |
 | Jammu and Kashmir | 38 |
 | Andhra Pradesh | 36 |
@@ -70,7 +70,7 @@
 
 | Quality grade | Tenders |
 |---|---|
-| D | 559 |
+| D | 560 |
 | C | 546 |
 | E | 359 |
 | A | 10 |
@@ -79,19 +79,19 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1462 |
+| Fresh | 1463 |
 | Recently Verified | 12 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 23 | 3.5 |
-| SECI_ARCHIVE | OK | 264 | 1.1 |
+| SECI | OK | 22 | 3.5 |
+| SECI_ARCHIVE | OK | 265 | 1.1 |
 | SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | OK | 6 | 3.0 |
-| NTPC_RE_ARCHIVE | OK | 364 | 4.2 |
-| NHPC | EMPTY | 0 | 19.4 |
+| NTPC_RE | OK | 6 | 3.3 |
+| NTPC_RE_ARCHIVE | OK | 364 | 4.4 |
+| NHPC | EMPTY | 0 | 17.9 |
 
 ## Coverage limits
 
