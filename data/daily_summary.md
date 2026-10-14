@@ -1,15 +1,20 @@
-# Renewable tender tracker - 13 Oct 2026
+# Renewable tender tracker - 14 Oct 2026
 
-- **0** new tenders
-- **0** revised bid dates
-- **12** closing within 7 days
+- **1** new tenders
+- **2** revised bid dates
+- **8** closing within 7 days
 - **226** award records across 164 tenders
 - **129** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 692 winner rows in scope; 523 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 693 winner rows in scope; 523 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | SUPPLY OF SOLAR PV MODULES FOR 2100MW SOLAR PV PROJECT OF NTPC REL AT FATEHGARH  | 2026-10-24 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
