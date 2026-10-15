@@ -1,12 +1,12 @@
-# Renewable tender tracker - 14 Oct 2026
+# Renewable tender tracker - 15 Oct 2026
 
-- **1** new tenders
-- **2** revised bid dates
+- **349** new tenders
+- **1** revised bid dates
 - **8** closing within 7 days
-- **226** award records across 164 tenders
-- **129** financing targets
+- **227** award records across 165 tenders
+- **130** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 693 winner rows in scope; 523 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 769 winner rows in scope; 796 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -15,6 +15,25 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Authority | Tender | Closes |
 |---|---|---|
 | NTPC | SUPPLY OF SOLAR PV MODULES FOR 2100MW SOLAR PV PROJECT OF NTPC REL AT FATEHGARH  | 2026-10-24 |
+| NTPC | Hiring of One No. Vehicle for NTPC REL Anta 300 MW Solar PV Project. (opens in a | 2026-10-17 |
+| NTPC | Hiring of 01 No. 4-Wheel Drive Vehicle for Block-VI (300MW) PV Project for 02 Ye | 2026-10-16 |
+| NTPC | PROCUREMENT OF ISTS-CONNECTED PUMPED HYDRO ENERGY STORAGE OF 2,000 MW / 12,000 M | 2026-10-19 |
+| NTPC | EPC WORKS OF 400KV EHV TRANSMISSION LINE FROM NTPC REL’S PROJECT POOLING SUB-STA | 2026-10-15 |
+| NTPC | EPC PACKAGE FOR 2X500 MW GROUND MOUNTED SOLAR PV PROJECT AT KAMBADUR, ANANTAPUR, | 2026-10-30 |
+| NTPC | Hiring of 24 Hours Duty (Driver& VEHICLE) FOR NREL, Khavda RE Park, Site for a p | 2026-10-03 |
+| NTPC | 650 MVAR SVG PACKAGE FOR REACTIVE POWER COMPENSATION OF WIND PROJECTS IN KARNATA | 2026-10-02 |
+| NTPC | SUPPLY AND INSTALLATION OF WIND TURBINE GENERATORS (WTG) FOR ISTS CONNECTED WIND | 2026-09-21 |
+| NTPC | Hiring of 1 (One) No. 24 Hours Duty (Driver & Vehicle) for NREL, Khavda RE Park, | 2026-09-28 |
+| NTPC | DEVELOPMENT OF WIND ENERGY PROJECT WITH 215MW CAPACITY AT STU SUBSTATION IN MADH | 2026-09-25 |
+| NTPC | Hiring of ONE (01) no AC Vehicle (Latest model of Mahindra Scorpio - N or equiva | 2026-09-14 |
+| NTPC | Hiring of Latest Model of Mahindra Scorpio (4 WD) or equivalent 4WD Not earlier  | 2026-09-07 |
+| NTPC | Hiring of 01 No. 4 - Wheel Drive Vehicle for Block-VI (300MW) PV Project for 02  | 2026-07-25 |
+| NTPC | BALANCE OF SYSTEM PACKAGE FOR 110 MW WIND ENERGY PROJECT AT KHAVDA, GUJARAT (ope | 2026-07-26 |
+| NTPC | Hiring of Vehicle on Annual basis for 12 Months for 894.3MW Bellary Wind Project | 2026-07-20 |
+| NTPC | 400KV SUB STATION PACKAGE FOR 900 MW SOLAR PROJECTS AT MANDSAUR MADHYA PRADESH ( | 2026-07-17 |
+| NTPC | EPC PACKAGE FOR DEVELOPMENT OF 600MW (2x300MW) GRID CONNECTED SOLAR PV PROJECTS  | 2026-08-06 |
+| NTPC | EPC PACKAGE FOR DEVELOPMENT OF 240 MW/ 960 MWH ISTS CONNECTED BESS AT NTPC REL D | 2026-07-08 |
+| NTPC | EPC PACKAGE FOR DEVELOPMENT OF 550 MW/ 2200 MWH ISTS CONNECTED BESS AT NTPC REL  | 2026-06-29 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -53,7 +72,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Source | Status | Error |
 |---|---|---|
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
-| NHPC | EMPTY | - |
+| NHPC | FAILED | fetch failed for https://www.nhpcindia.com/welcome/tender: HTTPSConnectionPool(h |
 
 > Records from a failed source are preserved untouched, not marked delisted.
 
