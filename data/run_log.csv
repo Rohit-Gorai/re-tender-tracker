@@ -277,3 +277,9 @@ run_date,source,status,rows,seconds,error
 2026-10-15,NTPC_RE,OK,6,3.1,
 2026-10-15,NTPC_RE_ARCHIVE,OK,365,4.4,
 2026-10-15,NHPC,FAILED,0,168.3,"fetch failed for https://www.nhpcindia.com/welcome/tender: HTTPSConnectionPool(host='www.nhpcindia.com', port=443): Max retries exceeded with url: /welcome/tender (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.nhpcindia.com', port=443) at 0x7f82b9ee67d0>, 'Connection to www.nhpcindia.com "
+2026-10-16,SECI,OK,19,4.0,
+2026-10-16,SECI_ARCHIVE,OK,268,1.2,
+2026-10-16,SECI_AWARDED,FAILED,0,12.8,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Server Error for url: https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder
+2026-10-16,NTPC_RE,OK,5,2.9,
+2026-10-16,NTPC_RE_ARCHIVE,OK,366,4.1,
+2026-10-16,NHPC,EMPTY,0,18.4,

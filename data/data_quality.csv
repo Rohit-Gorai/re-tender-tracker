@@ -1,6 +1,6 @@
 Severity,Check,TenderKey,Authority,Detail,Value
 HIGH,SOURCE_UNHEALTHY,,,SECI_AWARDED returned FAILED,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Ser
-HIGH,SOURCE_UNHEALTHY,,,NHPC returned FAILED,"fetch failed for https://www.nhpcindia.com/welcome/tender: HTTPSConnectionPool(host='www.nhpcindia.com', port=443): Max "
+HIGH,SOURCE_UNHEALTHY,,,NHPC returned EMPTY,
 LOW,WINNER_NOT_FOUND,T-ff99a21ab127,NTPC,material tender closed with no winner found yet,250.0
 LOW,WINNER_NOT_FOUND,T-14b219a5ac11,NTPC,material tender closed with no winner found yet,250.0
 LOW,WINNER_NOT_FOUND,T-44082fc608c6,NTPC,material tender closed with no winner found yet,260.0
@@ -854,10 +854,10 @@ HIGH,POSSIBLE_DUPLICATE,9be57a217bf3,SECI,same reference number on two records,S
 LOW,WINNER_NOT_FOUND,9be57a217bf3,SECI,material tender closed with no winner found yet,50.0
 LOW,WINNER_NOT_FOUND,bd1bd676960c,SECI,material tender closed with no winner found yet,700.0
 LOW,WINNER_NOT_FOUND,T-23530c5db0fb,NTPC,material tender closed with no winner found yet,600.0
-HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
 HIGH,POSSIBLE_DUPLICATE,T-1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
 HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
+HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
