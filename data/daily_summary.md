@@ -1,21 +1,15 @@
-# Renewable tender tracker - 17 Oct 2026
+# Renewable tender tracker - 18 Oct 2026
 
-- **2** new tenders
+- **0** new tenders
 - **0** revised bid dates
-- **7** closing within 7 days
+- **6** closing within 7 days
 - **229** award records across 167 tenders
 - **131** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 773 winner rows in scope; 797 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 774 winner rows in scope; 797 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| NTPC | EPC PACKAGE WITH LAND FOR DEVELOPMENT OF 900MW ISTS CONNECTED GROUND MOUNTED SOL | 2026-10-26 |
-| NTPC | EPC PACKAGE WITH LAND FOR DEVELOPMENT OF UP TO 600MW (300MW+300MW) ISTS CONNECTE | 2026-10-26 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
