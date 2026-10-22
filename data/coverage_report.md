@@ -1,31 +1,31 @@
-# Coverage report - 21 Oct 2026
+# Coverage report - 22 Oct 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 2037 |
-| Renewable tenders | 1838 |
-| Award records | 240 |
+| Canonical tenders | 2043 |
+| Renewable tenders | 1844 |
+| Award records | 246 |
 | Unique winners | 40 |
-| Renewable capacity tracked (MW) | 798,692 |
-| Tenders with a winner | 175 |
+| Renewable capacity tracked (MW) | 801,025 |
+| Tenders with a winner | 181 |
 | Tenders awaiting a winner | 1663 |
 | Records with a tariff | 0 |
-| Financing targets | 135 |
-| Needing manual review | 1151 |
+| Financing targets | 137 |
+| Needing manual review | 1169 |
 
 ## By technology
 
 | Technology | Tenders |
 |---|---|
-| Solar | 593 |
-| Unclassified | 429 |
+| Solar | 594 |
+| Unclassified | 430 |
 | Hydro | 158 |
-| Wind | 155 |
+| Wind | 156 |
 | Rooftop Solar | 105 |
-| Solar + Storage | 95 |
-| Energy Storage (BESS) | 58 |
+| Solar + Storage | 97 |
+| Energy Storage (BESS) | 59 |
 | Transmission / Evacuation | 56 |
 | Round-the-Clock / CfD / Trading | 48 |
 | Green Hydrogen / Derivatives | 45 |
@@ -36,14 +36,14 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NTPC | 717 |
-| NHPC | 624 |
-| SECI | 412 |
+| NTPC | 719 |
+| NHPC | 625 |
+| SECI | 413 |
 | NLC India | 18 |
 | SJVN | 18 |
+| MPPMCL | 10 |
 | GUVNL | 9 |
-| MPPMCL | 9 |
-| MSEDCL | 8 |
+| MSEDCL | 9 |
 | NVVN | 6 |
 | UPPCL | 6 |
 | KREDL | 4 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1239 |
+| (blank) | 1245 |
 | Rajasthan | 130 |
 | Andhra Pradesh | 58 |
 | Gujarat | 58 |
@@ -71,27 +71,27 @@
 | Quality grade | Tenders |
 |---|---|
 | C | 793 |
-| D | 671 |
-| E | 363 |
+| D | 676 |
+| E | 364 |
 | A | 11 |
 
 ## By freshness
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1825 |
+| Fresh | 1831 |
 | Recently Verified | 13 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 19 | 3.7 |
-| SECI_ARCHIVE | OK | 268 | 1.4 |
-| SECI_AWARDED | FAILED | 0 | 12.8 |
-| NTPC_RE | OK | 4 | 3.0 |
-| NTPC_RE_ARCHIVE | OK | 369 | 4.9 |
-| NHPC | EMPTY | 0 | 19.2 |
+| SECI | OK | 19 | 3.6 |
+| SECI_ARCHIVE | OK | 268 | 1.0 |
+| SECI_AWARDED | FAILED | 0 | 12.7 |
+| NTPC_RE | OK | 4 | 3.1 |
+| NTPC_RE_ARCHIVE | OK | 369 | 4.3 |
+| NHPC | EMPTY | 0 | 17.3 |
 
 ## Coverage limits
 
