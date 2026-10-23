@@ -1,15 +1,20 @@
-# Renewable tender tracker - 22 Oct 2026
+# Renewable tender tracker - 23 Oct 2026
 
-- **0** new tenders
-- **0** revised bid dates
-- **10** closing within 7 days
-- **246** award records across 181 tenders
-- **137** financing targets
+- **1** new tenders
+- **1** revised bid dates
+- **16** closing within 7 days
+- **260** award records across 194 tenders
+- **147** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 791 winner rows in scope; 799 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 800 winner rows in scope; 802 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | Hiring of one (01) no. AC Vehicle (Latest model of Mahindra Scorpio - N or equiv | 2026-11-02 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -19,10 +24,10 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | 3 | Adani Power | 2500 | Round-the-Clock / CfD / Trading | 2028-04-06 | Press report - verify |
 | 4 | ReNew | 2000 | Solar | 2027-04-24 | Press report - verify |
 | 5 | Engie | 2000 | Energy Storage (BESS) | 2027-05-18 | Press report - verify |
-| 6 | SAEL | 2000 | Solar + Storage | 2027-11-08 | Press report - verify |
-| 7 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
-| 8 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
-| 9 | Adani Power | 1600 | Unclassified | 2027-09-12 | Press report - verify |
+| 6 | Renew | 2000 | Energy Storage (BESS) | 2027-05-19 | Press report - verify |
+| 7 | SAEL | 2000 | Solar + Storage | 2027-11-08 | Press report - verify |
+| 8 | Renew | 2000 | Energy Storage (BESS) | 2028-03-22 | Press report - verify |
+| 9 | Renew | 2000 | Wind | 2028-07-16 | Press report - verify |
 | 10 | Adani Power | 1600 | Unclassified | 2027-09-11 | Press report - verify |
 
 ## Needs manual verification
