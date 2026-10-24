@@ -1,12 +1,12 @@
-# Renewable tender tracker - 23 Oct 2026
+# Renewable tender tracker - 24 Oct 2026
 
 - **1** new tenders
 - **1** revised bid dates
-- **16** closing within 7 days
-- **260** award records across 194 tenders
-- **147** financing targets
+- **14** closing within 7 days
+- **263** award records across 197 tenders
+- **149** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 800 winner rows in scope; 802 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 803 winner rows in scope; 802 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
@@ -14,7 +14,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## New tenders
 | Authority | Tender | Closes |
 |---|---|---|
-| NTPC | Hiring of one (01) no. AC Vehicle (Latest model of Mahindra Scorpio - N or equiv | 2026-11-02 |
+| NTPC | DEVELOPMENT OF WEPs (Ph-1) WITH 1080MW (4x270MW) CAPACITY AT KURNOOL ISTS SUB- S | 2026-11-03 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
