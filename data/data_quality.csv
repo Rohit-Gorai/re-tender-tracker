@@ -862,6 +862,8 @@ LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-283a983a6ef0,NTPC,material tender closed with no winner found yet,2000.0
 HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
+LOW,WINNER_NOT_FOUND,T-92ce9b618c18,NTPC,material tender closed with no winner found yet,2100.0
+LOW,WINNER_NOT_FOUND,T-3679d40fc380,NTPC,material tender closed with no winner found yet,2100.0
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
@@ -1276,6 +1278,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-ed8a197bf7c0,NVVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-d685a27a33dd,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-226a0ba9eb2e,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-192f9aa24471,NVVN,"winner from press or AI, confirm before use",Rays Power
+LOW,WINNER_NEEDS_VERIFICATION,T-0f013f4343a1,NVVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-f504d9c8dc54,SECI,"winner from press or AI, confirm before use",Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-2316ce5c96dc,SECI,"winner from press or AI, confirm before use",Greenko; Tata Power; Torrent
 LOW,WINNER_NEEDS_VERIFICATION,T-cc515c96331c,SECI,"winner from press or AI, confirm before use",Resolven
