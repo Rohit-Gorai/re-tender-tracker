@@ -862,7 +862,6 @@ LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-283a983a6ef0,NTPC,material tender closed with no winner found yet,2000.0
 HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
-LOW,WINNER_NOT_FOUND,T-92ce9b618c18,NTPC,material tender closed with no winner found yet,2100.0
 LOW,WINNER_NOT_FOUND,T-3679d40fc380,NTPC,material tender closed with no winner found yet,2100.0
 LOW,WINNER_NOT_FOUND,T-56709e023540,NTPC,material tender closed with no winner found yet,900.0
 LOW,WINNER_NOT_FOUND,T-2a1ff5d0c585,NTPC,material tender closed with no winner found yet,600.0
@@ -1335,6 +1334,10 @@ LOW,WINNER_NEEDS_VERIFICATION,T-5fcd6c4646ca,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-2044754372fa,SECI,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36e7b4a2e449,SECI,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-6982ad44bed0,SECI,"winner from press or AI, confirm before use",ACME Solar
+LOW,WINNER_NEEDS_VERIFICATION,T-0f02814f678a,SECI,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-fef84520e39f,SECI,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-cf29e8979dca,SECI,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-167ddaa8bf0b,SECI,"winner from press or AI, confirm before use",renew
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
@@ -1363,9 +1366,11 @@ LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from pres
 LOW,WINNER_NEEDS_VERIFICATION,T-719c789a5a75,SJVN Green Energy,"winner from press or AI, confirm before use",NLC India; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-b87ad922fb8e,SJVN Green Energy,"winner from press or AI, confirm before use",ReNew; Serentica
 LOW,WINNER_NEEDS_VERIFICATION,T-23cce7c9b7c6,SJVN Green Energy,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-f5ef5ba19b78,SJVN Green Energy,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-354bc7d40a8b,UPPCL,"winner from press or AI, confirm before use",Adani Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b235e4c4bf9f,UPPCL,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-9e6d81f16a2c,UPPCL,"winner from press or AI, confirm before use",Adani Green
 LOW,WINNER_NEEDS_VERIFICATION,T-54846ccdedf9,UPPCL,"winner from press or AI, confirm before use",ReNew
 LOW,WINNER_NEEDS_VERIFICATION,T-eebc728559de,UPPCL,"winner from press or AI, confirm before use",Adani Green
 LOW,WINNER_NEEDS_VERIFICATION,T-d2f99ead6f32,UPPCL,"winner from press or AI, confirm before use",Adani Green
+LOW,WINNER_NEEDS_VERIFICATION,T-69ff9e931f65,UPPCL,"winner from press or AI, confirm before use",NTPC Renewable
