@@ -1,8 +1,8 @@
-# Renewable tender tracker - 28 Oct 2026
+# Renewable tender tracker - 29 Oct 2026
 
-- **0** new tenders
-- **2** revised bid dates
-- **12** closing within 7 days
+- **3** new tenders
+- **1** revised bid dates
+- **10** closing within 7 days
 - **277** award records across 210 tenders
 - **159** financing targets
 
@@ -10,6 +10,13 @@
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | RfS for setting up Solar PV Power Project for NHAI (Phase-I) under Tariff-Based  | 2026-12-14 |
+| SECI | Supply of Energy from 4000 MW/ 16000 MWh Standalone Battery Energy Storage Syste | 2026-11-19 |
+| NTPC | EPC PACKAGE WITH LAND FOR DEVELOPMENT OF UP TO 1200MW (900MW+300MW) ISTS CONNECT | 2026-11-11 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
