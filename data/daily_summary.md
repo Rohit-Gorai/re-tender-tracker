@@ -1,22 +1,15 @@
-# Renewable tender tracker - 29 Oct 2026
+# Renewable tender tracker - 30 Oct 2026
 
-- **3** new tenders
+- **0** new tenders
 - **1** revised bid dates
-- **10** closing within 7 days
-- **277** award records across 210 tenders
+- **8** closing within 7 days
+- **278** award records across 211 tenders
 - **159** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 818 winner rows in scope; 804 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 819 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
-- **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | RfS for setting up Solar PV Power Project for NHAI (Phase-I) under Tariff-Based  | 2026-12-14 |
-| SECI | Supply of Energy from 4000 MW/ 16000 MWh Standalone Battery Energy Storage Syste | 2026-11-19 |
-| NTPC | EPC PACKAGE WITH LAND FOR DEVELOPMENT OF UP TO 1200MW (900MW+300MW) ISTS CONNECT | 2026-11-11 |
+- **572** high-severity data-quality flags
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -55,6 +48,7 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Source | Status | Error |
 |---|---|---|
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
+| NTPC_RE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10:  |
 | NHPC | EMPTY | - |
 
 > Records from a failed source are preserved untouched, not marked delisted.

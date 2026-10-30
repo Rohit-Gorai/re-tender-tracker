@@ -361,3 +361,9 @@ run_date,source,status,rows,seconds,error
 2026-10-29,NTPC_RE,OK,5,3.2,
 2026-10-29,NTPC_RE_ARCHIVE,OK,371,4.2,
 2026-10-29,NHPC,EMPTY,0,17.9,
+2026-10-30,SECI,OK,20,3.4,
+2026-10-30,SECI_ARCHIVE,OK,269,1.0,
+2026-10-30,SECI_AWARDED,FAILED,0,12.7,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Server Error for url: https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder
+2026-10-30,NTPC_RE,FAILED,0,15.0,fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10: 404 Client Error: Not Found for url: https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10
+2026-10-30,NTPC_RE_ARCHIVE,OK,372,8.8,
+2026-10-30,NHPC,EMPTY,0,17.3,
