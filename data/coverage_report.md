@@ -1,31 +1,31 @@
-# Coverage report - 30 Oct 2026
+# Coverage report - 31 Oct 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 2078 |
-| Renewable tenders | 1879 |
-| Award records | 278 |
+| Canonical tenders | 2080 |
+| Renewable tenders | 1881 |
+| Award records | 279 |
 | Unique winners | 41 |
-| Renewable capacity tracked (MW) | 832,875 |
-| Tenders with a winner | 211 |
-| Tenders awaiting a winner | 1668 |
+| Renewable capacity tracked (MW) | 833,740 |
+| Tenders with a winner | 212 |
+| Tenders awaiting a winner | 1669 |
 | Records with a tariff | 0 |
-| Financing targets | 159 |
-| Needing manual review | 1265 |
+| Financing targets | 160 |
+| Needing manual review | 1270 |
 
 ## By technology
 
 | Technology | Tenders |
 |---|---|
-| Solar | 599 |
+| Solar | 600 |
 | Unclassified | 432 |
 | Wind | 163 |
 | Hydro | 158 |
 | Rooftop Solar | 105 |
 | Solar + Storage | 99 |
-| Energy Storage (BESS) | 70 |
+| Energy Storage (BESS) | 71 |
 | Transmission / Evacuation | 56 |
 | Round-the-Clock / CfD / Trading | 53 |
 | Green Hydrogen / Derivatives | 45 |
@@ -36,11 +36,11 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NTPC | 723 |
+| NTPC | 724 |
 | NHPC | 628 |
 | SECI | 423 |
 | SJVN | 24 |
-| NLC India | 18 |
+| NLC India | 19 |
 | GUVNL | 14 |
 | MPPMCL | 10 |
 | MSEDCL | 10 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1276 |
+| (blank) | 1277 |
 | Rajasthan | 130 |
 | Andhra Pradesh | 60 |
 | Gujarat | 59 |
@@ -70,8 +70,8 @@
 
 | Quality grade | Tenders |
 |---|---|
-| C | 796 |
-| D | 706 |
+| C | 797 |
+| D | 707 |
 | E | 366 |
 | A | 11 |
 
@@ -79,19 +79,19 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1866 |
+| Fresh | 1868 |
 | Recently Verified | 13 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 20 | 3.4 |
-| SECI_ARCHIVE | OK | 269 | 1.0 |
+| SECI | OK | 19 | 3.2 |
+| SECI_ARCHIVE | OK | 270 | 1.0 |
 | SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | FAILED | 0 | 15.0 |
-| NTPC_RE_ARCHIVE | OK | 372 | 8.8 |
-| NHPC | EMPTY | 0 | 17.3 |
+| NTPC_RE | OK | 4 | 2.5 |
+| NTPC_RE_ARCHIVE | OK | 373 | 4.1 |
+| NHPC | EMPTY | 0 | 17.4 |
 
 ## Coverage limits
 

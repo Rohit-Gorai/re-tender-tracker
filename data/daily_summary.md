@@ -1,15 +1,20 @@
-# Renewable tender tracker - 30 Oct 2026
+# Renewable tender tracker - 31 Oct 2026
 
-- **0** new tenders
-- **1** revised bid dates
-- **8** closing within 7 days
-- **278** award records across 211 tenders
-- **159** financing targets
+- **1** new tenders
+- **2** revised bid dates
+- **3** closing within 7 days
+- **279** award records across 212 tenders
+- **160** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 819 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 822 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
-- **572** high-severity data-quality flags
+- **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | Hiring of One Vehicle on Regular Contract Basis for NT PC REL Dhule 600 MW ISTS  | 2026-11-09 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -48,7 +53,6 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Source | Status | Error |
 |---|---|---|
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
-| NTPC_RE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10:  |
 | NHPC | EMPTY | - |
 
 > Records from a failed source are preserved untouched, not marked delisted.

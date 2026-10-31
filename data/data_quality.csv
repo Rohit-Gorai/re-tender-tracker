@@ -1,6 +1,5 @@
 Severity,Check,TenderKey,Authority,Detail,Value
 HIGH,SOURCE_UNHEALTHY,,,SECI_AWARDED returned FAILED,fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: 500 Server Error: Internal Ser
-HIGH,SOURCE_UNHEALTHY,,,NTPC_RE returned FAILED,fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10: 404 Client Error: Not Found for url: htt
 HIGH,SOURCE_UNHEALTHY,,,NHPC returned EMPTY,
 LOW,WINNER_NOT_FOUND,T-ff99a21ab127,NTPC,material tender closed with no winner found yet,250.0
 LOW,WINNER_NOT_FOUND,T-14b219a5ac11,NTPC,material tender closed with no winner found yet,250.0
@@ -868,10 +867,12 @@ LOW,WINNER_NOT_FOUND,T-56709e023540,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-2a1ff5d0c585,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records,SECI/CP/IT/12/03/2025-26
 LOW,WINNER_NOT_FOUND,T-92ce9b618c18,NTPC,material tender closed with no winner found yet,2100.0
+LOW,WINNER_NOT_FOUND,T-719fdfbedbc2,NTPC,material tender closed with no winner found yet,500.0
+LOW,WINNER_NOT_FOUND,T-bcc24b4888b6,NTPC,material tender closed with no winner found yet,500.0
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
-HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
+HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, confirm before use",Juniper; Jakson
@@ -1254,6 +1255,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-176f2a04ae80,NLC India,"winner from press or AI,
 LOW,WINNER_NEEDS_VERIFICATION,T-6e597eb43a1c,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-38a4ea5a9184,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-7f10ebed9ec6,NLC India,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-77a9bef0eb1c,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-08873d53680b,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-513c147e4745,NTPC,"winner from press or AI, confirm before use",SECI
 LOW,WINNER_NEEDS_VERIFICATION,T-98082a4e0e6b,NTPC,"winner from press or AI, confirm before use",NTPC Green
