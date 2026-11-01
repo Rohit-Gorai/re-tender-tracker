@@ -1,20 +1,15 @@
-# Renewable tender tracker - 31 Oct 2026
+# Renewable tender tracker - 01 Nov 2026
 
-- **1** new tenders
-- **2** revised bid dates
+- **0** new tenders
+- **0** revised bid dates
 - **3** closing within 7 days
-- **279** award records across 212 tenders
+- **280** award records across 213 tenders
 - **160** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 822 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 823 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| NTPC | Hiring of One Vehicle on Regular Contract Basis for NT PC REL Dhule 600 MW ISTS  | 2026-11-09 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
