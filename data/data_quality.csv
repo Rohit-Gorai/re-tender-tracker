@@ -809,7 +809,6 @@ LOW,WINNER_NOT_FOUND,T-ddf58f0523c4,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-00641139216d,NTPC,material tender closed with no winner found yet,900.0
 LOW,WINNER_NOT_FOUND,T-76a19cbdb074,NTPC,material tender closed with no winner found yet,300.0
 LOW,WINNER_NOT_FOUND,T-ea324ad77baf,NTPC,material tender closed with no winner found yet,894.3
-LOW,WINNER_NOT_FOUND,T-13acbda916b7,NTPC,material tender closed with no winner found yet,540.0
 LOW,WINNER_NOT_FOUND,T-dea013ca569a,NTPC,material tender closed with no winner found yet,894.3
 LOW,WINNER_NOT_FOUND,T-fe5ae1312df3,NTPC,material tender closed with no winner found yet,540.0
 LOW,WINNER_NOT_FOUND,T-a5b691e0a9cb,SECI,material tender closed with no winner found yet,1000.0
@@ -858,7 +857,6 @@ HIGH,POSSIBLE_DUPLICATE,T-1b9bd417bdbe,SECI,same reference number on two records
 LOW,WINNER_NOT_FOUND,T-d69b63046541,NTPC,material tender closed with no winner found yet,300.0
 LOW,WINNER_NOT_FOUND,T-7bce85c38e13,NTPC,material tender closed with no winner found yet,300.0
 LOW,WINNER_NOT_FOUND,T-98e33a0d168e,NTPC,material tender closed with no winner found yet,300.0
-LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner found yet,2000.0
 LOW,WINNER_NOT_FOUND,T-283a983a6ef0,NTPC,material tender closed with no winner found yet,2000.0
 HIGH,POSSIBLE_DUPLICATE,T-1f8ee688fa78,SECI,same reference number on two records,SECI/CP/OP/15/0005/26-27
 HIGH,POSSIBLE_DUPLICATE,T-c1be359c8a64,SECI,same reference number on two records,SECI/CP/EOI/17/0004/26-27
@@ -1367,6 +1365,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-7cd8c9bc8540,SJVN,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-a74c879ed3fb,SJVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-27dc84d6d831,SJVN,"winner from press or AI, confirm before use",NLC India; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-2c4f326caea0,SJVN,"winner from press or AI, confirm before use",Refex
+LOW,WINNER_NEEDS_VERIFICATION,T-4e5a2b1cdcc8,SJVN,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-d287d11834a0,SJVN Green Energy,"winner from press or AI, confirm before use",ACME Solar; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-719c789a5a75,SJVN Green Energy,"winner from press or AI, confirm before use",NLC India; Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-b87ad922fb8e,SJVN Green Energy,"winner from press or AI, confirm before use",ReNew; Serentica
