@@ -1,12 +1,12 @@
-# Renewable tender tracker - 04 Nov 2026
+# Renewable tender tracker - 05 Nov 2026
 
 - **0** new tenders
 - **0** revised bid dates
-- **7** closing within 7 days
-- **284** award records across 217 tenders
-- **164** financing targets
+- **10** closing within 7 days
+- **286** award records across 218 tenders
+- **165** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 828 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 830 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
