@@ -1,20 +1,15 @@
-# Renewable tender tracker - 06 Nov 2026
+# Renewable tender tracker - 07 Nov 2026
 
-- **1** new tenders
+- **0** new tenders
 - **0** revised bid dates
-- **10** closing within 7 days
+- **8** closing within 7 days
 - **286** award records across 218 tenders
 - **165** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 830 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 831 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| NTPC | Deployment of Two (2) no. of Commercial Vehicle (4WD) for a Period of Two (02) Y | 2026-11-20 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
