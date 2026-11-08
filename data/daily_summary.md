@@ -1,4 +1,4 @@
-# Renewable tender tracker - 07 Nov 2026
+# Renewable tender tracker - 08 Nov 2026
 
 - **0** new tenders
 - **0** revised bid dates
