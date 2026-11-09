@@ -870,9 +870,9 @@ LOW,WINNER_NOT_FOUND,T-bcc24b4888b6,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-32e6438e5564,NTPC,material tender closed with no winner found yet,1080.0
 LOW,WINNER_NOT_FOUND,T-13acbda916b7,NTPC,material tender closed with no winner found yet,540.0
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
-HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
-HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
+HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
+HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, confirm before use",Juniper; Jakson
@@ -1348,6 +1348,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-167ddaa8bf0b,SECI,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-4410e6e773a8,SECI,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-394150ecb483,SECI,"winner from press or AI, confirm before use",Ayana Renewable
 LOW,WINNER_NEEDS_VERIFICATION,T-66a1117cef33,SECI,"winner from press or AI, confirm before use",Juniper Green; Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-e6c0d96a4816,SECI,"winner from press or AI, confirm before use",Torrent
 LOW,WINNER_NEEDS_VERIFICATION,T-8a50373c8d89,SJVN,"winner from press or AI, confirm before use",Renew; Resolven
 LOW,WINNER_NEEDS_VERIFICATION,T-58954615e819,SJVN,"winner from press or AI, confirm before use",Sembcorp; renew
 LOW,WINNER_NEEDS_VERIFICATION,T-09598eb67675,SJVN,"winner from press or AI, confirm before use",ACME Solar
