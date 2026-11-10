@@ -1,15 +1,15 @@
-# Renewable tender tracker - 09 Nov 2026
+# Renewable tender tracker - 10 Nov 2026
 
 - **0** new tenders
-- **3** revised bid dates
-- **7** closing within 7 days
-- **287** award records across 219 tenders
+- **4** revised bid dates
+- **5** closing within 7 days
+- **289** award records across 220 tenders
 - **166** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 832 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 835 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
-- **571** high-severity data-quality flags
+- **573** high-severity data-quality flags
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -48,6 +48,8 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Source | Status | Error |
 |---|---|---|
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
+| NTPC_RE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10:  |
+| NTPC_RE_ARCHIVE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Archives?Type=Loc&Location= |
 | NHPC | EMPTY | - |
 
 > Records from a failed source are preserved untouched, not marked delisted.
