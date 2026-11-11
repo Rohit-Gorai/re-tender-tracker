@@ -1,15 +1,20 @@
-# Renewable tender tracker - 10 Nov 2026
+# Renewable tender tracker - 11 Nov 2026
 
-- **0** new tenders
-- **4** revised bid dates
+- **1** new tenders
+- **0** revised bid dates
 - **5** closing within 7 days
-- **289** award records across 220 tenders
-- **166** financing targets
+- **290** award records across 221 tenders
+- **167** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 835 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 836 winner rows in scope; 805 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
-- **573** high-severity data-quality flags
+- **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | Hiring of Vehicle on Annual basis for 12 months for 379.5 MW NREL Davangere Wind | 2026-11-21 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -48,8 +53,6 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | Source | Status | Error |
 |---|---|---|
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
-| NTPC_RE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Search?Type=Reg&Region=10:  |
-| NTPC_RE_ARCHIVE | FAILED | fetch failed for https://ntpctender.ntpc.co.in/Index/Archives?Type=Loc&Location= |
 | NHPC | EMPTY | - |
 
 > Records from a failed source are preserved untouched, not marked delisted.

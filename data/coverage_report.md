@@ -1,19 +1,19 @@
-# Coverage report - 10 Nov 2026
+# Coverage report - 11 Nov 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 2089 |
-| Renewable tenders | 1890 |
-| Award records | 289 |
+| Canonical tenders | 2091 |
+| Renewable tenders | 1892 |
+| Award records | 290 |
 | Unique winners | 41 |
-| Renewable capacity tracked (MW) | 862,331 |
-| Tenders with a winner | 220 |
-| Tenders awaiting a winner | 1670 |
+| Renewable capacity tracked (MW) | 862,911 |
+| Tenders with a winner | 221 |
+| Tenders awaiting a winner | 1671 |
 | Records with a tariff | 0 |
-| Financing targets | 166 |
-| Needing manual review | 1299 |
+| Financing targets | 167 |
+| Needing manual review | 1302 |
 
 ## By technology
 
@@ -21,11 +21,11 @@
 |---|---|
 | Solar | 601 |
 | Unclassified | 435 |
-| Wind | 166 |
+| Wind | 167 |
 | Hydro | 158 |
 | Rooftop Solar | 105 |
 | Solar + Storage | 100 |
-| Energy Storage (BESS) | 72 |
+| Energy Storage (BESS) | 73 |
 | Transmission / Evacuation | 56 |
 | Round-the-Clock / CfD / Trading | 53 |
 | Green Hydrogen / Derivatives | 45 |
@@ -36,7 +36,7 @@
 
 | Issuing authority | Tenders |
 |---|---|
-| NTPC | 725 |
+| NTPC | 727 |
 | NHPC | 629 |
 | SECI | 427 |
 | SJVN | 25 |
@@ -53,11 +53,11 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1286 |
+| (blank) | 1287 |
 | Rajasthan | 130 |
 | Andhra Pradesh | 60 |
 | Gujarat | 59 |
-| Karnataka | 50 |
+| Karnataka | 51 |
 | Jammu and Kashmir | 38 |
 | Maharashtra | 35 |
 | Uttar Pradesh | 33 |
@@ -70,8 +70,8 @@
 
 | Quality grade | Tenders |
 |---|---|
-| C | 797 |
-| D | 714 |
+| C | 798 |
+| D | 715 |
 | E | 368 |
 | A | 11 |
 
@@ -79,19 +79,19 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1877 |
+| Fresh | 1879 |
 | Recently Verified | 13 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 17 | 3.7 |
-| SECI_ARCHIVE | OK | 272 | 1.9 |
+| SECI | OK | 16 | 3.6 |
+| SECI_ARCHIVE | OK | 273 | 2.0 |
 | SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | FAILED | 0 | 15.6 |
-| NTPC_RE_ARCHIVE | FAILED | 0 | 148.1 |
-| NHPC | EMPTY | 0 | 17.2 |
+| NTPC_RE | OK | 3 | 3.4 |
+| NTPC_RE_ARCHIVE | OK | 376 | 6.6 |
+| NHPC | EMPTY | 0 | 18.4 |
 
 ## Coverage limits
 
