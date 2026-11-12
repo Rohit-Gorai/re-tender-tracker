@@ -872,6 +872,7 @@ LOW,WINNER_NOT_FOUND,T-13acbda916b7,NTPC,material tender closed with no winner f
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
 LOW,WINNER_NOT_FOUND,T-b9e66d438d42,NTPC,material tender closed with no winner found yet,600.0
 LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner found yet,2000.0
+LOW,WINNER_NOT_FOUND,T-35f369c8a56e,NTPC,material tender closed with no winner found yet,1200.0
 HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
