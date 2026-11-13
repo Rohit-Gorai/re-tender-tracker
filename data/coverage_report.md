@@ -1,4 +1,4 @@
-# Coverage report - 12 Nov 2026
+# Coverage report - 13 Nov 2026
 
 ## Totals
 
@@ -86,12 +86,12 @@
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 16 | 3.9 |
-| SECI_ARCHIVE | OK | 273 | 1.9 |
+| SECI | OK | 15 | 3.8 |
+| SECI_ARCHIVE | OK | 274 | 2.5 |
 | SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | OK | 2 | 3.2 |
+| NTPC_RE | OK | 2 | 2.9 |
 | NTPC_RE_ARCHIVE | OK | 377 | 4.3 |
-| NHPC | EMPTY | 0 | 17.7 |
+| NHPC | EMPTY | 0 | 17.9 |
 
 ## Coverage limits
 
