@@ -1,19 +1,19 @@
-# Coverage report - 13 Nov 2026
+# Coverage report - 14 Nov 2026
 
 ## Totals
 
 | Metric | Value |
 |---|---|
-| Canonical tenders | 2091 |
-| Renewable tenders | 1892 |
-| Award records | 290 |
+| Canonical tenders | 2092 |
+| Renewable tenders | 1893 |
+| Award records | 291 |
 | Unique winners | 41 |
-| Renewable capacity tracked (MW) | 862,911 |
-| Tenders with a winner | 221 |
+| Renewable capacity tracked (MW) | 863,511 |
+| Tenders with a winner | 222 |
 | Tenders awaiting a winner | 1671 |
 | Records with a tariff | 0 |
 | Financing targets | 167 |
-| Needing manual review | 1303 |
+| Needing manual review | 1305 |
 
 ## By technology
 
@@ -21,7 +21,7 @@
 |---|---|
 | Solar | 601 |
 | Unclassified | 435 |
-| Wind | 167 |
+| Wind | 168 |
 | Hydro | 158 |
 | Rooftop Solar | 105 |
 | Solar + Storage | 100 |
@@ -39,7 +39,7 @@
 | NTPC | 727 |
 | NHPC | 629 |
 | SECI | 427 |
-| SJVN | 25 |
+| SJVN | 26 |
 | NLC India | 19 |
 | GUVNL | 14 |
 | MPPMCL | 10 |
@@ -53,7 +53,7 @@
 
 | State | Tenders |
 |---|---|
-| (blank) | 1287 |
+| (blank) | 1288 |
 | Rajasthan | 130 |
 | Andhra Pradesh | 60 |
 | Gujarat | 59 |
@@ -71,7 +71,7 @@
 | Quality grade | Tenders |
 |---|---|
 | C | 798 |
-| D | 715 |
+| D | 716 |
 | E | 368 |
 | A | 11 |
 
@@ -79,19 +79,19 @@
 
 | Freshness | Tenders |
 |---|---|
-| Fresh | 1879 |
+| Fresh | 1880 |
 | Recently Verified | 13 |
 
 ## Source status this run
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 15 | 3.8 |
-| SECI_ARCHIVE | OK | 274 | 2.5 |
-| SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | OK | 2 | 2.9 |
-| NTPC_RE_ARCHIVE | OK | 377 | 4.3 |
-| NHPC | EMPTY | 0 | 17.9 |
+| SECI | OK | 15 | 4.2 |
+| SECI_ARCHIVE | OK | 274 | 2.4 |
+| SECI_AWARDED | FAILED | 0 | 12.8 |
+| NTPC_RE | OK | 3 | 3.4 |
+| NTPC_RE_ARCHIVE | OK | 376 | 4.5 |
+| NHPC | EMPTY | 0 | 16.1 |
 
 ## Coverage limits
 
