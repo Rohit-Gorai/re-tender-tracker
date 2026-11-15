@@ -1,7 +1,7 @@
-# Renewable tender tracker - 14 Nov 2026
+# Renewable tender tracker - 15 Nov 2026
 
 - **0** new tenders
-- **1** revised bid dates
+- **0** revised bid dates
 - **10** closing within 7 days
 - **291** award records across 222 tenders
 - **167** financing targets
