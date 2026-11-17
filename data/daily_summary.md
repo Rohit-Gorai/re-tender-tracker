@@ -1,15 +1,20 @@
-# Renewable tender tracker - 15 Nov 2026
+# Renewable tender tracker - 17 Nov 2026
 
-- **0** new tenders
-- **0** revised bid dates
-- **10** closing within 7 days
+- **1** new tenders
+- **3** revised bid dates
+- **9** closing within 7 days
 - **291** award records across 222 tenders
 - **167** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 835 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 836 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | Request for Empanelment of Battery Energy Storage System (BESS) Suppliers | 2026-11-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
