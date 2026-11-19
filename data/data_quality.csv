@@ -866,14 +866,14 @@ HIGH,POSSIBLE_DUPLICATE,T-f5a0469c786d,SECI,same reference number on two records
 LOW,WINNER_NOT_FOUND,T-92ce9b618c18,NTPC,material tender closed with no winner found yet,2100.0
 LOW,WINNER_NOT_FOUND,T-719fdfbedbc2,NTPC,material tender closed with no winner found yet,500.0
 LOW,WINNER_NOT_FOUND,T-bcc24b4888b6,NTPC,material tender closed with no winner found yet,500.0
-LOW,WINNER_NOT_FOUND,T-32e6438e5564,NTPC,material tender closed with no winner found yet,1080.0
 LOW,WINNER_NOT_FOUND,T-13acbda916b7,NTPC,material tender closed with no winner found yet,540.0
 HIGH,POSSIBLE_DUPLICATE,T-7a4a7e61e2d8,SECI,same reference number on two records,SECI/CP/MI/00/0002/26-27
 LOW,WINNER_NOT_FOUND,T-b9e66d438d42,NTPC,material tender closed with no winner found yet,600.0
 LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner found yet,2000.0
 LOW,WINNER_NOT_FOUND,T-35f369c8a56e,NTPC,material tender closed with no winner found yet,1200.0
-HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
+LOW,WINNER_NOT_FOUND,T-2a1ff5d0c585,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
+HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
@@ -1288,6 +1288,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-041b68d942e2,NTPC Green Energy,"winner from pres
 LOW,WINNER_NEEDS_VERIFICATION,T-d1caf49c1118,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 MEDIUM,CAPACITY_IMPLAUSIBLE,T-8fbc9c9b1ddc,NTPC Green Energy,"capacity above 5 GW, check the parsed unit",27686.0
 LOW,WINNER_NEEDS_VERIFICATION,T-8fbc9c9b1ddc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-56a617731be4,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b5f86f00d1d1,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-de9dfcb73ed6,NVVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-ed8a197bf7c0,NVVN,"winner from press or AI, confirm before use",Sunsure
