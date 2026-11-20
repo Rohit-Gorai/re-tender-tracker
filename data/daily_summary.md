@@ -1,7 +1,7 @@
-# Renewable tender tracker - 19 Nov 2026
+# Renewable tender tracker - 20 Nov 2026
 
-- **0** new tenders
-- **2** revised bid dates
+- **2** new tenders
+- **1** revised bid dates
 - **10** closing within 7 days
 - **293** award records across 224 tenders
 - **168** financing targets
@@ -10,6 +10,12 @@
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| SECI | Request for Selection of Collaboration Partner for Trading of Renewable Power av | 2026-12-18 |
+| NTPC | Hiring of three (03) nos. AC Vehicle (Latest model of Mahindra Scorpio - N or eq | 2026-11-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
