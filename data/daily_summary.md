@@ -1,21 +1,15 @@
-# Renewable tender tracker - 20 Nov 2026
+# Renewable tender tracker - 21 Nov 2026
 
-- **2** new tenders
-- **1** revised bid dates
-- **10** closing within 7 days
-- **293** award records across 224 tenders
-- **168** financing targets
+- **0** new tenders
+- **0** revised bid dates
+- **9** closing within 7 days
+- **294** award records across 225 tenders
+- **169** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 837 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 838 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| SECI | Request for Selection of Collaboration Partner for Trading of Renewable Power av | 2026-12-18 |
-| NTPC | Hiring of three (03) nos. AC Vehicle (Latest model of Mahindra Scorpio - N or eq | 2026-11-30 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -43,12 +37,12 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 | NTPC | Pace Digitek | T-ba290cae1701 |
 | SECI | Greenko; Torrent; Tata Power | T-2b32a0fbd349 |
 | SECI | Greenko; Torrent; Tata Power | 2b32a0fbd349 |
+| SECI | Waaree | bd1bd676960c |
 | GUVNL | NLC India | T-70cc4438cd19 |
 | GUVNL | NLC India | T-bd812b7761b5 |
 | GUVNL | Juniper; Jakson | T-948bf847c4a1 |
 | GUVNL | Juniper | T-82c8f8303a06 |
 | GUVNL | Engie | T-0b5ee904fc8d |
-| GUVNL | Jakson | T-add6b5846289 |
 
 ## Sources that failed
 | Source | Status | Error |

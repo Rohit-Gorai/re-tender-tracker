@@ -1,4 +1,4 @@
-# Coverage report - 20 Nov 2026
+# Coverage report - 21 Nov 2026
 
 ## Totals
 
@@ -6,14 +6,14 @@
 |---|---|
 | Canonical tenders | 2097 |
 | Renewable tenders | 1898 |
-| Award records | 293 |
+| Award records | 294 |
 | Unique winners | 41 |
 | Renewable capacity tracked (MW) | 863,661 |
-| Tenders with a winner | 224 |
-| Tenders awaiting a winner | 1674 |
+| Tenders with a winner | 225 |
+| Tenders awaiting a winner | 1673 |
 | Records with a tariff | 0 |
-| Financing targets | 168 |
-| Needing manual review | 1311 |
+| Financing targets | 169 |
+| Needing manual review | 1312 |
 
 ## By technology
 
@@ -86,12 +86,12 @@
 
 | Source | Status | Rows | Seconds |
 |---|---|---|---|
-| SECI | OK | 17 | 3.6 |
-| SECI_ARCHIVE | OK | 274 | 2.0 |
-| SECI_AWARDED | FAILED | 0 | 12.7 |
-| NTPC_RE | OK | 4 | 3.1 |
-| NTPC_RE_ARCHIVE | OK | 376 | 4.5 |
-| NHPC | EMPTY | 0 | 17.1 |
+| SECI | OK | 17 | 4.0 |
+| SECI_ARCHIVE | OK | 274 | 2.3 |
+| SECI_AWARDED | FAILED | 0 | 12.8 |
+| NTPC_RE | OK | 3 | 3.3 |
+| NTPC_RE_ARCHIVE | OK | 377 | 4.4 |
+| NHPC | EMPTY | 0 | 18.0 |
 
 ## Coverage limits
 

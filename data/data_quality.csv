@@ -851,7 +851,7 @@ LOW,WINNER_NOT_FOUND,T-876f5d4e8922,SECI,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-9be57a217bf3,SECI,material tender closed with no winner found yet,50.0
 HIGH,POSSIBLE_DUPLICATE,9be57a217bf3,SECI,same reference number on two records,SECI/CP/IPP/15/0008/26-27
 LOW,WINNER_NOT_FOUND,9be57a217bf3,SECI,material tender closed with no winner found yet,50.0
-LOW,WINNER_NOT_FOUND,bd1bd676960c,SECI,material tender closed with no winner found yet,700.0
+LOW,WINNER_NEEDS_VERIFICATION,bd1bd676960c,SECI,"winner from press or AI, confirm before use",Waaree
 LOW,WINNER_NOT_FOUND,T-23530c5db0fb,NTPC,material tender closed with no winner found yet,600.0
 HIGH,POSSIBLE_DUPLICATE,T-1b9bd417bdbe,SECI,same reference number on two records,SECI/CP/OP/15/0006/25-26
 LOW,WINNER_NOT_FOUND,T-d69b63046541,NTPC,material tender closed with no winner found yet,300.0
