@@ -487,3 +487,9 @@ run_date,source,status,rows,seconds,error
 2026-11-21,NTPC_RE,OK,3,3.3,
 2026-11-21,NTPC_RE_ARCHIVE,OK,377,4.4,
 2026-11-21,NHPC,EMPTY,0,18.0,
+2026-11-22,SECI,FAILED,0,169.1,"fetch failed for https://www.seci.co.in/tenders: HTTPSConnectionPool(host='www.seci.co.in', port=443): Read timed out. (read timeout=45)"
+2026-11-22,SECI_ARCHIVE,FAILED,0,148.5,"fetch failed for https://www.seci.co.in/tenders/archive: HTTPSConnectionPool(host='www.seci.co.in', port=443): Read timed out. (read timeout=45)"
+2026-11-22,SECI_AWARDED,FAILED,0,148.5,"fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/list/bidder: HTTPSConnectionPool(host='www.seci.co.in', port=443): Read timed out. (read timeout=45)"
+2026-11-22,NTPC_RE,OK,2,4.6,
+2026-11-22,NTPC_RE_ARCHIVE,OK,378,6.3,
+2026-11-22,NHPC,EMPTY,0,17.1,
