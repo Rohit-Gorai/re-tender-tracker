@@ -1,15 +1,15 @@
-# Renewable tender tracker - 22 Nov 2026
+# Renewable tender tracker - 23 Nov 2026
 
 - **0** new tenders
-- **0** revised bid dates
-- **8** closing within 7 days
-- **295** award records across 226 tenders
-- **170** financing targets
+- **1** revised bid dates
+- **14** closing within 7 days
+- **299** award records across 228 tenders
+- **172** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 840 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 843 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
-- **573** high-severity data-quality flags
+- **571** high-severity data-quality flags
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
@@ -47,8 +47,6 @@ Primary output: **data/renewable_tender_winners.csv** (one row per tender-award 
 ## Sources that failed
 | Source | Status | Error |
 |---|---|---|
-| SECI | FAILED | fetch failed for https://www.seci.co.in/tenders: HTTPSConnectionPool(host='www.s |
-| SECI_ARCHIVE | FAILED | fetch failed for https://www.seci.co.in/tenders/archive: HTTPSConnectionPool(hos |
 | SECI_AWARDED | FAILED | fetch failed for https://www.seci.co.in/Bidder/view/tender/results/all-award/lis |
 | NHPC | EMPTY | - |
 
