@@ -872,9 +872,10 @@ LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-35f369c8a56e,NTPC,material tender closed with no winner found yet,1200.0
 LOW,WINNER_NOT_FOUND,T-2a1ff5d0c585,NTPC,material tender closed with no winner found yet,600.0
 LOW,WINNER_NOT_FOUND,T-fe136731b73b,NTPC,material tender closed with no winner found yet,379.5
-HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
+LOW,WINNER_NOT_FOUND,T-e446e8fb9e09,SECI,material tender closed with no winner found yet,1200.0
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
 HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
+HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, confirm before use",Juniper; Jakson
@@ -1244,6 +1245,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-d00d74b619fe,NHPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-87dde47db8ed,NHPC,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-2966b84aa8dd,NHPC,"winner from press or AI, confirm before use",ACME Solar
 LOW,WINNER_NEEDS_VERIFICATION,T-a31134989c12,NHPC,"winner from press or AI, confirm before use",Renew
+LOW,WINNER_NEEDS_VERIFICATION,T-da7b576849e9,NHPC,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-956d86e85998,NLC India,"winner from press or AI, confirm before use",Renew; Juniper Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56d130be8de8,NLC India,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-36f0b8607c13,NLC India,"winner from press or AI, confirm before use",Renew
@@ -1285,6 +1287,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-e83feaf16e7b,NTPC,"winner from press or AI, conf
 LOW,WINNER_NEEDS_VERIFICATION,T-9197d1527ba7,NTPC,"winner from press or AI, confirm before use",NTPC Renewable
 LOW,WINNER_NEEDS_VERIFICATION,T-81996dc66410,NTPC,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-9d1727ab1522,NTPC,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-36747e0770d3,NTPC,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-cca15fd12bcf,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-839f243652dc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-041b68d942e2,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
