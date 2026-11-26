@@ -872,10 +872,10 @@ LOW,WINNER_NOT_FOUND,T-58c1cdb28df1,NTPC,material tender closed with no winner f
 LOW,WINNER_NOT_FOUND,T-35f369c8a56e,NTPC,material tender closed with no winner found yet,1200.0
 LOW,WINNER_NOT_FOUND,T-2a1ff5d0c585,NTPC,material tender closed with no winner found yet,600.0
 LOW,WINNER_NOT_FOUND,T-fe136731b73b,NTPC,material tender closed with no winner found yet,379.5
-LOW,WINNER_NOT_FOUND,T-e446e8fb9e09,SECI,material tender closed with no winner found yet,1200.0
+LOW,WINNER_NOT_FOUND,T-9542faf21707,SECI,material tender closed with no winner found yet,800.0
 HIGH,POSSIBLE_DUPLICATE,T-5e9b7edc2288,SECI,same reference number on two records,SECI/CP/IPP/13/0002/26-27
-HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 HIGH,POSSIBLE_DUPLICATE,T-e671476b4d53,SECI,same reference number on two records,SECI/CP/OP/11/0003/26-27
+HIGH,POSSIBLE_DUPLICATE,T-bd1bd676960c,SECI,same reference number on two records,SECI/CP/IPP/15/0009/26-27
 LOW,WINNER_NEEDS_VERIFICATION,T-70cc4438cd19,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-bd812b7761b5,GUVNL,"winner from press or AI, confirm before use",NLC India
 LOW,WINNER_NEEDS_VERIFICATION,T-948bf847c4a1,GUVNL,"winner from press or AI, confirm before use",Juniper; Jakson
@@ -1295,6 +1295,7 @@ LOW,WINNER_NEEDS_VERIFICATION,T-d1caf49c1118,NTPC Green Energy,"winner from pres
 MEDIUM,CAPACITY_IMPLAUSIBLE,T-8fbc9c9b1ddc,NTPC Green Energy,"capacity above 5 GW, check the parsed unit",27686.0
 LOW,WINNER_NEEDS_VERIFICATION,T-8fbc9c9b1ddc,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-56a617731be4,NTPC Green Energy,"winner from press or AI, confirm before use",NTPC Green
+LOW,WINNER_NEEDS_VERIFICATION,T-488f7461b864,NTPC Green Energy,"winner from press or AI, confirm before use",Pace Digitek; NTPC Green
 LOW,WINNER_NEEDS_VERIFICATION,T-b5f86f00d1d1,NVVN,"winner from press or AI, confirm before use",Sunsure
 LOW,WINNER_NEEDS_VERIFICATION,T-de9dfcb73ed6,NVVN,"winner from press or AI, confirm before use",Renew
 LOW,WINNER_NEEDS_VERIFICATION,T-ed8a197bf7c0,NVVN,"winner from press or AI, confirm before use",Sunsure

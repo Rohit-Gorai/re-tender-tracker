@@ -1,15 +1,21 @@
-# Renewable tender tracker - 25 Nov 2026
+# Renewable tender tracker - 26 Nov 2026
 
-- **0** new tenders
-- **3** revised bid dates
-- **11** closing within 7 days
-- **302** award records across 231 tenders
-- **174** financing targets
+- **2** new tenders
+- **5** revised bid dates
+- **12** closing within 7 days
+- **304** award records across 232 tenders
+- **175** financing targets
 
 **Business scope: FY26 onward. Cutoff 1 April 2025.** 849 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
+
+## New tenders
+| Authority | Tender | Closes |
+|---|---|---|
+| NTPC | QCA & Forecasting, Scheduling Services for Renewable Energy Power Projects of NT | 2026-12-07 |
+| NTPC | LAND AGGREGATION PACKAGE FOR DEVELOPMENT OF 600MW ISTS CONNECTED SOLAR PV PROJEC | 2026-12-03 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
