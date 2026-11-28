@@ -1,20 +1,15 @@
-# Renewable tender tracker - 27 Nov 2026
+# Renewable tender tracker - 28 Nov 2026
 
-- **1** new tenders
-- **2** revised bid dates
+- **0** new tenders
+- **0** revised bid dates
 - **14** closing within 7 days
-- **305** award records across 233 tenders
+- **307** award records across 235 tenders
 - **176** financing targets
 
-**Business scope: FY26 onward. Cutoff 1 April 2025.** 849 winner rows in scope; 806 pre-FY26 excluded (retained in tenders.csv).
+**Business scope: FY26 onward. Cutoff 1 April 2025.** 850 winner rows in scope; 807 pre-FY26 excluded (retained in tenders.csv).
 
 Primary output: **data/renewable_tender_winners.csv** (one row per tender-award relationship).
 - **571** high-severity data-quality flags
-
-## New tenders
-| Authority | Tender | Closes |
-|---|---|---|
-| NTPC | BULK PROCUREMENT OF POWER TRANSFORMERS FOR RENEWABLE ENERGY PROJECTS OF NTPC REN | 2026-12-08 |
 
 ## Financing targets (top 10 by capacity)
 | # | Winner | MW | Tech | COD | Confidence |
